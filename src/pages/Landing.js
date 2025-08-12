@@ -1,15 +1,15 @@
 import React from "react";
-import styles from "./styles/Main.module.css";
+import styles from "../styles/Landing.module.css";
 
 
-function Main() {
+function Landing() {
   return (
     <>
       <div className={styles.main}>
-        main page
+        landing page
       </div>
     </>
   );
 }
 
-export default Main;
+export default Landing;
