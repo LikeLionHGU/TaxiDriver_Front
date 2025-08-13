@@ -3,6 +3,7 @@
 import React, { useState} from "react"
 import "../styles/Purchasehistory.css"
 import logo from "../assets/logo.svg";
+import excelIcon from "../assets/excel.svg";
 
 const PurchaseHistoryPage = () => {
   const [activeTab, setActiveTab] = useState("구매 내역")
@@ -48,7 +49,7 @@ const PurchaseHistoryPage = () => {
     },
   ]
 
-  const tabs = ["로그", "실시간 관제", "수험현황", "구매 내역"]
+  const tabs = ["로고", "실시간 경매", "수령현황", "구매 내역"]
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
   // Calculate totals
@@ -162,7 +163,11 @@ const PurchaseHistoryPage = () => {
             className: "excel-download-btn",
             onClick: handleExcelDownload,
           },
-          React.createElement("span", null, "📊"),
+          React.createElement("img", {
+            src: excelIcon,
+            alt: "엑셀 아이콘",
+            style: { width: "16px", height: "16px", marginRight: "5px" }
+          }),
           "엑셀다운로드",
         ),
       ),
