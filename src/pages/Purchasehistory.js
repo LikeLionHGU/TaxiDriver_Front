@@ -6,7 +6,7 @@ import logo from "../assets/logo.svg";
 import excelIcon from "../assets/excel.svg";
 
 const PurchaseHistoryPage = () => {
-  const [activeTab, setActiveTab] = useState("구매 내역")
+  // const [setActiveTab] = useState("구매 내역")
   const [activeFilter, setActiveFilter] = useState("전체")
 
   // Sample purchase data
@@ -49,7 +49,7 @@ const PurchaseHistoryPage = () => {
     },
   ]
 
-  const tabs = ["로고", "실시간 경매", "수령현황", "구매 내역"]
+  //const tabs = ["로고", "실시간 경매", "수령현황", "구매 내역"]
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
   // Calculate totals
@@ -61,9 +61,9 @@ const PurchaseHistoryPage = () => {
   activeFilter === "전체" ? purchaseData : purchaseData;
 
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab)
-  }
+  // const handleTabClick = (tab) => {
+  //   setActiveTab(tab)
+  // }
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter)
@@ -109,136 +109,87 @@ const PurchaseHistoryPage = () => {
     }
   }
 
-  return React.createElement(
-    "div",
-    { className: "purchase-history-container" },
-    // Navigation tabs
-    React.createElement(
-      "div",
-      { className: "nav-tabs" },
-      tabs.map((tab) =>
-        React.createElement(
-          "button",
-          {
-            key: tab,
-            className: `nav-tab ${activeTab === tab ? "active" : ""}`,
-            onClick: () => handleTabClick(tab),
-          },
-          tab,
-        ),
-      ),
-    ),
+return (
+  <div className="purchase-history-container">
+    {/* Purchase section */}
+    <div className="purchase-section">
+      {/* Section header */}
+      <div className="section-header">
+        <div>
+          <h2 className="section-title">
+            <img
+              src={logo}
+              alt="로고"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginRight: "8px",
+                verticalAlign: "middle",
+              }}
+            />
+            구매 내역
+          </h2>
+          <div className="purchase-stats">
+            조회된 건수: {totalRecords}건 | 총 구매액: ₩{totalAmount.toLocaleString()}
+          </div>
+        </div>
+        <button className="excel-download-btn" onClick={handleExcelDownload}>
+          <img
+            src={excelIcon}
+            alt="엑셀 아이콘"
+            style={{ width: "16px", height: "16px", marginRight: "5px" }}
+          />
+          엑셀다운로드
+        </button>
+      </div>
 
-    // Purchase section
-    React.createElement(
-      "div",
-      { className: "purchase-section" },
-      // Section header
-      React.createElement(
-        "div",
-        { className: "section-header" },
-        React.createElement(
-          "div",
-          null,
-          React.createElement(
-        "h2",
-        { className: "section-title" },
-        React.createElement("img", {
-            src: logo,
-            alt: "로고",
-            style: { width: "20px", height: "20px", marginRight: "8px", verticalAlign: "middle" }
-        }),
-        "구매 내역"
-        )
-,
-          React.createElement(
-            "div",
-            { className: "purchase-stats" },
-            `조회된 건수: ${totalRecords}건 | 총 구매액: ₩${totalAmount.toLocaleString()}`,
-          ),
-        ),
-        React.createElement(
-          "button",
-          {
-            className: "excel-download-btn",
-            onClick: handleExcelDownload,
-          },
-          React.createElement("img", {
-            src: excelIcon,
-            alt: "엑셀 아이콘",
-            style: { width: "16px", height: "16px", marginRight: "5px" }
-          }),
-          "엑셀다운로드",
-        ),
-      ),
+      <div className="purchase-content">
+        {/* Filter buttons */}
+        <div className="filter-buttons">
+          {filters.map((filter) => (
+            <button
+              key={filter}
+              className={`filter-btn ${activeFilter === filter ? "active" : ""}`}
+              onClick={() => handleFilterClick(filter)}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
 
-      // Filter buttons
-      React.createElement(
-        "div",
-        { className: "filter-buttons" },
-        filters.map((filter) =>
-          React.createElement(
-            "button",
-            {
-              key: filter,
-              className: `filter-btn ${activeFilter === filter ? "active" : ""}`,
-              onClick: () => handleFilterClick(filter),
-            },
-            filter,
-          ),
-        ),
-      ),
-
-      // Purchase table
-      React.createElement(
-        "table",
-        { className: "purchase-table" },
-        React.createElement(
-          "thead",
-          null,
-          React.createElement(
-            "tr",
-            null,
-            React.createElement("th", null, "상품명"),
-            React.createElement("th", null, "수량"),
-            React.createElement("th", null, "낙찰가"),
-            React.createElement("th", null, "낙찰일"),
-            React.createElement("th", null, "상태"),
-          ),
-        ),
-        React.createElement(
-          "tbody",
-          null,
-          filteredData.map((item) =>
-            React.createElement(
-              "tr",
-              { key: item.id },
-              React.createElement(
-                "td",
-                null,
-                React.createElement("div", { className: "product-name" }, item.productName),
-                React.createElement("div", { className: "product-description" }, item.description),
-              ),
-              React.createElement("td", null, item.quantity),
-              React.createElement("td", { className: "price" }, `₩${item.price.toLocaleString()}`),
-              React.createElement("td", { className: "date" }, item.date),
-              React.createElement(
-                "td",
-                null,
-                React.createElement(
-                  "span",
-                  {
-                    className: `status-badge ${getStatusClass(item.status)}`,
-                  },
-                  item.status,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  )
+        {/* Purchase table */}
+        <table className="purchase-table">
+          <thead>
+            <tr>
+              <th>상품명</th>
+              <th>수량</th>
+              <th>낙찰가</th>
+              <th>낙찰일</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <div className="product-name">{item.productName}</div>
+                  <div className="product-description">{item.description}</div>
+                </td>
+                <td>{item.quantity}</td>
+                <td className="price">₩{item.price.toLocaleString()}</td>
+                <td className="date">{item.date}</td>
+                <td>
+                  <span className={`status-badge ${getStatusClass(item.status)}`}>
+                    {item.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+);
 }
-
 export default PurchaseHistoryPage
