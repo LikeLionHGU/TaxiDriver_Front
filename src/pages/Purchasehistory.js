@@ -15,8 +15,8 @@ const PurchaseHistoryPage = () => {
   const purchaseData = [
     {
       id: 1,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "30마리",
       price: 250000,
       date: "2025. 8. 9.",
@@ -24,8 +24,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 2,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "100마리",
       price: 85000,
       date: "2025. 8. 10.",
@@ -33,8 +33,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 3,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "200마리",
       price: 120000,
       date: "2025. 8. 11.",
@@ -42,8 +42,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 4,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "80마리",
       price: 95000,
       date: "2025. 8. 12.",
