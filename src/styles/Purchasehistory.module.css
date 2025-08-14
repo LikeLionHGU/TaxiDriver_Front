@@ -25,6 +25,45 @@
   padding-bottom: 20px;
   border-bottom: 1px solid #e9ecef;
 }
+
+/* ⬇️ 왼쪽 묶음: 아이콘 + 텍스트 스택 */
+.title-area {
+  display: flex;
+  align-items: center;  /* 아이콘과 텍스트 수직 정렬 */
+  gap: 12px;
+}
+
+.title-icon {
+  width: 82.3px;   /* 필요 시 24~32px로 조정 */
+  height: 67.7px;
+  flex: 0 0 auto;
+}
+
+.title-texts {
+  display: flex;
+  flex-direction: column;  /* 제목 위, 통계 아래 */
+  gap: 2px;                /* 제목/통계 간격 */
+}
+
+/* 제목/통계 기본 스타일 */
+.section-title {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.1;   /* 아이콘과 수평선 맞추기 */
+}
+
+.purchase-stats {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;          /* 위쪽 여백 제거 (세로 정렬 깔끔) */
+}
+
+/* 모바일에서 헤더 스택 */
+@media (max-width: 768px) {
+  .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+}
 .section-title {
   margin: 0;
   font-size: 24px;
@@ -112,16 +151,19 @@
 
 /* 첫 번째 열: 두 줄 세로 정렬 */
 .purchase-table td:first-child {
-  text-align: left;
-  vertical-align: middle;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2px;
+  text-align:left;
+  vertical-align:middle;
+  padding-left:12px;
 }
-.product-name, .product-description { margin: 0; line-height: 1.4; }
-.product-name { font-weight: 600; color: #333; }
+
+.amount {
+  color: #2563EB;   /* 파란색 */
+  font-weight: 600; /* 선택: 강조 */
+}
+
+
+.product-name, .product-description { margin: 0; line-height: 1.4; display:block;}
+.product-name { margin-bottom:4px; }
 .product-description { font-size: 12px; color: #6c757d; }
 
 /* Status Badges */

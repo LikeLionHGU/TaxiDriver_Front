@@ -111,33 +111,28 @@ const PurchaseHistoryPage = () => {
     <div className={styles['purchase-history-container']}>
       <div className={styles['purchase-section']}>
         <div className={styles['section-header']}>
-          <div>
-            <h2 className={styles['section-title']}>
-              <img
-                src={logo} // .src가 필요 없는 환경일 수 있으므로 원상 복구
-                alt="로고"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  marginRight: "8px",
-                  verticalAlign: "middle",
-                }}
-              />
-              구매 내역
-            </h2>
-            <div className={styles['purchase-stats']}>
-              조회된 건수: {totalRecords}건 | 총 구매액: ₩{totalAmount.toLocaleString()}
-            </div>
-          </div>
-          <button className={styles['excel-download-btn']} onClick={handleExcelDownload}>
-            <img
-              src={excelIcon} // .src가 필요 없는 환경일 수 있으므로 원상 복구
-              alt="엑셀 아이콘"
-              style={{ width: "16px", height: "16px", marginRight: "5px" }}
-            />
-            엑셀다운로드
-          </button>
-        </div>
+  {/* 왼쪽: 아이콘 + (제목/통계 세로 스택) */}
+  <div className={styles['title-area']}>
+    <img src={logo} alt="장바구니" className={styles['title-icon']} />
+    <div className={styles['title-texts']}>
+      <h2 className={styles['section-title']}>구매 내역</h2>
+      <div className={styles['purchase-stats']}>
+        조회된 건수: {totalRecords}건 | 총 구매액:{' '}
+        <span className={styles['amount']}>
+        ₩{totalAmount.toLocaleString()}
+    </span>
+</div>
+
+    </div>
+  </div>
+
+  {/* 오른쪽: 엑셀 버튼 */}
+  <button className={styles['excel-download-btn']} onClick={handleExcelDownload}>
+    <img src={excelIcon} alt="엑셀 아이콘" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
+    엑셀다운로드
+  </button>
+</div>
+
 
         <div className={styles['purchase-content']}>
           <div className={styles['filter-buttons']}>
