@@ -10,12 +10,14 @@ function Header() {
     setRole(ROLES.JUNGDOMAEIN); 
   }, [role]);
 
+
   return (
     <>
       <div className={styles.headerContainer}>
         <div className={styles.logo}>
 
         </div>
+
         <nav>
           {items.map((it) => (
             <a key={it.key} href={it.href} className={styles.buttonContainer}>
@@ -25,6 +27,7 @@ function Header() {
         </nav>
 
         {/* <div className={styles.buttonContainer}>
+
           <span className={styles.button}>등록 현황</span>
         </div>
         <div className={styles.buttonContainer}>
@@ -35,7 +38,9 @@ function Header() {
         </div>
         <div className={styles.buttonContainer}>
           <span className={styles.button}>판매 정산</span>
+
         </div> */}
+
       </div>
     </>
   );
