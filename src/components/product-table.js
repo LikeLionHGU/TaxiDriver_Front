@@ -25,11 +25,11 @@ export default function ProductTable({ products, onStatusChange }) {
     return <span className={`${styles.statusBadge} ${config.className}`}>{config.label}</span>
   }
 
-  const handleSelectProduct = (productId) => {
-    setSelectedProducts((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
-    )
-  }
+  // const handleSelectProduct = (productId) => {
+  //   setSelectedProducts((prev) =>
+  //     prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
+  //   )
+  // }
 
   const handleBulkApprove = async () => {
     for (const productId of selectedProducts) {
@@ -41,7 +41,7 @@ export default function ProductTable({ products, onStatusChange }) {
   return (
     <div className={styles.container}>
       <div className={styles.tableHeader}>
-        <h2 className={styles.tableTitle}>등록 상품 목록</h2>
+       
         {selectedProducts.length > 0 && (
           <button className={styles.bulkActionBtn} onClick={handleBulkApprove}>
             선택한 {selectedProducts.length}개 승인
@@ -54,22 +54,12 @@ export default function ProductTable({ products, onStatusChange }) {
           <thead>
             <tr>
               <th>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedProducts(products.map((p) => p.id))
-                    } else {
-                      setSelectedProducts([])
-                    }
-                  }}
-                />
               </th>
               <th>수산물 정보</th>
               <th>검사 결과</th>
-              <th>희가 수매가</th>
-              <th>생산지</th>
-              <th>등록 상태</th>
+              <th>최저 수락가</th>
+              <th>생산자</th>
+              <th>등록 상세</th>
               <th>승인 현황</th>
             </tr>
           </thead>
@@ -77,11 +67,6 @@ export default function ProductTable({ products, onStatusChange }) {
             {products.map((product) => (
               <tr key={product.id} className={styles.tableRow}>
                 <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedProducts.includes(product.id)}
-                    onChange={() => handleSelectProduct(product.id)}
-                  />
                 </td>
                 <td>
                   <div className={styles.productInfo}>
