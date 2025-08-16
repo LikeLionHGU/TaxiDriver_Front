@@ -4,14 +4,19 @@ import './App.css';
 import Landing from "./pages/Landing";
 import PurchaseHistoryPage from "./pages/Purchasehistory";
 
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        <Header />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   );
