@@ -1,20 +1,22 @@
 "use client"
 
-import React, { useState} from "react"
-import "../styles/Purchasehistory.css"
+import React, { useState } from "react"
+// 1. CSS 모듈 import 방식은 그대로 유지합니다.
+import styles from "../styles/Purchasehistory.module.css"
+// SVG 파일 import 방식은 사용자의 환경에 따라 다를 수 있습니다.
+// .src가 필요 없는 환경일 수 있으므로 원래대로 되돌립니다.
 import logo from "../assets/logo.svg";
 import excelIcon from "../assets/excel.svg";
 
 const PurchaseHistoryPage = () => {
-  // const [setActiveTab] = useState("구매 내역")
   const [activeFilter, setActiveFilter] = useState("전체")
 
   // Sample purchase data
   const purchaseData = [
     {
       id: 1,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "30마리",
       price: 250000,
       date: "2025. 8. 9.",
@@ -22,8 +24,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 2,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "100마리",
       price: 85000,
       date: "2025. 8. 10.",
@@ -31,8 +33,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 3,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "200마리",
       price: 120000,
       date: "2025. 8. 11.",
@@ -40,8 +42,8 @@ const PurchaseHistoryPage = () => {
     },
     {
       id: 4,
-      productName: "포항 대게",
-      description: "18kg | 인증:PH45678",
+      productName: "대게",
+      description: "포항",
       quantity: "80마리",
       price: 95000,
       date: "2025. 8. 12.",
@@ -49,7 +51,6 @@ const PurchaseHistoryPage = () => {
     },
   ]
 
-  //const tabs = ["로고", "실시간 경매", "수령현황", "구매 내역"]
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
   // Calculate totals
@@ -58,12 +59,7 @@ const PurchaseHistoryPage = () => {
 
   // Filter data based on active filter
   const filteredData =
-  activeFilter === "전체" ? purchaseData : purchaseData;
-
-
-  // const handleTabClick = (tab) => {
-  //   setActiveTab(tab)
-  // }
+    activeFilter === "전체" ? purchaseData : purchaseData;
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter)
@@ -94,102 +90,96 @@ const PurchaseHistoryPage = () => {
     document.body.removeChild(link)
   }
 
+  // 2. getStatusClass가 styles 객체의 클래스 이름을 대괄호 표기법으로 반환하도록 수정
   const getStatusClass = (status) => {
     switch (status) {
       case "수령완료":
-        return "status-completed"
+        return styles['status-completed'];
+      case "수령대기":
+        return styles['status-pending'];
       case "처리중":
-        return "status-processing"
-      case "대기중":
-        return "status-pending"
+        return styles['status-processing'];
       case "취소됨":
-        return "status-cancelled"
+        return styles['status-cancelled'];
       default:
-        return "status-completed"
+        return ""; // 기본값 설정
     }
   }
 
-return (
-  <div className="purchase-history-container">
-    {/* Purchase section */}
-    <div className="purchase-section">
-      {/* Section header */}
-      <div className="section-header">
-        <div>
-          <h2 className="section-title">
-            <img
-              src={logo}
-              alt="로고"
-              style={{
-                width: "20px",
-                height: "20px",
-                marginRight: "8px",
-                verticalAlign: "middle",
-              }}
-            />
-            구매 내역
-          </h2>
-          <div className="purchase-stats">
-            조회된 건수: {totalRecords}건 | 총 구매액: ₩{totalAmount.toLocaleString()}
-          </div>
-        </div>
-        <button className="excel-download-btn" onClick={handleExcelDownload}>
-          <img
-            src={excelIcon}
-            alt="엑셀 아이콘"
-            style={{ width: "16px", height: "16px", marginRight: "5px" }}
-          />
-          엑셀다운로드
-        </button>
-      </div>
+  return (
+    // 3. 모든 className을 대괄호 표기법 styles['class-name']을 사용하여 적용
+    <div className={styles['purchase-history-container']}>
+      <div className={styles['purchase-section']}>
+        <div className={styles['section-header']}>
+  {/* 왼쪽: 아이콘 + (제목/통계 세로 스택) */}
+  <div className={styles['title-area']}>
+    <img src={logo} alt="장바구니" className={styles['title-icon']} />
+    <div className={styles['title-texts']}>
+      <h2 className={styles['section-title']}>구매 내역</h2>
+      <div className={styles['purchase-stats']}>
+        조회된 건수: {totalRecords}건 | 총 구매액:{' '}
+        <span className={styles['amount']}>
+        ₩{totalAmount.toLocaleString()}
+    </span>
+</div>
 
-      <div className="purchase-content">
-        {/* Filter buttons */}
-        <div className="filter-buttons">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              className={`filter-btn ${activeFilter === filter ? "active" : ""}`}
-              onClick={() => handleFilterClick(filter)}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-
-        {/* Purchase table */}
-        <table className="purchase-table">
-          <thead>
-            <tr>
-              <th>상품명</th>
-              <th>수량</th>
-              <th>낙찰가</th>
-              <th>낙찰일</th>
-              <th>상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <div className="product-name">{item.productName}</div>
-                  <div className="product-description">{item.description}</div>
-                </td>
-                <td>{item.quantity}</td>
-                <td className="price">₩{item.price.toLocaleString()}</td>
-                <td className="date">{item.date}</td>
-                <td>
-                  <span className={`status-badge ${getStatusClass(item.status)}`}>
-                    {item.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
-);
+
+  {/* 오른쪽: 엑셀 버튼 */}
+  <button className={styles['excel-download-btn']} onClick={handleExcelDownload}>
+    <img src={excelIcon} alt="엑셀 아이콘" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
+    엑셀다운로드
+  </button>
+</div>
+
+
+        <div className={styles['purchase-content']}>
+          <div className={styles['filter-buttons']}>
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                // 4. 동적 className도 대괄호 표기법을 사용하여 적용
+                className={`${styles['filter-btn']} ${activeFilter === filter ? styles['active'] : ""}`}
+                onClick={() => handleFilterClick(filter)}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+
+          <table className={styles['purchase-table']}>
+            <thead>
+              <tr>
+                <th>상품명</th>
+                <th>수량</th>
+                <th>낙찰가</th>
+                <th>낙찰일</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <div className={styles['product-name']}>{item.productName}</div>
+                    <div className={styles['product-description']}>{item.description}</div>
+                  </td>
+                  <td>{item.quantity}</td>
+                  <td className={styles['price']}>₩{item.price.toLocaleString()}</td>
+                  <td className={styles['date']}>{item.date}</td>
+                  <td>
+                    <span className={`${styles['status-badge']} ${getStatusClass(item.status)}`}>
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
-export default PurchaseHistoryPage
+export default PurchaseHistoryPage;

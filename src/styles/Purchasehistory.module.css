@@ -10,10 +10,10 @@
 
 /* Purchase Section */
 .purchase-section {
-  background: transparent;        /* ✅ 섹션은 투명 */
+  background: transparent;        /* 섹션은 투명 */
   border-radius: 8px;
   padding: 30px;
-  box-shadow: none;               /* ✅ 섀도 제거 */
+  box-shadow: none;               /* 섀도 제거 */
 }
 
 /* Section Header */
@@ -23,7 +23,46 @@
   align-items: center;
   margin-bottom: 25px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: none;
+}
+
+/* ⬇️ 왼쪽 묶음: 아이콘 + 텍스트 스택 */
+.title-area {
+  display: flex;
+  align-items: center;  /* 아이콘과 텍스트 수직 정렬 */
+  gap: 12px;
+}
+
+.title-icon {
+  width: 82.3px;   /* 필요 시 24~32px로 조정 */
+  height: 67.7px;
+  flex: 0 0 auto;
+}
+
+.title-texts {
+  display: flex;
+  flex-direction: column;  /* 제목 위, 통계 아래 */
+  gap: 2px;                /* 제목/통계 간격 */
+}
+
+/* 제목/통계 기본 스타일 */
+.section-title {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.1;   /* 아이콘과 수평선 맞추기 */
+}
+
+.purchase-stats {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;          /* 위쪽 여백 제거 (세로 정렬 깔끔) */
+}
+
+/* 모바일에서 헤더 스택 */
+@media (max-width: 768px) {
+  .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
 .section-title {
   margin: 0;
@@ -53,7 +92,7 @@
 }
 .excel-download-btn:hover { background: #218838; }
 
-/* ✅ 엑셀 버튼 아래부터(필터+표) 흰색 카드 */
+/* 엑셀 버튼 아래부터(필터+표) 흰색 카드 */
 .purchase-content {
   background-color: #fff;
   padding: 20px;
@@ -61,6 +100,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
   border: 1px solid #EEF1F4;
+  overflow:hidden;
 }
 
 /* Filter Buttons */
@@ -72,8 +112,8 @@
 .filter-btn {
   padding: 8px 16px;
   border: 1px solid #dee2e6;
-  background: #fff;
-  border-radius: 4px;
+  background:  #E5E7EB;
+  border-radius: 8.061px; 
   cursor: pointer;
   font-size: 13px;
   color: #495057;
@@ -88,12 +128,17 @@
 
 /* Table Styles */
 .purchase-table {
-  width: 100%;
+  width: calc(100% + 40px); /* 20px 패딩 * 2 */
+  margin-left: -20px;
+  margin-right: -20px;
   border-collapse: collapse;
   margin-top: 20px;
+
+  border-top: 1px solid #C5C5C5;
 }
+
 .purchase-table th {
-  background: #fff;              /* 헤더도 카드색과 동일 */
+  background: #F9FAFB;              /* 헤더도 카드색과 동일 */
   padding: 15px 12px;
   text-align: center;
   font-weight: 600;
@@ -112,27 +157,66 @@
 
 /* 첫 번째 열: 두 줄 세로 정렬 */
 .purchase-table td:first-child {
-  text-align: left;
-  vertical-align: middle;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2px;
+  text-align:left;
+  vertical-align:middle;
+  padding-left:12px;
 }
-.product-name, .product-description { margin: 0; line-height: 1.4; }
-.product-name { font-weight: 600; color: #333; }
+
+.amount {
+  color: #2563EB;   /* 파란색 */
+  font-weight: 600; /* 선택: 강조 */
+}
+
+
+.product-name, .product-description { margin: 0; line-height: 1.4; display:block;}
+.product-name { margin-bottom:4px; }
 .product-description { font-size: 12px; color: #6c757d; }
 
 /* Status Badges */
-.status-badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; display: inline-block; }
-.status-completed { background: #d4edda; color: #155724; }
+.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
+.status-completed { background: #DCfCE7; color: #166534; border:1px solid #86EFAC;}
 .status-processing { background: #d1ecf1; color: #0c5460; }
-.status-pending { background: #fff3cd; color: #856404; }
+.status-pending { background: #AFDEF5; color: #075985; border:1px solid #38BDF8;}
 .status-cancelled { background: #f8d7da; color: #721c24; }
 
 .price { font-weight: 600; color: #333; }
 .date { color: #6c757d; }
+
+/* 헤더 상품명 왼쪽 정렬 */
+.purchase-table th:first-child {
+  text-align: left;
+  padding-left: 24px; /* 본문 셀과 동일하게 */
+}
+
+/* 첫 번째 열 셀 왼쪽 정렬 */
+.purchase-table td:first-child {
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 24px;
+}
+
+/* 상품명 */
+.product-name {
+  display: block;
+  margin: 0 0 4px;
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #525252;
+}
+
+/* 상품 설명 */
+.product-description {
+  display: block;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #757575;
+}
+
+
+
 
 /* (모바일) */
 @media (max-width: 768px) {
