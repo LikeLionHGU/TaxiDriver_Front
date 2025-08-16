@@ -42,6 +42,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;  
 }
 
 .table th {
@@ -53,10 +54,12 @@
   font-size: 0.875rem;
   border-bottom: 1px solid #e5e7eb;
 }
-
-.table th:first-child {
-  width: 40px;
+.tableHeader:empty {
+  display: none;
+  padding: 0;
+  border: 0;
 }
+
 
 .tableRow {
   transition: background-color 0.2s;
