@@ -51,10 +51,17 @@ export default function ProductTable({ products, onStatusChange }) {
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
+          <colgroup>
+          {/* 수산물 정보 / 검사 결과 / 최저 수락가 / 생산자 / 등록 상세 / 승인 현황 */}
+            <col style={{ width: "28%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: "12%" }} />
+            <col style={{ width: "12%" }} />
+          </colgroup>
           <thead>
             <tr>
-              <th>
-              </th>
               <th>수산물 정보</th>
               <th>검사 결과</th>
               <th>최저 수락가</th>
@@ -66,8 +73,6 @@ export default function ProductTable({ products, onStatusChange }) {
           <tbody>
             {products.map((product) => (
               <tr key={product.id} className={styles.tableRow}>
-                <td>
-                </td>
                 <td>
                   <div className={styles.productInfo}>
                     <strong>{product.name}</strong>
