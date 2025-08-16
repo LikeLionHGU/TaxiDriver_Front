@@ -1,64 +1,27 @@
-// registration-status.js
 "use client"
 
 import { useState, useEffect } from "react"
 import StatsCards from "./stats-cards"
 import ProductTable from "./product-table"
 import styles from "./styles/registration-status.module.css"
-import regIconUrl from "../assets/registar.svg";
+import regIconUrl from "../assets/registar.svg"
 
-// 목데이터 + 기본값
 const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 }
 const MOCK = {
   stats: { pending: 3, approved: 2, rejected: 1 },
   products: [
-    {
-      id: 1,
-      name: "대게",
-      category: "포항",
-      weight: "25.5kg",
-      testResult: "",
-      price: 175750,
-      origin: "김철수(어민 정보 추가)",
-      status: "pending",
-    },
-    {
-      id: 2,
-      name: "대게",
-      category: "포항",
-      weight: "25.5kg",
-      testResult: "",
-      price: 175750,
-      origin: "김철수(어민 정보 추가)",
-      status: "approved",
-    },
-    {
-      id: 3,
-      name: "대게",
-      category: "포항",
-      weight: "25.5kg",
-      testResult: "",
-      price: 175750,
-      origin: "김철수(어민 정보 추가)",
-      status: "approved",
-    },
-     {
-      id: 4,
-      name: "대게",
-      category: "포항",
-      weight: "25.5kg",
-      testResult: "",
-      price: 175750,
-      origin: "김철수(어민 정보 추가)",
-      status: "approved",
-    },
+    { id: 1, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "pending" },
+    { id: 2, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "approved" },
+    { id: 3, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "approved" },
+    { id: 4, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "approved" },
   ],
 }
 
+
 export default function RegistrationStatus() {
-  // 절대 null 되지 않도록 초깃값부터 MOCK
   const [data, setData] = useState(MOCK)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("all")
 
   useEffect(() => {
     fetchRegistrationData()
@@ -70,12 +33,11 @@ export default function RegistrationStatus() {
       const res = await fetch("/api/registration-status")
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
-      // 스키마 확인 (없으면 목으로 대체)
       if (!json?.products || !json?.stats) throw new Error("Bad schema")
       setData(json)
     } catch (e) {
       console.warn("API 실패 → 목데이터 사용:", e)
-      setData(MOCK) // 실패해도 data는 항상 객체
+      setData(MOCK)
     } finally {
       setLoading(false)
     }
@@ -90,23 +52,33 @@ export default function RegistrationStatus() {
     )
   }
 
-  // 방어적 기본값
   const stats = data?.stats || DEFAULT_STATS
   const products = Array.isArray(data?.products) ? data.products : []
+  const filteredProducts =
+    activeTab === "all" ? products : products.filter(p => p.status === activeTab)
 
   return (
     <div className={styles.container}>
+      {/* 헤더 */}
       <div className={styles.header}>
-            <img src={regIconUrl} alt="등록 현황 아이콘" className={styles.iconImage} />
-        <div className={styles.headerContent}>
-          <h1 className={styles.title}>등록 현황</h1> {/* 오타 수정 */}
+          <img src={regIconUrl} alt="등록 현황 아이콘" className={styles.iconImage} />
+        
+        <div className={styles.headerText}>
+          <h1 className={styles.title}>등록 현황</h1>
           <p className={styles.subtitle}>내가 등록한 상품의 승인 여부를 확인하세요.</p>
         </div>
       </div>
 
-      {/* 안전하게 전달 */}
-      <StatsCards stats={stats} />
-      <ProductTable products={products} onStatusChange={handleStatusChange} />
+
+      {/* 카드(클릭 시 필터 변경) */}
+      <StatsCards
+        stats={stats}
+        onSelect={key => setActiveTab(key)}   // ← 카드 클릭 연동
+        activeKey={activeTab}                // ← 선택 상태 스타일용
+      />
+
+      {/* 테이블 */}
+      <ProductTable products={filteredProducts} onStatusChange={handleStatusChange} />
     </div>
   )
 
