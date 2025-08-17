@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
