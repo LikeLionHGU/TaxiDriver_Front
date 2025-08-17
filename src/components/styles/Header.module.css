@@ -10,6 +10,7 @@
   box-shadow: 0 4px 8.5px 0 rgba(0, 0, 0, 0.06);
 
   padding-top: 18px;
+  box-sizing: border-box;
 }
 
 .logo{
@@ -36,4 +37,9 @@
 
   border-bottom: 4px solid #cc0000;
   margin: 0 10px;
+}
+
+.nav{
+  display:flex !important;
+  flex-direction: row;
 }

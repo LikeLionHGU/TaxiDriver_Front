@@ -1,4 +1,5 @@
-import React, { use } from "react";
+import React, { useState, useEffect} from "react";
+import { NavLink /*, Link, useNavigate */ } from "react-router-dom";
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
@@ -18,13 +19,23 @@ function Header() {
 
         </div>
 
-        <nav>
-          {items.map((it) => (
-            <a key={it.key} href={it.href} className={styles.buttonContainer}>
-              <span className={styles.button}>{it.label}</span>
-            </a>
-          ))}
-        </nav>
+         <nav className={styles.nav} aria-label="main">
+            {items.map((it) => (
+              <NavLink
+                key={it.key}
+                to={it.href}
+                className={({ isActive }) =>
+                  [
+                    styles.buttonContainer,
+                    isActive ? styles.active : ""
+                  ].join(" ")
+                }
+                end
+              >
+                <span className={styles.button}>{it.label}</span>
+              </NavLink>
+            ))}
+          </nav>
 
         {/* <div className={styles.buttonContainer}>
 
