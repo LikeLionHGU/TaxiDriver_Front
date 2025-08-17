@@ -54,6 +54,29 @@
   font-size: 0.875rem;
   border-bottom: 1px solid #e5e7eb;
 }
+
+/* 헤더와 바디 모두 가운데 높이 정렬 */
+.table th,
+.table td {
+  vertical-align: middle;   /* ← th에도 추가! */
+}
+
+/* 첫 번째 열(수산물 정보)만 여백 추가 */
+.table th:first-child,
+.table td:first-child {
+  padding-left: 3.5rem; /* 원하는 만큼 (기본 1rem → 1.5rem 정도) */
+}
+
+
+/* 열별 가로 정렬 (헤더/바디 동일하게) */
+.table th:nth-child(1), .table td:nth-child(1) { text-align: left;  }  /* 수산물 정보 */
+.table th:nth-child(2), .table td:nth-child(2) { text-align: left;  }  /* 검사 결과   */
+.table th:nth-child(3), .table td:nth-child(3) { text-align: right; }  /* 최저 수락가 (숫자/통화는 보통 오른쪽) */
+.table th:nth-child(4), .table td:nth-child(4) { text-align: left;  }  /* 생산자      */
+.table th:nth-child(5), .table td:nth-child(5) { text-align: center;}  /* 승인 현황 (뱃지 중앙) */
+.table th:nth-child(6), .table td:nth-child(6) { text-align: center;}  /* 등록 상세 (버튼 중앙) */
+
+
 .tableHeader:empty {
   display: none;
   padding: 0;
@@ -110,20 +133,20 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: inline-block;
+  white-space: nowrap; 
 }
 
 .detailBtn:hover {
-  background: #e5e7eb;
+  background: #ECF6FF;
 }
 
 .statusBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
   display: inline-block;
-  min-width: 60px;
+  min-width: 72px;        /* 살짝 넓혀주면 폭이 일정해져서 더 안정적 */
+  text-align: center;
+  line-height: 1;         /* 높이 흔들림 방지 */
+  padding: 0.5rem 0.75rem;
 }
 
 .statusPending {

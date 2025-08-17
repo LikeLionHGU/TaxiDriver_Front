@@ -39,11 +39,12 @@
 
 /* 전체보기(active) */
 .cardActiveAll {
-  --border-color: #2775E7;
-  background:
-    linear-gradient(180deg, rgba(219,236,250,0) 25.77%, rgba(174,218,255,0.7) 136.54%),
-    rgba(255,255,255,0.85);
-  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+ border-radius: 10px;
+ border: 1px solid var(--, #2775E7);
+ background: #ECF6FF;
+
+ /* 아이콘 그림자 2 */
+ box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
 }
 
 /* 검토중(active) */
