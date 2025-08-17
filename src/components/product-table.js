@@ -66,8 +66,8 @@ export default function ProductTable({ products, onStatusChange }) {
               <th>검사 결과</th>
               <th>최저 수락가</th>
               <th>생산자</th>
-              <th>등록 상세</th>
               <th>승인 현황</th>
+              <th>등록 상세</th>
             </tr>
           </thead>
           <tbody>
@@ -84,10 +84,10 @@ export default function ProductTable({ products, onStatusChange }) {
                 <td className={styles.testResult}>{product.testResult}</td>
                 <td className={styles.price}>₩{product.price.toLocaleString()}</td>
                 <td>{product.origin}</td>
+                <td>{getStatusBadge(product.status)}</td>
                 <td>
                   <button className={styles.detailBtn}>상세보기</button>
                 </td>
-                <td>{getStatusBadge(product.status)}</td>
               </tr>
             ))}
           </tbody>
