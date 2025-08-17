@@ -3,16 +3,16 @@
   appearance: none;           /* 브라우저 기본 버튼 스타일 제거 */
   -webkit-appearance: none;
   border: 1px solid;          /* 먼저 두께 고정 */
-  border-color: var(--border-color, #D9D9D9);  /* ✅ 올바른 var 사용 */
+  border-color: var(--border-color, #D9D9D9);  /* 올바른 var 사용 */
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
   border-radius: 10px;
   background: var(--bg, #fff);
-  box-sizing: border-box;     /* ✅ 보더/패딩 포함 */
-  width: 100%;                /* ✅ 그리드 셀 꽉 채우기 */
-  min-height: 72px;           /* ✅ 높이 고정(원하면 조절) */
+  box-sizing: border-box;     /* 보더/패딩 포함 */
+  width: 100%;                /* 그리드 셀 꽉 채우기 */
+  min-height: 72px;           /* 높이 고정(원하면 조절) */
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease,
               background-color 0.2s ease, border-color 0.2s ease;
@@ -56,7 +56,7 @@
 }
 
 /* 승인완료(active)
-   ⚠️ fill/stroke는 div에 적용되지 않으니 카드 대신 '아이콘 이미지'에 drop-shadow 적용 */
+   fill/stroke는 div에 적용되지 않으니 카드 대신 '아이콘 이미지'에 drop-shadow 적용 */
 .cardActiveApproved {
   --border-color: #D9D9D9;
   background:
@@ -77,7 +77,7 @@
   font-size: 1.5rem;
   width: 40px;
   height: 40px;
-  min-width: 40px;            /* ✅ 아이콘 없는 카드로 인한 흔들림 방지 */
+  min-width: 40px;            /* 아이콘 없는 카드로 인한 흔들림 방지 */
   display: flex;
   align-items: center;
   justify-content: center;
