@@ -24,7 +24,7 @@
   margin-left: 93px;
   margin-right: 93px;
 
-  border: 5px solid #cc0000;
+  border: 5px solid #2563EB;
 }
 
 .buttonContainer{
@@ -35,8 +35,23 @@
   align-items: center;
   justify-content: center;
 
-  border-bottom: 4px solid #cc0000;
   margin: 0 10px;
+  text-decoration: none;
+
+}
+
+.currentPage{
+  border-bottom: 4px solid #2563EB;
+}
+
+.currentPage span{
+  color: #2563EB;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.button{
+  color: #525252;
 }
 
 .nav{

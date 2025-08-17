@@ -1,11 +1,11 @@
 export const ROLES = {
-  ADMIN: "admin",
+  AMIN: "amin",
   GUARDIAN: "guardian",
   JUNGDOMAEIN: "jungdomaein", // 중도매인
 };
 
 export const NAV_BY_ROLE = {
-  [ROLES.ADMIN]: [
+  [ROLES.AMIN]: [
     { key: "status",           label: "등록 현황",   href: "/status" },
     { key: "register-fish",    label: "수산물 등록", href: "/register" },
     { key: "auction-status",   label: "경매 상태",   href: "/auction" },

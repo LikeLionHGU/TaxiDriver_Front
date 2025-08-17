@@ -1,15 +1,15 @@
-import React, { useState, useEffect} from "react";
-import { NavLink /*, Link, useNavigate */ } from "react-router-dom";
+import React, {useState} from "react";
+import { NavLink, useLocation /*, Link, useNavigate */ } from "react-router-dom";
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
 function Header() {
-  const [role, setRole] = useState(ROLES.JUNGDOMAEIN);
+  const [role] = useState(ROLES.AMIN);
   const items = NAV_BY_ROLE[role];
 
-  useEffect(() => {
-    setRole(ROLES.JUNGDOMAEIN); 
-  }, [role]);
+// 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
+  const location = useLocation();
+
 
 
   return (
@@ -21,17 +21,7 @@ function Header() {
 
          <nav className={styles.nav} aria-label="main">
             {items.map((it) => (
-              <NavLink
-                key={it.key}
-                to={it.href}
-                className={({ isActive }) =>
-                  [
-                    styles.buttonContainer,
-                    isActive ? styles.active : ""
-                  ].join(" ")
-                }
-                end
-              >
+              <NavLink key={it.key} to={it.href} className={`${location.pathname === it.href ? styles.currentPage : ""} ${styles.buttonContainer}`}>
                 <span className={styles.button}>{it.label}</span>
               </NavLink>
             ))}
