@@ -2,5 +2,5 @@
   text-align: center;
 
   /* 패딩을 정해진 크기 안으로 적용시키는 코드임 ! 원래 패딩입히면 패딩값만큼 커지는데 그때 때문에 넣어뒀서용 */
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
