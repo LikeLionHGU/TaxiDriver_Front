@@ -87,7 +87,7 @@ export default function ProductDetailModal({ open, onClose, product }) {
 
   return React.createElement(
     Modal,
-    { open, onClose, title: "승인완료 상세보기 모달" },
+    { open, onClose, title: "상품 상세 검토" },
     React.createElement(React.Fragment, null, grid, bottom)
   );
 }
