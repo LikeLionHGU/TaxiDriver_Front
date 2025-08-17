@@ -1,3 +1,23 @@
+/* 공통: 버튼 리셋 (UA 스타일 제거) */
+.card {
+  appearance: none;           /* 브라우저 기본 버튼 스타일 제거 */
+  -webkit-appearance: none;
+  border: 1px solid;          /* 먼저 두께 고정 */
+  border-color: var(--border-color, #D9D9D9);  /* ✅ 올바른 var 사용 */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--bg, #fff);
+  box-sizing: border-box;     /* ✅ 보더/패딩 포함 */
+  width: 100%;                /* ✅ 그리드 셀 꽉 채우기 */
+  min-height: 72px;           /* ✅ 높이 고정(원하면 조절) */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              background-color 0.2s ease, border-color 0.2s ease;
+}
+
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -5,37 +25,81 @@
   margin-bottom: 2rem;
 }
 
-.card {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 10px;
-  border: 1px solid var(--, #D9D9D9);
-  gap: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* === Active Variants === */
+
+/* 전체보기(active) */
+.cardActiveAll {
+  --border-color: #2775E7;
+  background:
+    linear-gradient(180deg, rgba(219,236,250,0) 25.77%, rgba(174,218,255,0.7) 136.54%),
+    rgba(255,255,255,0.85);
+  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+}
+
+/* 검토중(active) */
+.cardActivePending {
+  --border-color: #D9D9D9;
+  background:
+    linear-gradient(0deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%),
+    linear-gradient(0deg, #E990FF 0%, #FFF 67.3%);
+}
+
+/* 승인완료(active)
+   ⚠️ fill/stroke는 div에 적용되지 않으니 카드 대신 '아이콘 이미지'에 drop-shadow 적용 */
+.cardActiveApproved {
+  --border-color: #D9D9D9;
+  background:
+    linear-gradient(180deg, rgba(219,236,250,0) 25.77%, rgba(174,218,255,0.7) 136.54%),
+    rgba(255,255,255,0.85);
+  box-shadow: 0 4px 7.2px rgba(0,0,0,0.07);
+}
+
+/* 승인거부(active) */
+.cardActiveRejected {
+  --border-color: #D9D9D9;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.85) 40.2%, rgba(255,222,230,0.85) 121.19%);
+  box-shadow: 1.793px 0 8.068px 1.793px rgba(0,0,0,0.02);
 }
 
 .icon {
   font-size: 1.5rem;
   width: 40px;
   height: 40px;
+  min-width: 40px;            /* ✅ 아이콘 없는 카드로 인한 흔들림 방지 */
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255,255,255,0.8);
   border-radius: 8px;
+}
+
+.iconImage {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+/* 승인완료일 때 아이콘에만 드롭섀도우 주고 싶다면 */
+.cardActiveApproved .iconImage {
+  filter: drop-shadow(0 4px 7.2px rgba(0,0,0,0.07));
 }
 
 .content {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
-  flex-grow: 1;                   
+  justify-content: space-between;
+  flex-grow: 1;
 }
 
 .label {
