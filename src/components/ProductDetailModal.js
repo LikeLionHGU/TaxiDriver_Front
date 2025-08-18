@@ -45,7 +45,7 @@ export default function ProductDetailModal({ open, onClose, product }) {
     h(
       "section",
       { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "AI 분류결과(판별)"),
+      h("h3", { className: styles.cardTitle }, "AI 분석결과(질병)"),
       h(
         "div",
         { className: styles.scoreWrap },
@@ -58,7 +58,7 @@ export default function ProductDetailModal({ open, onClose, product }) {
     h(
       "section",
       { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "AI 판단 근거"),
+      h("h3", { className: styles.cardTitle }, "AI 판정 근거"),
       h(
         "p",
         { className: styles.note },
