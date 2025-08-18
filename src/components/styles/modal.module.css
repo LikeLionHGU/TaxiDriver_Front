@@ -49,6 +49,61 @@
 .photoArea { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; min-height:200px;}
 .photoArea img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; }
 
+/* AI 판정 근거 카드 전체 회색 */
+.noteCard {
+  background: #F7F7F7;          /* 카드 전체 회색 */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 안의 텍스트는 배경 없이 */
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  background: transparent; /*  회색 중첩 방지 */
+}
+
+/* 반려 사유 입력 */
+.rejectReasonInput {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 모달 본문 맨 아래 확인 버튼 래퍼 */
+.modalFooter {
+  margin-top: 8px;
+}
+
+/* 확인 버튼 (전체폭) */
+.confirmBtn {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #2775E7; /* 필요하면 #07F 로 변경 가능 */
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.confirmBtn:active {
+  transform: translateY(0.5px);
+}
+
+
 /* 여기서 꼭 닫기! */
 .photoPlaceholder {
   min-height:200px;
@@ -91,6 +146,30 @@
   gap: 8px;         /* 제목과 카드 간격 */
   height:100%;
 }
+
+/* 회색 카드(전체 배경) */
+.cardGray {
+  background: #F7F7F7;        /* 카드 전체 회색 */
+  border-color: #ececec;      /* 테두리 살짝 연함 */
+  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+}
+
+/* 카드 안 텍스트는 배경 투명 */
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  background: transparent;
+}
+
+/* (선택) 소제목 */
+.noteTitle {
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #111827;
+}
+
 
 /* 전체 폭을 써야 하는 아이템(예: 상품 사진) */
 .cardGroupFull {
@@ -155,6 +234,112 @@
   font-size: 18px;
   color: #444444;
 }
+
+/* 거부 상태 라벨/점수 */
+.rejectBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #444444;
+  font-weight: 800;
+  font-size: 18px;
+}
+.rejectValue {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2775E7;
+}
+
+/* 붉은 진행바 */
+.progressDanger { background: #F0F4FF; }
+.progressDanger span {
+  background: linear-gradient(90deg, #ff7474 0%, #d92d20 100%);
+}
+
+/* 반려 사유 박스 */
+.rejectReasonBox {
+  background: #fff3f3;
+  border: 1px solid #ffd6d9;
+  border-radius: 8px;
+  padding: 12px;
+}
+.rejectReasonTitle {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  color: #b4232c;
+}
+.rejectReasonText {
+  margin-top: -20px;
+  min-height:200px;
+  color: #6b7280;
+  background:#fff;
+  line-height: 1.5;
+}
+
+/* AI 판정 근거 카드 전체 회색 */
+.noteCard {
+  background: #F7F7F7;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  background: transparent;
+}
+
+/* 반려 사유 입력 */
+.rejectReasonInput {
+  width: 100%;
+  min-height: 160px;    /* 칸 넉넉하게 */
+  resize: vertical;     /* 필요시 세로 리사이즈 가능 */
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  background: #fff;
+  outline: none;
+}
+.rejectReasonInput:focus {
+  border-color: #077fff;
+  box-shadow: 0 0 0 3px rgba(7,127,255,0.15);
+}
+
+/* 버튼 영역 */
+.rejectReasonActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.rejectReasonBtnPrimary {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #077fff;
+  background: #077fff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rejectReasonBtnPrimary:hover { filter: brightness(0.95); }
+
+.rejectReasonBtnGhost {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rejectReasonBtnGhost:hover { background: #f9fafb; }
 
 
 
