@@ -1,11 +1,18 @@
 :root{
+  font-family: 'Jal_Haru', 'Noto Sans KR';
   color: #525252;
-  font-family: "Noto Sans KR";
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 
+}
+
+@font-face {
+    font-family: 'Jal_Haru';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Jal_Haru.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 body {

@@ -1,13 +1,14 @@
 import React from "react";
-import styles from "../styles/Landing.module.css";
+import styles from "../styles/SalesSettlement.module.css";
+
+import SaleTable from "../components/SaleTable";
 
 
 function SalesSettlement() {
   return (
     <>
-      <div className={styles.main}>
-        SalesSettlement page
-      </div>
+        <SaleTable />
+
     </>
   );
 }

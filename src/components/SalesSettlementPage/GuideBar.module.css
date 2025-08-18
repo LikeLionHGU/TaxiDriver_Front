@@ -1,0 +1,16 @@
+.guideBarContainer{
+  width: 100%;
+  height: 74px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border-radius: 10px;
+  background: #FFF;
+
+  /* 아이콘 그림자 */
+  box-shadow: 1.793px 0 8.068px 1.793px rgba(0, 0, 0, 0.02);
+
+  margin-top: 40px;
+}

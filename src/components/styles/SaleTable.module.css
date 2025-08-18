@@ -7,3 +7,9 @@
   height: 88px;
   background: linear-gradient(0deg, rgba(246, 252, 255, 0.39) 28.73%, rgba(196, 233, 251, 0.39) 100%);
 }
+
+.pageContainer{
+  padding: 0px 150px 112px 150px;
+  box-sizing: border-box;
+}
+
