@@ -3,6 +3,7 @@ import styles from "./styles/SaleTable.module.css";
 
 import PageHeader from "./SalesSettlementPage/PageHeader";
 import GuideBar from "./SalesSettlementPage/GuideBar";
+import MainTable from "./SalesSettlementPage/MainTable";
 
 
 function SaleTable() {
@@ -14,6 +15,7 @@ function SaleTable() {
         <div className={styles.pageContainer}>
           <PageHeader />
           <GuideBar />
+          <MainTable />
         </div>
       </div>
     </>
