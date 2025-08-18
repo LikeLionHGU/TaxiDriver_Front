@@ -27,8 +27,8 @@ export default function ProductDetailModal({ open, onClose, product }) {
     cardBlock(
       "기본 정보",
       h("ul", { className: styles.kv },
-        kvItem("이름", product.name),
-        kvItem("원산지", product.origin),
+        kvItem("어종", product.name),
+        kvItem("포장단위", product.origin),
         kvItem("어획일", product.caughtAt || "2025.05.14"),
         kvItem("어획지역", product.area || "동해 북부 일대")
       )
