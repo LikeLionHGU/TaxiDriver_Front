@@ -6,7 +6,7 @@ export const ROLES = {
 
 export const NAV_BY_ROLE = {
   [ROLES.AMIN]: [
-    { key: "status",           label: "등록 현황",   href: "/status" },
+    { key: "status",           label: "등록 현황",   href: "/producermain" },
     { key: "register-fish",    label: "수산물 등록", href: "/register" },
     { key: "auction-status",   label: "경매 상태",   href: "/auction" },
     { key: "settlement",       label: "판매 정산",   href: "/sales-settlement" },
