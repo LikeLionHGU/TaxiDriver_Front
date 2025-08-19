@@ -4,6 +4,7 @@ import './App.css';
 import Landing from "./pages/Landing";
 import PurchaseHistoryPage from "./pages/Purchasehistory";
 import Producermain from "./pages/Producermain";
+import Produceregistar from "./pages/Produceregistar";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
