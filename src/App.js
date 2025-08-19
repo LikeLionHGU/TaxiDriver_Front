@@ -18,6 +18,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
           <Route path="/status" element={<Producermain />} />
+          <Route path="/register" element={<Produceregistar />} />
         </Routes>
         <Footer />
       </div>
