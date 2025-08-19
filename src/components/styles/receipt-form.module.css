@@ -1,0 +1,418 @@
+.container {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.iconContainer {
+  width: 32px;
+  height: 32px;
+  background-color: #dbeafe;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconText {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.title {
+  color: #000;
+  text-align: center;
+  font-family: JalpullineunharuOTF;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-left:-220px;
+  margin-bottom:-15px;
+  margin-top:50px;
+}
+
+.subtitle {
+  font-size: 20px;
+  color: #6b7280;
+  margin-left: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: #444;
+  font-family: "Noto Sans KR";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-left: -600px;
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 16px;
+  height: 16px;
+}
+
+.input {
+  width: 233px;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  margin-left:-110px;
+}
+
+.input:focus {
+  ring: 2px solid #3b82f6;
+  border-color: transparent;
+}
+
+.searchInput {
+  padding-left: 30px;
+  margin-left:-180px;
+}
+
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.categoryButton {
+  padding: 4px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.categoryButton:hover {
+  background-color: #f9fafb;
+}
+
+.categoryButton:focus {
+  outline: none;
+  ring: 2px solid #3b82f6;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .fieldGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.select:focus {
+  ring: 2px solid #3b82f6;
+  border-color: transparent;
+}
+
+.uploadArea {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+}
+
+.uploadText {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.chatSection {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chatBubbleContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.chatBubble {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 24px;
+  max-width: 384px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.chatDot {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 auto 4px;
+}
+
+.chatInfo {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.chatInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chatInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.chatInput:focus {
+  ring: 2px solid #3b82f6;
+  border-color: transparent;
+}
+
+.sendButton {
+  padding: 8px 12px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sendButton:hover {
+  background-color: #2563eb;
+}
+
+.sendButton:focus {
+  outline: none;
+  ring: 2px solid #1d4ed8;
+}
+
+.sendIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.questionButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.questionButton:hover {
+  background-color: #eff6ff;
+}
+
+.questionButton:focus {
+  outline: none;
+  ring: 2px solid #3b82f6;
+}
+
+.priceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.priceTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.priceList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.priceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.priceValue {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.priceDivider {
+  margin: 12px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+.totalItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.totalValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.totalNote {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 8px;
+}
+
+.actionSection {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.cancelButton {
+  padding: 12px 32px;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #f9fafb;
+}
+
+.cancelButton:focus {
+  outline: none;
+  ring: 2px solid #6b7280;
+}
+
+.submitButton {
+  padding: 12px 32px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitButton:hover {
+  background-color: #1d4ed8;
+}
+
+.submitButton:focus {
+  outline: none;
+  ring: 2px solid #1d4ed8;
+}
