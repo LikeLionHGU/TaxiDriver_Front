@@ -11,7 +11,7 @@ export default function Dashboard() {
       applicationDate: "2024/01/15",
       reviewer: "이영희",
       approvalDate: "2024/01/16",
-      status: "승인 완료",
+      status: "승인",
       progress: 100,
     },
     {
@@ -20,7 +20,7 @@ export default function Dashboard() {
       applicationDate: "2024/01/14",
       reviewer: "최수진",
       approvalDate: "-",
-      status: "승인 대기",
+      status: "검토요청",
       progress: 60,
     },
     {
@@ -29,7 +29,7 @@ export default function Dashboard() {
       applicationDate: "2024/01/13",
       reviewer: "김대호",
       approvalDate: "2024/01/14",
-      status: "승인 완료",
+      status: "승인",
       progress: 100,
     },
     {
@@ -38,7 +38,7 @@ export default function Dashboard() {
       applicationDate: "2024/01/12",
       reviewer: "박소영",
       approvalDate: "-",
-      status: "승인 거부",
+      status: "승인거부",
       progress: 30,
     },
   ]
@@ -46,15 +46,22 @@ export default function Dashboard() {
   const [activeCard, setActiveCard] = useState("all")
 
   const stats = {
-    pending: requestData.filter((item) => item.status === "승인 대기").length,
-    approved: requestData.filter((item) => item.status === "승인 완료").length,
-    rejected: requestData.filter((item) => item.status === "승인 거부").length,
+    pending: requestData.filter((item) => item.status === "검토요청").length,
+    approved: requestData.filter((item) => item.status === "승인").length,
+    rejected: requestData.filter((item) => item.status === "승인거부").length,
   }
 
   const handleCardSelect = (key) => {
     setActiveCard(key)
-    // You can add filtering logic here based on the selected key
   }
+
+  const filteredData = requestData.filter((item) => {
+    if (activeCard === "all") return true
+    if (activeCard === "pending") return item.status === "검토요청"
+    if (activeCard === "approved") return item.status === "승인"
+    if (activeCard === "rejected") return item.status === "승인거부"
+    return true
+  })
 
   return (
     <div className={styles.container}>
@@ -84,23 +91,42 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {requestData.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.applicant}</td>
-                  <td>{item.applicationDate}</td>
-                  <td>{item.reviewer}</td>
-                  <td>{item.approvalDate}</td>
+              {filteredData.map((item) => (
+                <tr key={item.id} className={styles.row}>
                   <td>
-                    <div className={styles.statusCell}>
+                    <div className={styles.cellPrimary}>{item.id}</div>
+                  </td>
+                  <td>
+                    <div className={styles.cell}>{item.applicant}</div>
+                  </td>
+                  <td>
+                    <div className={styles.cell}>{item.applicationDate}</div>
+                  </td>
+                  <td>
+                    <div className={styles.cell}>{item.reviewer}</div>
+                  </td>
+                  <td>
+                    <div className={styles.cell}>{item.approvalDate}</div>
+                  </td>
+                  <td>
+                    <div className={`${styles.cell} ${styles.statusCell}`}>
                       <div className={styles.progressContainer}>
-                        <div className={styles.progressBar} style={{ width: `${item.progress}%` }}></div>
+                        <div
+                          className={styles.progressBar}
+                          style={{ width: `${item.progress}%` }}
+                        />
                       </div>
-                      <span className={`${styles.badge} ${styles[item.status.replace(" ", "")]}`}>{item.status}</span>
+                      <span
+                        className={`${styles.badge} ${
+                          styles[item.status.replace(" ", "")]
+                        }`}
+                      >
+                        {item.status}
+                      </span>
                     </div>
                   </td>
                   <td>
-                    <button className={styles.actionButton}>상세보기</button>
+                    <button className={styles.ghostButton}>상세보기</button>
                   </td>
                 </tr>
               ))}

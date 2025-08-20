@@ -56,10 +56,9 @@
 }
 
 .cardReviewActive{
-    --border-color: #D9D9D9;
-    background:
-        linear-gradient(0deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%),
-        linear-gradient(0deg, #E990FF 0%, #FFF 67.3%);
+    border-radius: 10px;
+    border: 1px solid var(--, #D9D9D9);
+    background: var(--, linear-gradient(180deg, rgba(219, 236, 250, 0.00) 25.77%, rgba(174, 218, 255, 0.70) 136.54%), rgba(255, 255, 255, 0.85));
 }
 
 /* 승인완료(active)
