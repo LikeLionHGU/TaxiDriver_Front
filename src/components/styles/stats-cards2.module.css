@@ -35,6 +35,11 @@
   outline-offset: 2px;
 }
 
+/* "전체보기" 버튼 기본 스타일 */
+.cardAll {
+  border-color: 1px solid var(--, #2775E7);;
+}
+
 /* === Active Variants === */
 
 /* 전체보기(active) */
