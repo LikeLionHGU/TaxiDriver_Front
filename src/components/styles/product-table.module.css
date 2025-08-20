@@ -160,8 +160,19 @@
 }
 
 .statusRejected {
-  background: #FF9B9B;
+  background: #E5E5E5;
   border-radius: 26.871px;
+}
+
+.reviewBtn {
+  border-radius: 26.871px;
+  border: 1px solid #2563EB;
+}
+
+.reviewBtn:hover {
+  background: #2775E7;
+  border-color: #2775E7;
+  color: white;
 }
 
 .emptyState {

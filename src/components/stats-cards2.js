@@ -31,7 +31,7 @@ export default function StatsCards({ stats, onSelect, activeKey }) {
           <button
             key={card.key}
             type="button"
-            className={`${styles.card} ${activeClass}`}
+            className={`${styles.card} ${card.key === 'all' ? styles.cardAll : ''} ${activeClass}`}
             onClick={() => onSelect?.(card.key)}
           >
             {card.icon && (
