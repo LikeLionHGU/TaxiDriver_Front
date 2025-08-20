@@ -22,7 +22,7 @@ export default function StatsCards({ stats, onSelect, activeKey }) {
         let activeClass = ""
         if (activeKey === card.key) {
           if (card.key === "all") activeClass = styles.cardActiveAll
-          if (card.key === "review") activeClass = styles.cardReviewActive
+          if (card.key === "pending") activeClass = styles.cardActivePending
           if (card.key === "approved") activeClass = styles.cardActiveApproved
           if (card.key === "rejected") activeClass = styles.cardActiveRejected
         }

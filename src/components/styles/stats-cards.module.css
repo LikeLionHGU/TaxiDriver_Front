@@ -47,8 +47,13 @@
  box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
 }
 
-/* 검토중(active) */
+/* 검토요청(active) */
 .cardActivePending {
+  background: linear-gradient(to bottom, #ffffff, #def6ff);
+}
+
+/* 검토중(active) */
+.cardReviewActive {
   --border-color: #D9D9D9;
   background:
     linear-gradient(0deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%),
