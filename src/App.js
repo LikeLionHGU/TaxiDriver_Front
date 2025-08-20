@@ -4,6 +4,7 @@ import './App.css';
 import Landing from "./pages/Landing";
 import PurchaseHistoryPage from "./pages/Purchasehistory";
 import Producermain from "./pages/Producermain";
+import SalesSettlement from "./pages/SalesSettlement";
 import Produceregistar from "./pages/Produceregistar";
 import Review from "./pages/Review";
 
@@ -18,7 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
-          <Route path="/producermain" element={<Producermain />} />
+          <Route path="/sales-settlement" element={<SalesSettlement />} />
+          <Route path="/status" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
           <Route path="/review" element={<Review />} />
         </Routes>

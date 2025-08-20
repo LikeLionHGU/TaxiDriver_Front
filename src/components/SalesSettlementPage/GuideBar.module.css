@@ -1,0 +1,84 @@
+.guideBarContainer{
+  width: 100%;
+  height: 74px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border-radius: 10px;
+  background: #FFF;
+
+  /* 아이콘 그림자 */
+  box-shadow: 1.793px 0 8.068px 1.793px rgba(0, 0, 0, 0.02);
+
+  margin-top: 40px;
+}
+
+.icon{
+  margin-right: 10px;
+}
+
+.bar{
+  height: 30px;
+  border-radius: 10px;
+  border: 1px #D9D9D9 solid;
+
+  /* margin-left: 46px;
+  margin-right: 46px; */
+}
+
+.guideBarTitle{
+  color: #164181;
+  font-size: 18px;
+  font-weight: 600;
+
+  margin-left: 33px;
+}
+
+.guideBarBoldTitle{
+  color: #164181;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.guideBarText{
+  color: #444;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.guideBarBoldText{
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.sideLayout{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 32px;
+}
+
+.left{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.right{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.w2  { flex: 1.8   1 0; }
+.w25 { flex: 2.5 1 0; }
+.w3  { flex: 3.2   1 0; }
