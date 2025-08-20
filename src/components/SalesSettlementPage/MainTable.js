@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./MainTable.module.css";
 
+import MainTableBox from "../../components/SalesSettlementPage/MainTableBox";
+
 
 function MainTable() {
 
@@ -42,7 +44,7 @@ function MainTable() {
         </div>
 
         <div className={styles.tableContent}>
-
+          <MainTableBox />
         </div>
 
       </div>
