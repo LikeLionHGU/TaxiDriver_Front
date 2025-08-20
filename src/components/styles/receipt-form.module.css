@@ -91,6 +91,7 @@
 
 .searchContainer {
   position: relative;
+  width: 100%;
 }
 
 .searchIcon {
@@ -120,8 +121,8 @@
 }
 
 .searchInput {
-  padding-left: 30px;
-  margin-left:-180px;
+  padding-left: 36px;
+  margin-left:-420px;
 }
 
 .categoryButtons {
@@ -170,11 +171,11 @@
 }
 
 .toggleCard {
-  width: 260px;                 /* 필요하면 조절 */
+  width: 260px;
   padding: 16px 18px;
   border-radius: 12px;
-  border: 1px solid #E5E7EB;    /* 기본 회색 테두리 */
-  background: #fff;             /* 기본 흰 배경 */
+  border: 1px solid #E5E7EB;
+  background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   text-align: left;
   cursor: pointer;
@@ -182,53 +183,6 @@
 }
 
 .toggleCard:hover {
-  border-color: #C7D2FE;        /* hover 살짝 파랑 */
-}
-
-.toggleActive {
-  border-color: #2563EB;        /* 파랑 테두리 */
-  background: #F1F5FF;          /* 아주 연한 파랑 배경 */
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-}
-
-.toggleTitle {
-  display: block;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 4px;
-}
-
-.toggleDesc {
-  display: block;
-  font-size: 12px;
-  color: #6B7280;
-}
-
-.toggleCardSmall {
-  width: 160px;          /* ← 상태 선택은 작게 */
-  padding: 14px 12px;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB;
-  background: #fff;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color .15s, background-color .15s, box-shadow .15s;
-}
-
-/* 판매 방식용 큰 카드 */
-.toggleCardLarge {
-  width: 240px;          /* ← 판매 방식은 크게 */
-  padding: 18px 16px;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB;
-  background: #fff;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color .15s, background-color .15s, box-shadow .15s;
-}
-
-.toggleCardSmall:hover,
-.toggleCardLarge:hover {
   border-color: #C7D2FE;
 }
 
@@ -251,7 +205,33 @@
   color: #6B7280;
 }
 
-/* 업로드 박스 안쪽 배치 */
+.toggleCardSmall {
+  width: 160px;
+  padding: 14px 12px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s, box-shadow .15s;
+}
+
+.toggleCardLarge {
+  width: 240px;
+  padding: 18px 16px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s, box-shadow .15s;
+}
+
+.toggleCardSmall:hover,
+.toggleCardLarge:hover {
+  border-color: #C7D2FE;
+}
+
 .uploadInner {
   display: flex;
   flex-direction: column;
@@ -273,12 +253,12 @@
   font-weight: 600;
   cursor: pointer;
 }
+
 .uploadButton:disabled {
   opacity: .6;
   cursor: not-allowed;
 }
 
-/* 큰 드랍존 느낌으로 (원래 uploadArea가 있으면 유지 + 아래 스타일 덧입힘) */
 .uploadArea {
   border: 2px dashed #d1d5db;
   border-radius: 12px;
@@ -290,7 +270,6 @@
   background: #fafafa;
 }
 
-/* 업로드 결과 썸네일 */
 .thumbGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
@@ -339,8 +318,14 @@
   font-size: 12px;
   color: #fff;
 }
-.badgeUploading { background: #2563EB; }
-.badgeError { background: #EF4444; }
+
+.badgeUploading { 
+  background: #2563EB; 
+}
+
+.badgeError { 
+  background: #EF4444; 
+}
 
 .uploadWarning {
   margin-top: 8px;
@@ -351,8 +336,6 @@
   border-radius: 8px;
   white-space: pre-line;
 }
-
-
 
 @media (min-width: 768px) {
   .fieldGrid {
@@ -374,13 +357,6 @@
 .select:focus {
   ring: 2px solid #3b82f6;
   border-color: transparent;
-}
-
-.uploadArea {
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 24px;
-  text-align: center;
 }
 
 .uploadText {
@@ -619,7 +595,7 @@
   height: 40px;
   padding: 0 16px;
   border-radius: 12px;
-  border: 1px solid #E5E7EB;   /* 기본 회색 테두리 */
+  border: 1px solid #E5E7EB;
   background: #fff;
   color: #374151;
   font-weight: 600;
@@ -636,13 +612,12 @@
 }
 
 .chipActive {
-  border: 1px solid #2563EB;    /* 활성 파랑 */
-  background: #F1F5FF;          /* 옅은 파랑 배경 */
+  border: 1px solid #2563EB;
+  background: #F1F5FF;
   color: #1D4ED8;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
-/* --- 수량 스텝퍼 --- */
 .stepper {
   display: flex;
   align-items: center;
@@ -673,4 +648,55 @@
   padding: 0 12px;
   font-size: 14px;
   outline: none;
+}
+
+/* 수정된 부분: 드롭다운 위치 정상화 */
+.autocompleteDropdown {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  width: 233px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  margin-left: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.autocompleteItem {
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.autocompleteItem:hover {
+  background-color: #f3f4f6;
+}
+
+/* 선택된 어종 표시 박스도 정상화 */
+.selectedFish {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #F1F5FF;
+  border: 1px solid #C7D2FE;
+  border-radius: 6px;
+  margin-top: 8px;
+  width: 120px;
+  margin-left: 5px;
+}
+
+.selectedFish span {
+  font-weight: 600;
+  color: #1D4ED8;
+}
+
+.selectedFish button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #9ca3af;
 }
