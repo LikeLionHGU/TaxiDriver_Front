@@ -1,12 +1,12 @@
 import React from "react";
 
-import AuctionTable from "../components/AuctionPage/AuctionTable";
+import AuctionPage from "../components/AuctionPage/AuctionPage";
 
 
 function SalesSettlement() {
   return (
     <>
-      <AuctionTable />
+      <AuctionPage />
     </>
   );
 }

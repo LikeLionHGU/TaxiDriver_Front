@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "../AuctionPage/AuctionTable.module.css";
+import styles from "../AuctionPage/AuctionPage.module.css";
 
 import PageHeader from "../SalesSettlementPage/PageHeader";
-import SelcetButton from "../AuctionPage/SelectButton";
+import SelcetButton from "./SelectButton";
 
-function SaleTable() {
+function AuctionPage() {
   return (
     <>
       <div className={styles.main}>
@@ -15,10 +15,11 @@ function SaleTable() {
             title="경매 상태"
             content="내가 등록한 상품의 경매 상태를 확인하세요."/>
           <SelcetButton />
+
         </div>
       </div>
     </>
   );
 }
 
-export default SaleTable;
+export default AuctionPage;
