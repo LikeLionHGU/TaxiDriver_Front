@@ -6,6 +6,7 @@ import PurchaseHistoryPage from "./pages/Purchasehistory";
 import Producermain from "./pages/Producermain";
 import SalesSettlement from "./pages/SalesSettlement";
 import Produceregistar from "./pages/Produceregistar";
+import Review from "./pages/Review";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -19,9 +20,9 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
           <Route path="/sales-settlement" element={<SalesSettlement />} />
-
           <Route path="/status" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
+          <Route path="/review" element={<Review />} />
         </Routes>
         <Footer />
       </div>
