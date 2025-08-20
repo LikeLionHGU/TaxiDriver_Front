@@ -1,0 +1,119 @@
+.main{
+  height:666px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+
+  /* 아이콘 그림자 */
+  box-shadow: 1.793px 0 8.068px 1.793px rgba(0, 0, 0, 0.02);
+
+  margin-top: 36px;
+}
+
+.topContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  margin-top: 42px;
+  padding: 0 36px 44px 38px;
+  box-sizing: border-box;
+
+  width:100%;
+}
+
+.dropdown{
+  width: 310px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-right: 42px;
+}
+
+.searchButton{
+  width: 146px;
+  height: 48px;
+
+  padding: 13px 40px;
+  background-color: rgba(37, 99, 235, 1);
+  border-radius: 8px;
+  box-sizing: border-box;
+
+  position: static;      /* 또는 삭제 */
+  margin-left: auto;     /* 오른쪽 끝으로 밀기 */
+  align-self: flex-end;
+}
+
+.searchButton:hover{
+  background-color: rgba(28, 78, 216, 1);
+}
+
+.searchButton span{
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.dropdownDiv{
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+
+  /* 아이콘 그림자 */
+  box-shadow: 1.793px 0 8.068px 1.793px rgba(0, 0, 0, 0.02);
+
+  margin-top: 12px;
+}
+
+.dropdownText{
+  color: #444;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tableTitle{
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding-left: 60px;
+  box-sizing: border-box;
+
+  border-top: 1px solid #D9D9D9;
+  border-bottom: 1px solid #D9D9D9;
+  background: #F9FAFB;
+}
+
+.tableTitle > span {
+  display: flex;       
+  align-items: center;       
+  justify-content: flex-start;
+  text-align: left;           
+  padding-left: 0;            
+
+  color: var(--gray, #757575);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tableTitle1{ width: 195px; }
+.tableTitle2{ width: 232px; }
+.tableTitle3{ width: 304px; }
+.tableTitle4{ width: 276px; }
+.tableTitle5{ width: 134px; }
+
+.tableContent{
+  width:100%;
+}
