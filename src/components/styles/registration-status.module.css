@@ -103,6 +103,62 @@
   animation: spin 1s linear infinite;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pageBtn {
+  width: 41.708px;
+  height: 41.708px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* 활성 페이지 */
+.activePage {
+  border: 1px solid #2563EB;
+  background: #2563EB;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 비활성 페이지 */
+.inactivePage {
+  border-radius: 8px;
+  border: 1px solid #D9D9D9;
+  color: #374151;
+}
+
+.navBtn {
+  border-radius: 8px;
+  border: 1px solid #D9D9D9;
+  color: #374151;
+}
+
+.navBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ellipsis {
+  width: 41.708px;
+  height: 41.708px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  user-select: none;
+}
+
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

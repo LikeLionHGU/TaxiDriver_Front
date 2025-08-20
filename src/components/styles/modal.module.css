@@ -7,22 +7,342 @@
 .title { margin: 0; font-size: 18px; color: #111827; font-weight: 600; }
 .closeBtn { background: transparent; border: 0; font-size: 24px; cursor: pointer;
   line-height: 1; color: #6b7280; }
-.body { padding: 16px 20px 24px; overflow: auto; background: #f7f7f7; }
-.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 16px; }
-.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
-.cardTitle { margin: 0 0 10px; font-size: 14px; color: #6b7280; font-weight: 600; }
+.body { padding: 16px 20px 24px; overflow: auto; background: #fff;scrollbar-color: #07F transparent; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; align-items: stretch;}
 .kv { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .kv li { display: flex; justify-content: space-between; gap: 12px; }
 .kv span { color: #6b7280; font-size: 14px; }
 .kv strong { color: #111827; font-size: 14px; }
-.scoreWrap { display: grid; gap: 8px; }
-.scoreLabel { color: #10b981; font-weight: 700; }
-.scoreValue { font-size: 32px; font-weight: 800; color: #1f2937; }
-.progress { height: 10px; background: #e5e7eb; border-radius: 8px; overflow: hidden; }
-.progress span { display:block; height:100%; background:#22c55e; }
-.note { margin: 0; font-size: 14px; color: #374151; line-height: 1.4; }
-.photoArea { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.scoreWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   
+  gap: 8px;
+  text-align: center;
+  width: 100%;          
+}
+
+
+/* 잘못된 CSS 변수 보정 */
+.scoreLabel { color: #444; font-weight: 700; font-size: 30px; }
+
+.scoreValue { font-size: 38px; font-weight: 800; color: #2775E7; }
+
+/* 한 번만 선언 */
+.progressWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  align-self: stretch;   /* 부모가 center여도 가로폭 유지 */
+}
+.progress { height: 24.5px; align-self: stretch;  background: #F0F4FF; border-radius: 24px; overflow: hidden; width: 100%; }
+.progress span { display:block; height:100%; background: linear-gradient(90deg, #06D75E 0%, #029F44 158.84%); }
+.progressLabels {
+  display: flex;
+  justify-content: space-between; /* 0~100 evenly 배치 */
+  font-size: 12px;
+  color: #555;
+}
+
+.note { margin: 0; font-size: 14px; color: #374151; line-height: 1.4; background: #F7F7F7; box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);}
+.photoArea { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; min-height:200px;}
 .photoArea img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; }
-.photoPlaceholder { height: 140px; display:flex; align-items:center; justify-content:center;
-  color:#9ca3af; border:1px dashed #d1d5db; border-radius:8px; background:#fafafa; }
-@media (max-width: 768px) { .grid{ grid-template-columns: 1fr; } }
+
+/* AI 판정 근거 카드 전체 회색 */
+.noteCard {
+  background: #F7F7F7;          /* 카드 전체 회색 */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 안의 텍스트는 배경 없이 */
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  background: transparent; /*  회색 중첩 방지 */
+}
+
+/* 반려 사유 입력 */
+.rejectReasonInput {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 모달 본문 맨 아래 확인 버튼 래퍼 */
+.modalFooter {
+  margin-top: 8px;
+}
+
+/* 확인 버튼 (전체폭) */
+.confirmBtn {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #2775E7; /* 필요하면 #07F 로 변경 가능 */
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.confirmBtn:active {
+  transform: translateY(0.5px);
+}
+
+
+/* 여기서 꼭 닫기! */
+.photoPlaceholder {
+  min-height:200px;
+  height: 140px;
+  display:flex; align-items:center; justify-content:center;
+  color:#9ca3af; border:1px dashed #d1d5db; border-radius:8px; background:#fafafa;
+}
+
+/* 카드 박스와 제목 */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex:1;
+}
+.cardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+.cardTitleOutside {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;  /* 제목과 카드 사이 간격 */
+}
+
+/* 제목+카드를 묶는 그리드 아이템 */
+.cardGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;         /* 제목과 카드 간격 */
+  height:100%;
+}
+
+/* 회색 카드(전체 배경) */
+.cardGray {
+  background: #F7F7F7;        /* 카드 전체 회색 */
+  border-color: #ececec;      /* 테두리 살짝 연함 */
+  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+}
+
+/* 카드 안 텍스트는 배경 투명 */
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  background: transparent;
+}
+
+/* (선택) 소제목 */
+.noteTitle {
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* 전체 폭을 써야 하는 아이템(예: 상품 사진) */
+.cardGroupFull {
+  grid-column: 1 / -1;
+}
+
+.photoPlaceholder {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  border: none;          /* 테두리 제거 */
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+
+/* 제목: 기본 margin 상단이 큼 → 0으로 */
+.cardTitleOutside {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;        /* 상하 margin 제거 */
+}
+
+/* 카드 박스 */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 기존 그리드 유지 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* 검토중 로딩 카드 */
+.pendingWrap {
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--, #D9D9D9);
+  background: var(--, linear-gradient(0deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.85) 100%), linear-gradient(0deg, #F7D5FF 0%, #FFF 67.3%));
+  box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
+  }
+
+.pendingText {
+  margin-bottom: -10px;
+  font-size: 18px;
+  color: #444444;
+}
+
+/* 거부 상태 라벨/점수 */
+.rejectBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #444444;
+  font-weight: 800;
+  font-size: 18px;
+}
+.rejectValue {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2775E7;
+}
+
+/* 붉은 진행바 */
+.progressDanger { background: #F0F4FF; }
+.progressDanger span {
+  background: linear-gradient(90deg, #ff7474 0%, #d92d20 100%);
+}
+
+/* 반려 사유 박스 */
+.rejectReasonBox {
+  background: #fff3f3;
+  border: 1px solid #ffd6d9;
+  border-radius: 8px;
+  padding: 12px;
+}
+.rejectReasonTitle {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  color: #b4232c;
+}
+.rejectReasonText {
+  margin-top: -20px;
+  min-height:200px;
+  color: #6b7280;
+  background:#fff;
+  line-height: 1.5;
+}
+
+/* AI 판정 근거 카드 전체 회색 */
+.noteCard {
+  background: #F7F7F7;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.noteText {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  background: transparent;
+}
+
+/* 반려 사유 입력 */
+.rejectReasonInput {
+  width: 100%;
+  min-height: 160px;    /* 칸 넉넉하게 */
+  resize: vertical;     /* 필요시 세로 리사이즈 가능 */
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  background: #fff;
+  outline: none;
+}
+.rejectReasonInput:focus {
+  border-color: #077fff;
+  box-shadow: 0 0 0 3px rgba(7,127,255,0.15);
+}
+
+/* 버튼 영역 */
+.rejectReasonActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.rejectReasonBtnPrimary {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #077fff;
+  background: #077fff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rejectReasonBtnPrimary:hover { filter: brightness(0.95); }
+
+.rejectReasonBtnGhost {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rejectReasonBtnGhost:hover { background: #f9fafb; }
+
+
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+}

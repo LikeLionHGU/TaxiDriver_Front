@@ -7,87 +7,92 @@ export default function ProductDetailModal({ open, onClose, product }) {
   if (!product) return null;
 
   const h = React.createElement;
+  const kvItem = (k, v) => h("li", null, h("span", null, k), h("strong", null, v));
 
-  const kvItem = (k, v) =>
-    h("li", null, h("span", null, k), h("strong", null, v));
+  //  재사용: 제목은 밖, 내용은 카드 안, 그리고 한 덩어리로 "div.cardGroup"에 담기
+  const cardBlock = (title, content, { full = false } = {}) =>
+  h(
+    "div",
+    { className: full ? `${styles.cardGroup} ${styles.cardGroupFull}` : styles.cardGroup },
+    h("h3", { className: styles.cardTitleOutside }, title),
+    h("section", { className: styles.card }, content)
+  );
+
 
   const grid = h(
     "div",
     { className: styles.grid },
+
     // 기본 정보
-    h(
-      "section",
-      { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "기본 정보"),
-      h(
-        "ul",
-        { className: styles.kv },
-        kvItem("이름", product.name),
-        kvItem("원산지", product.origin),
+    cardBlock(
+      "기본 정보",
+      h("ul", { className: styles.kv },
+        kvItem("어종", product.name),
+        kvItem("포장단위", product.origin),
         kvItem("어획일", product.caughtAt || "2025.05.14"),
         kvItem("어획지역", product.area || "동해 북부 일대")
       )
     ),
-    // 가격 정보
-    h(
-      "section",
-      { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "가격정보"),
-      h(
-        "ul",
-        { className: styles.kv },
+
+    // 가격정보
+    cardBlock(
+      "가격정보",
+      h("ul", { className: styles.kv },
         kvItem("최저 수락가", `₩${product.price.toLocaleString()}`),
         kvItem("어제 시세", `₩${(product.yesterday || 33000).toLocaleString()}`),
         kvItem("7일 평균", `₩${(product.avg7d || 31500).toLocaleString()}`)
       )
     ),
-    // AI 점수
-    h(
-      "section",
-      { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "AI 분류결과(판별)"),
-      h(
-        "div",
-        { className: styles.scoreWrap },
+
+    // AI 분석결과(질병)
+    cardBlock(
+      "AI 분석결과(질병)",
+      h("div", { className: styles.scoreWrap },
         h("div", { className: styles.scoreLabel }, "정상"),
         h("div", { className: styles.scoreValue }, String(product.aiScore || 91.3)),
-        h("div", { className: styles.progress }, h("span", { style: { width: "91%" } }))
+        h("div", { className: styles.progressWrap },
+        h("div", { className: styles.progress },
+        h("span", { style: { width: "91%" } })   //  실제 진행률
+    ),
+        h("div", { className: styles.progressLabels },
+        ["0", "25", "50", "75", "100"].map((label, i) =>
+        h("span", { key: i }, label)
+    )
+  )
+)
+
       )
     ),
-    // AI 판단 근거
-    h(
-      "section",
-      { className: styles.card },
-      h("h3", { className: styles.cardTitle }, "AI 판단 근거"),
-      h(
-        "p",
-        { className: styles.note },
-        "형태·색채의 기저값 범위에 정상으로 분류. 외관의 균일성, 표면 광택 정도, 손상 여부 등 항목이 정상 범위에 해당합니다."
+
+    // AI 판정 근거
+    cardBlock(
+      "AI 판정 근거",
+      h("p", { className: styles.note },
+        "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다."
       )
     )
   );
 
-  const photos =
-    product.photos && product.photos.length
-      ? product.photos.map((src, i) =>
-          React.createElement("img", {
-            key: i,
-            src,
-            alt: `${product.name} 사진 ${i + 1}`,
-          })
-        )
-      : React.createElement("div", { className: styles.photoPlaceholder }, "이미지가 없습니다");
+  // 문구 없이 빈 박스만 보여주기
+const hasPhotos = Array.isArray(product.photos) && product.photos.length > 0;
 
-  const bottom = React.createElement(
-    "section",
-    { className: styles.card },
-    React.createElement("h3", { className: styles.cardTitle }, "상품 사진"),
-    React.createElement("div", { className: styles.photoArea }, photos)
-  );
+const photos = hasPhotos
+  ? product.photos.map((src, i) =>
+      h("img", { key: i, src, alt: `${product.name} 사진 ${i + 1}` })
+    )
+  : null;   // 아예 렌더링하지 않음
 
-  return React.createElement(
+
+
+  const bottom = cardBlock(
+  "상품 사진",
+  h("div", { className: styles.photoArea }, photos),
+  { full: true }   // 한 줄 전체 사용
+);
+
+  return h(
     Modal,
-    { open, onClose, title: "승인완료 상세보기 모달" },
-    React.createElement(React.Fragment, null, grid, bottom)
+    { open, onClose, title: "상품 상세 검토" },
+    h(React.Fragment, null, grid, bottom)
   );
 }
