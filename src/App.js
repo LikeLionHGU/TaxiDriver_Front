@@ -6,6 +6,7 @@ import PurchaseHistoryPage from "./pages/Purchasehistory";
 import Producermain from "./pages/Producermain";
 import SalesSettlement from "./pages/SalesSettlement";
 import Produceregistar from "./pages/Produceregistar";
+import Auction from "./pages/Auction";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -22,6 +23,8 @@ function App() {
 
           <Route path="/status" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
+          <Route path="/auction" element={<Auction />} />
+
         </Routes>
         <Footer />
       </div>
