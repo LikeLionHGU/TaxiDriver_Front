@@ -168,8 +168,7 @@
 .toggleGroup {
   display: flex;
   gap: 16px;
-}
-
+}
 .toggleCard {
   width: 260px;
   padding: 16px 18px;
@@ -699,4 +698,33 @@
   font-size: 16px;
   cursor: pointer;
   color: #9ca3af;
+}
+
+.addMoreImagesButton {
+  width: 96px; /* Same as .thumb width */
+  height: 96px; /* Same as .thumb height */
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addMoreImagesButton:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Adjust thumbGrid to accommodate the add button */
+.thumbGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+  align-items: center; /* Align items vertically in the grid */
 }
