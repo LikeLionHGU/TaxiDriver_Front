@@ -1,12 +1,11 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect } from 'react';
 import styles from "./styles/receipt-form.module.css"
 import fishIcon from "../assets/수산물.svg"
+import fishSpeciesData from '../data/fishSpecies.json';
 
-const fishList = [
-  "광어", "고등어", "오징어", "갈치", "우럭", "농어", "참돔", "감성돔", "돌돔", "방어", "부시리", "전어", "숭어", "멸치", "정어리", "꽁치", "삼치", "대구", "명태", "조기", "민어", "병어", "준치", "아귀", "복어", "장어", "꼼장어", "문어", "낙지", "주꾸미", "소라", "전복", "홍합", "가리비", "꼬막", "바지락", "키조개", "해삼", "멍게", "성게", "새우", "게", "꽃게", "킹크랩", "대게", "랍스터"
-];
+const fishList = fishSpeciesData;
 
 const HANGUL_START_CODE = 44032; // '가'
 const CHOSUNG_LIST = [
@@ -396,68 +395,79 @@ export function ReceiptForm() {
                 onDragOver={onDragOver}
                 onDrop={onDrop}
               >
-                <div className={styles.uploadInner}>
-                  <div className={styles.uploadIcon} aria-hidden>⤴</div>
-                  <p className={styles.uploadText}>
-                    수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
-                    JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
-                  </p>
+                {images.length === 0 && (
+                  <div className={styles.uploadInner}>
+                    <div className={styles.uploadIcon} aria-hidden>⤴</div>
+                    <p className={styles.uploadText}>
+                      수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
+                      JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
+                    </p>
 
-                  <button
-                    type="button"
-                    className={styles.uploadButton}
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={images.length >= MAX_FILES}
-                  >
-                    파일 선택하기
-                  </button>
+                    <button
+                      type="button"
+                      className={styles.uploadButton}
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={images.length >= MAX_FILES}
+                    >
+                      파일 선택하기
+                    </button>
 
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    hidden
-                    accept="image/jpeg,image/png"
-                    multiple
-                    onChange={onPick}
-                  />
-                </div>
-              </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      hidden
+                      accept="image/jpeg,image/png"
+                      multiple
+                      onChange={onPick}
+                    />
+                  </div>
+                )}
 
-              {uploadMessage && (
-                <p className={styles.uploadWarning}>{uploadMessage}</p>
-              )}
-
-              {images.length > 0 && (
-                <div className={styles.thumbGrid}>
-                  {images.map(img => (
-                    <div key={img.url} className={styles.thumb}>
-                      <img src={img.url} alt="" className={styles.thumbImg} />
+                {images.length > 0 && (
+                  <div className={styles.thumbGrid}>
+                    {images.map(img => (
+                      <div key={img.url} className={styles.thumb}>
+                        <img src={img.url} alt="" className={styles.thumbImg} />
+                        <button
+                          type="button"
+                          className={styles.thumbRemove}
+                          onClick={() => removeImage(img.url)}
+                          aria-label="삭제"
+                        >
+                          ×
+                        </button>
+                        {img.status !== "done" && (
+                          <span
+                            className={
+                              img.status === "uploading"
+                                ? styles.badgeUploading
+                                : styles.badgeError
+                            }
+                          >
+                            {img.status === "uploading" ? "업로드 중…" : "실패"}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    {images.length < MAX_FILES && (
                       <button
                         type="button"
-                        className={styles.thumbRemove}
-                        onClick={() => removeImage(img.url)}
-                        aria-label="삭제"
+                        className={styles.addMoreImagesButton}
+                        onClick={() => fileInputRef.current?.click()}
                       >
-                        ×
+                        +
                       </button>
-                      {img.status !== "done" && (
-                        <span
-                          className={
-                            img.status === "uploading"
-                              ? styles.badgeUploading
-                              : styles.badgeError
-                          }
-                        >
-                          {img.status === "uploading" ? "업로드 중…" : "실패"}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    )}
+                  </div>
+                )}
+
+                {uploadMessage && (
+                  <p className={styles.uploadWarning}>{uploadMessage}</p>
+                )}
+              </div>
             {/* ───────────────────────────────────────────────────────*/}
           </div>
+          </div> {/* <-- Added missing closing tag for .formSection */}
 
           {/* Right - 가격 정보 */}
           <div className={styles.priceSection}>
