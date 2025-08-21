@@ -1,73 +1,120 @@
 "use client"
 
 import { useState, useEffect} from "react"
+
 import StatsCards from "./stats-cards"
-import ProductTable from "./product-table"
+import ProducerMainTable from "./producermain-table"
 import styles from "./styles/registration-status.module.css"
 import regIconUrl from "../assets/registar.svg"
 
 const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 }
 const MOCK = {
-  stats: { pending: 3, approved: 2, rejected: 1 },
-  products: [
-    { id: 1, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "pending" },
-    { id: 2, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "approved" },
-    { id: 3, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "approved" },
-    { id: 4, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "rejected" },
-  ],
+    stats: { pending: 2, approved: 2, rejected: 1 },
+    products: [
+        { id: 1, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "pending", registrationDate: "2025-08-20" },
+        { id: 2, name: "광어", category: "완도", weight: "10kg", testResult: "", price: 80000, origin: "이영희(어민 정보 추가)", status: "approved", registrationDate: "2025-08-15" },
+        { id: 3, name: "오징어", category: "주문진", weight: "50kg", testResult: "", price: 250000, origin: "박준호(어민 정보 추가)", status: "approved", registrationDate: "2025-07-25" },
+        { id: 4, name: "고등어", category: "부산", weight: "30kg", testResult: "", price: 120000, origin: "최유리(어민 정보 추가)", status: "rejected", registrationDate: "2025-05-10" },
+    ],
 }
 
 export default function RegistrationStatus() {
-  const [data, setData] = useState(MOCK)
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState("all")
+    const [data, setData] = useState(MOCK)
+    const [loading, setLoading] = useState(true)
+    const [activeTab, setActiveTab] = useState("all")
+    const [searchTerm, setSearchTerm] = useState("")
+    const [selectedPeriod, setSelectedPeriod] = useState("기간 선택")
+    const [page, setPage] = useState(1)
+    const pageSize = 10
 
-  // 페이지네이션 상태
-  const [page, setPage] = useState(1)
-  const pageSize = 10
+    useEffect(() => {
+        // Mock 데이터를 사용하므로 fetch 로직은 주석 처리하거나 유지할 수 있습니다.
+        // fetchRegistrationData()
+        setLoading(false) // 목 데이터 바로 사용하므로 로딩 완료
+    }, [])
 
-  useEffect(() => {
-    fetchRegistrationData()
-  }, [])
+    useEffect(() => {
+        setPage(1) // 필터 조건이 변경되면 항상 첫 페이지로 이동
+    }, [activeTab, searchTerm, selectedPeriod])
 
-  // 탭 바뀌면 페이지 초기화
-  useEffect(() => { setPage(1) }, [activeTab])
-
-  const fetchRegistrationData = async () => {
-    try {
-      const res = await fetch("/api/registration-status")
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = await res.json()
-      if (!json?.products || !json?.stats) throw new Error("Bad schema")
-      setData(json)
-    } catch (e) {
-      console.warn("API 실패 → 목데이터 사용:", e)
-      setData(MOCK)
-    } finally {
-      setLoading(false)
+    const fetchRegistrationData = async () => {
+        try {
+            const res = await fetch("/api/registration-status")
+            if (!res.ok) throw new Error(`HTTP ${res.status}`)
+            const json = await res.json()
+            if (!json?.products || !json?.stats) throw new Error("Bad schema")
+            setData(json)
+        } catch (e) {
+            console.warn("API 실패 → 목데이터 사용:", e)
+            setData(MOCK)
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
-  if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>데이터를 불러오는 중...</p>
-      </div>
-    )
-  }
+    const filteredProducts = (() => {
+        let products = Array.isArray(data?.products) ? data.products : []
 
-  const stats = data?.stats || DEFAULT_STATS
-  const products = Array.isArray(data?.products) ? data.products : []
-  const filteredProducts =
-    activeTab === "all" ? products : products.filter(p => p.status === activeTab)
+        // 1. 탭 필터링
+        if (activeTab !== "all") {
+            products = products.filter(p => p.status === activeTab)
+        }
 
-  // 페이지 계산
-  const total = filteredProducts.length
-  const totalPages = Math.max(1, Math.ceil(total / pageSize))
-  const currentPage = Math.min(page, totalPages)
-  const start = (currentPage - 1) * pageSize
-  const paginated = filteredProducts.slice(start, start + pageSize)
+        // 2. 검색어 필터링 (수산물 이름)
+        if (searchTerm.trim()) {
+            products = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        }
+
+        // 3. 기간 필터링
+        if (selectedPeriod !== "기간 선택") {
+            const now = new Date()
+            products = products.filter(p => {
+                if (!p.registrationDate) return false
+                const productDate = new Date(p.registrationDate)
+                let startDate = new Date(now)
+
+                switch (selectedPeriod) {
+                    case "1주일":
+                        startDate.setDate(now.getDate() - 7)
+                        break
+                    case "1개월":
+                        startDate.setMonth(now.getMonth() - 1)
+                        break
+                    case "3개월":
+                        startDate.setMonth(now.getMonth() - 3)
+                        break
+                    case "6개월":
+                        startDate.setMonth(now.getMonth() - 6)
+                        break
+                    case "1년":
+                        startDate.setFullYear(now.getFullYear() - 1)
+                        break
+                    default:
+                        return false // 선택된 기간이 없으면 필터링하지 않음
+                }
+                return productDate >= startDate && productDate <= now
+            })
+        }
+
+        return products
+    })()
+
+    if (loading) {
+        return (
+            <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>데이터를 불러오는 중...</p>
+            </div>
+        )
+    }
+
+    const stats = data?.stats || DEFAULT_STATS
+    // 페이지 계산
+    const total = filteredProducts.length
+    const totalPages = Math.max(1, Math.ceil(total / pageSize))
+    const currentPage = Math.min(page, totalPages)
+    const start = (currentPage - 1) * pageSize
+    const paginated = filteredProducts.slice(start, start + pageSize)
 
   return (
     <div className={styles.container}>
@@ -88,7 +135,14 @@ export default function RegistrationStatus() {
       />
 
       {/* 테이블 */}
-      <ProductTable products={paginated} onStatusChange={handleStatusChange} />
+      <ProducerMainTable
+        products={paginated}
+        onStatusChange={handleStatusChange}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+      />
 
       {/* 페이지네이션 */}
       <Pagination
