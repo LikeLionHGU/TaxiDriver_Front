@@ -72,6 +72,8 @@
   color:#444; 
   font-size:18px; 
   font-weight:500; 
+  justify-content: flex-start; /* ← 왼쪽 정렬 */
+  gap: 10px;
 }
 
 .rightContainer{ 
@@ -80,6 +82,3 @@
   font-weight:600; 
 }
 
-.leftContainer img{ 
-  margin-right:12px; 
-}
