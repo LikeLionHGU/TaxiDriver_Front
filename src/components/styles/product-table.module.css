@@ -7,10 +7,11 @@
 
 .tableHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
 }
 
 .tableTitle {
@@ -162,6 +163,17 @@
 .statusRejected {
   background: #FF9B9B;
   border-radius: 26.871px;
+}
+
+.reviewBtn {
+  border-radius: 26.871px;
+  border: 1px solid #2563EB;
+}
+
+.reviewBtn:hover {
+  background: #2775E7;
+  border-color: #2775E7;
+  color: white;
 }
 
 .emptyState {

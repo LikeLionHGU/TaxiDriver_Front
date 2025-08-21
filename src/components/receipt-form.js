@@ -1,8 +1,45 @@
 "use client"
 
-import { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from 'react';
 import styles from "./styles/receipt-form.module.css"
 import fishIcon from "../assets/수산물.svg"
+import fishSpeciesData from '../data/fishSpecies.json';
+
+const fishList = fishSpeciesData;
+
+const HANGUL_START_CODE = 44032; // '가'
+const CHOSUNG_LIST = [
+    'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+];
+
+function getChosung(char) {
+    const code = char.charCodeAt(0);
+    if (code >= HANGUL_START_CODE) {
+        const chosungIndex = Math.floor((code - HANGUL_START_CODE) / 588);
+        return CHOSUNG_LIST[chosungIndex];
+    }
+    return char;
+}
+
+function consonantSearch(query, word) {
+    if (!query) {
+        return true;
+    }
+
+    // Check for direct match first
+    if (word.includes(query)) {
+        return true;
+    }
+
+    // Then check for consonant match
+    let wordChosung = "";
+    for (let i = 0; i < word.length; i++) {
+        wordChosung += getChosung(word[i]);
+    }
+
+    return wordChosung.includes(query);
+}
+
 
 export function ReceiptForm() {
   const [statusType, setStatusType] = useState("live")
@@ -11,6 +48,14 @@ export function ReceiptForm() {
   const [sizeUnit, setSizeUnit] = useState("L")       // L | M | S
   const [specPerFish, setSpecPerFish] = useState("")  // 중량판매: 마리당 kg
   const [totalCount, setTotalCount] = useState(0)
+
+  // Autocomplete state
+  const [fishQuery, setFishQuery] = useState("");
+  const [filteredFish, setFilteredFish] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedFish, setSelectedFish] = useState(null);
+  const searchContainerRef = useRef(null);
+
 
   // ── 업로드 관련 상태 ─────────────────────────────────────────────
   const MAX_FILES = 6
@@ -120,6 +165,50 @@ export function ReceiptForm() {
     })
   }
 
+  const handleFishInputChange = (e) => {
+    const query = e.target.value;
+    setFishQuery(query);
+    if (query) {
+      const results = fishList.filter(fish => consonantSearch(query, fish));
+      setFilteredFish(results);
+      setIsDropdownOpen(true);
+    } else {
+      setFilteredFish([]);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  const handleFishSelect = (fish) => {
+    setSelectedFish(fish);
+    setFishQuery("");
+    setFilteredFish([]);
+    setIsDropdownOpen(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (isDropdownOpen && filteredFish.length > 0) {
+        handleFishSelect(filteredFish[0]);
+      }
+    }
+  };
+
+  const removeSelectedFish = () => {
+    setSelectedFish(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchContainerRef]);
+
   return (
     <div className={styles.container}>
       {/* 헤더 */}
@@ -140,7 +229,7 @@ export function ReceiptForm() {
             {/* 어종 선택 */}
             <div className={styles.inputGroup}>
               <label className={styles.label}>어종 선택</label>
-              <div className={styles.searchContainer}>
+              <div className={styles.searchContainer} ref={searchContainerRef}>
                 <svg className={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -149,9 +238,31 @@ export function ReceiptForm() {
                   type="text"
                   placeholder="어종명을 입력하세요."
                   className={`${styles.input} ${styles.searchInput}`}
-                  style={{ width: "500px" }}
+                  value={fishQuery}
+                  onChange={handleFishInputChange}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  onKeyDown={handleKeyDown}
                 />
+                {isDropdownOpen && filteredFish.length > 0 && (
+                  <div className={styles.autocompleteDropdown}>
+                    {filteredFish.map((fish, index) => (
+                      <div
+                        key={index}
+                        className={styles.autocompleteItem}
+                        onClick={() => handleFishSelect(fish)}
+                      >
+                        {fish}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+              {selectedFish && (
+                <div className={styles.selectedFish}>
+                  <span>{selectedFish}</span>
+                  <button onClick={removeSelectedFish}>×</button>
+                </div>
+              )}
             </div>
 
             {/* 상태 선택 */}
@@ -204,14 +315,13 @@ export function ReceiptForm() {
                     onChange={e => setSpecPerFish(e.target.value)}
                     placeholder="예: 4 (마리당 4kg)"
                     className={styles.input}
-                    style={{ width: "100%", paddingLeft: 12 }}
+                    style={{ width: "100%", paddingLeft: 12, marginLeft:8 }}
                   />
                 </div>
 
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>총 수량</label>
                   <div className={styles.stepper}>
-                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -223,6 +333,7 @@ export function ReceiptForm() {
                       className={styles.stepperInput}
                     />
                     <button type="button" className={styles.stepperBtn} onClick={inc}>＋</button>
+                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
                   </div>
                 </div>
               </>
@@ -258,7 +369,6 @@ export function ReceiptForm() {
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>총 수량 ({unitLabel})</label>
                   <div className={styles.stepper}>
-                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -270,12 +380,13 @@ export function ReceiptForm() {
                       className={styles.stepperInput}
                     />
                     <button type="button" className={styles.stepperBtn} onClick={inc}>＋</button>
+                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
                   </div>
                 </div>
               </>
             )}
 
-            {/* ── 사진 업로드 ───────────────────────────────────────── */}
+            {/* ── 사진 업로드 ─────────────────────────────────────────*/}
             <div className={styles.inputGroup}>
               <label className={styles.label}>사진 업로드</label>
 
@@ -284,68 +395,79 @@ export function ReceiptForm() {
                 onDragOver={onDragOver}
                 onDrop={onDrop}
               >
-                <div className={styles.uploadInner}>
-                  <div className={styles.uploadIcon} aria-hidden>⤴</div>
-                  <p className={styles.uploadText}>
-                    수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
-                    JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
-                  </p>
+                {images.length === 0 && (
+                  <div className={styles.uploadInner}>
+                    <div className={styles.uploadIcon} aria-hidden>⤴</div>
+                    <p className={styles.uploadText}>
+                      수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
+                      JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
+                    </p>
 
-                  <button
-                    type="button"
-                    className={styles.uploadButton}
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={images.length >= MAX_FILES}
-                  >
-                    파일 선택하기
-                  </button>
+                    <button
+                      type="button"
+                      className={styles.uploadButton}
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={images.length >= MAX_FILES}
+                    >
+                      파일 선택하기
+                    </button>
 
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    hidden
-                    accept="image/jpeg,image/png"
-                    multiple
-                    onChange={onPick}
-                  />
-                </div>
-              </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      hidden
+                      accept="image/jpeg,image/png"
+                      multiple
+                      onChange={onPick}
+                    />
+                  </div>
+                )}
 
-              {uploadMessage && (
-                <p className={styles.uploadWarning}>{uploadMessage}</p>
-              )}
-
-              {images.length > 0 && (
-                <div className={styles.thumbGrid}>
-                  {images.map(img => (
-                    <div key={img.url} className={styles.thumb}>
-                      <img src={img.url} alt="" className={styles.thumbImg} />
+                {images.length > 0 && (
+                  <div className={styles.thumbGrid}>
+                    {images.map(img => (
+                      <div key={img.url} className={styles.thumb}>
+                        <img src={img.url} alt="" className={styles.thumbImg} />
+                        <button
+                          type="button"
+                          className={styles.thumbRemove}
+                          onClick={() => removeImage(img.url)}
+                          aria-label="삭제"
+                        >
+                          ×
+                        </button>
+                        {img.status !== "done" && (
+                          <span
+                            className={
+                              img.status === "uploading"
+                                ? styles.badgeUploading
+                                : styles.badgeError
+                            }
+                          >
+                            {img.status === "uploading" ? "업로드 중…" : "실패"}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    {images.length < MAX_FILES && (
                       <button
                         type="button"
-                        className={styles.thumbRemove}
-                        onClick={() => removeImage(img.url)}
-                        aria-label="삭제"
+                        className={styles.addMoreImagesButton}
+                        onClick={() => fileInputRef.current?.click()}
                       >
-                        ×
+                        +
                       </button>
-                      {img.status !== "done" && (
-                        <span
-                          className={
-                            img.status === "uploading"
-                              ? styles.badgeUploading
-                              : styles.badgeError
-                          }
-                        >
-                          {img.status === "uploading" ? "업로드 중…" : "실패"}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            {/* ─────────────────────────────────────────────────────── */}
+                    )}
+                  </div>
+                )}
+
+                {uploadMessage && (
+                  <p className={styles.uploadWarning}>{uploadMessage}</p>
+                )}
+              </div>
+            {/* ───────────────────────────────────────────────────────*/}
           </div>
+          </div> {/* <-- Added missing closing tag for .formSection */}
 
           {/* Right - 가격 정보 */}
           <div className={styles.priceSection}>

@@ -1,0 +1,435 @@
+.container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navButton {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.navButton:hover {
+  color: #3b82f6;
+}
+
+.navButton.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+.main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.titleSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.titleIcon {
+  font-size: 2rem;
+  background: #dbeafe;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.title {
+  margin-right:320px;
+  margin-top:-10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.subtitle {
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+}
+
+
+
+.tableContainer {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;   /* 연회색 테두리 */
+  border-radius: 16px;
+  overflow: hidden;            /* 모서리 라운드 적용 위해 */
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-right:20px;
+}
+
+.table th {
+  background: #f8fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table thead th {
+  background: #F6F8FB;
+  color: #334155;
+  font-weight: 700;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.statusCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressContainer {
+  width: 60px;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: #10b981;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.승인 {
+  background: #E5E5E5;
+  color: #757575;
+}
+
+.검토요청 {
+  background: rgba(160, 215, 243, 0.60);
+  color: #115C6D;
+}
+
+.승인거부 {
+  background: #E5E5E5;
+  color: #757575;
+}
+
+.actionButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.actionButton:hover {
+  background: #2563eb;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.pageButton {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pageButton:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.pageButton.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.dots {
+  color: #64748b;
+  padding: 0 0.5rem;
+}
+
+/* ========== 테이블 컨테이너/헤더는 거의 유지 ========== */
+.tableContainer {
+  background: transparent;
+  border: none;
+  overflow: visible;
+  margin-bottom: 2rem;
+}
+
+/* 헤더 영역 */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;      /* 행 간격을 띄워 카드처럼 */
+}
+
+/* thead를 얇은 박스로 */
+.table thead th {
+  background: #f6f8fb;
+  color: #334155;
+  font-weight: 700;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+.table thead tr {
+  border-radius: 12px;
+}
+.table thead th:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.table thead th:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* ========== 카드형 행 ========== */
+.cardRow {
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+.cardRow td {
+  padding: 14px 16px;
+  border: none;                /* 기본 보더 제거 */
+  vertical-align: middle;
+}
+
+.cardRow,
+.tableRow {
+  background: #fff;
+  box-shadow: none;            /* ← 그림자 제거 */
+  transform: none;             /* ← 튀어 오름 제거 */
+}
+.cardRow:hover,
+.tableRow:hover {
+  background: #F8FAFF;
+}
+
+.cardRow td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.cardRow td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.cardRow:hover {
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.10);
+  transform: translateY(-1px);
+}
+
+/* ========== 셀 레이아웃 ========== */
+.mediaCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #eaf1ff;                /* 썸네일 없을 때 플레이스홀더 */
+  border: 1px dashed #c7dbff;
+}
+.cellStack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.primaryText {
+  font-weight: 700;
+  color: #0f172a;
+}
+.secondaryText {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cellRight {
+  text-align: right;
+  color: #0ea5e9;                        /* 가격 느낌의 파랑/초록 계열 */
+  font-weight: 700;
+}
+
+/* ========== 진행 바(검사 결과) ========== */
+.resultCell { display: flex; align-items: center; gap: 8px; }
+.progressTrack {
+  border-radius: 20px;
+  background: #E5E7EB; 
+  width: 63.814px;
+  height: 11.808px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.progressFill {
+  width: 51.83px;
+  height: 11.808px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #22C55D;
+  transition: width 0.3s ease;
+}
+.scoreText {
+  font-weight: bold;
+  color: #374151;
+}
+
+/* ========== 배지 (상태) ========== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+/* 상태별 컬러 (status: "검토요청" | "승인" | "승인거부") */
+.검토요청 {
+  background: rgba(160, 215, 243, 0.22);
+  color: #115c6d;
+  border-color: rgba(17, 92, 109, 0.15);
+}
+.승인 {
+  background: #eef4ff;
+  color: #31476e;
+  border-color: rgba(49, 71, 110, 0.18);
+}
+.승인거부 {
+  background: #f7f7f7;
+  color: #6b7280;
+  border-color: #e5e7eb;
+}
+
+/* ========== 고스트 버튼 ========== */
+.ghostButton {
+  background: #f8fbff;
+  color: #1d4ed8;
+  border: 1px solid #93c5fd;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.15s ease, transform 0.08s ease;
+}
+.ghostButton:hover {
+  background: #eaf2ff;
+  transform: translateY(-1px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .table { font-size: 13px; }
+  .progressTrack { width: 76px; }
+}
+
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  .table thead tr,
+  .cardRow td:first-child,
+  .cardRow td:last-child {
+    border-radius: 0;
+  }
+
+  .table {
+    border-collapse: separate;   /* collapse로 해도 OK, rounded 유지 위해 separate 사용 */
+    border-spacing: 0;           /* ← 간격 0으로! */
+    table-layout: fixed;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
