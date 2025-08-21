@@ -1,0 +1,45 @@
+.row{
+  display: grid;
+  /* 체크박스, 상품, 수량, 낙찰가, 낙찰일 */
+  grid-template-columns: 40px 1.6fr 0.7fr 1fr 0.9fr;
+  align-items: center;
+  padding: 18px 20px;
+  border-top: 1px solid #E5E7EB;
+  background: #FFF;
+}
+
+/* 셀들 */
+.checkCell{
+  display: flex;
+  justify-content: center;
+}
+
+.productCell{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.productName{
+  font-weight: 700;
+  color: #111827;
+}
+
+.origin{
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.qtyCell{
+  color: #4B5563;
+  font-weight: 500;
+}
+
+.priceCell{
+  color: #111827;
+  font-weight: 700;
+}
+
+.dateCell{
+  color: #6B7280;
+}

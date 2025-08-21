@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./MainTableBox.module.css";
 
-import AuctionRow from "../AuctionPage/AuctionRow";
+import SaleRow from "./SaleRow";
 
 import Rectangle from "../../assets/SaleTable/Rectangle.png";
 
@@ -21,7 +21,7 @@ function MainTableBox({items = []}) {
         </div>
 
         {/* row 를 맵으로 */}
-        {items.map((it) => (<AuctionRow key={it.id} item={it} />))}
+        {items.map((it) => (<SaleRow key={it.id} item={it} />))}
       </div>
     </>
   );
