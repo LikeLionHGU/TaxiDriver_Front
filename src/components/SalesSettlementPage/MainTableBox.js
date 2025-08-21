@@ -15,7 +15,7 @@ function MainTableBox({items = []}) {
         <div className={styles.tableTitle}>
           <img src={Rectangle} alt="checkbox" />
           <span className={styles.product}>상품명</span>
-          <span className={styles.quantity}>수량</span>
+          <span className={styles.quantity}>수량</span> 
           <span className={styles.price}>낙찰가</span>
           <span className={styles.date}>낙찰일</span>
         </div>
