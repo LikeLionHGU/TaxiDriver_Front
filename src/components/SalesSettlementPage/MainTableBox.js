@@ -4,9 +4,6 @@ import styles1 from "./SaleRow.module.css";
 
 import SaleRow from "./SaleRow";
 
-import Rectangle from "../../assets/SaleTable/Rectangle.png";
-
-
 function MainTableBox({items = []}) {
 
   

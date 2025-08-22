@@ -7,7 +7,7 @@ import MainTableBox from "../../components/SalesSettlementPage/MainTableBox";
 function MainTable() {
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
-  const MOCK_ROWS = [
+  const MOCK_ROWS = useMemo(() => ([
   // 전체
   { id: 1,  category: "전체", productName: "(활)대게", origin: "포항", qty: 30,  unit: "마리", price: 250000, date: "2025. 8. 9." },
   { id: 2,  category: "전체", productName: "(활)대게", origin: "포항", qty: 100, unit: "마리", price:  85000, date: "2025. 8. 10." },
@@ -27,7 +27,7 @@ function MainTable() {
   // 최근 3개월
   { id:11,  category: "최근 3개월", productName: "(활)대게", origin: "포항", qty: 25,  unit: "마리", price:  78000, date: "2025. 7. 5." },
   { id:12,  category: "최근 3개월", productName: "(활)대게", origin: "포항", qty: 70,  unit: "마리", price: 145000, date: "2025. 6. 18." },
-  ];
+  ]), []);
 
 // 1) 카테고리 별로 데이터 분류
   const filteredItems = useMemo(() => {
