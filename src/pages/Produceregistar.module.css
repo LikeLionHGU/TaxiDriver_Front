@@ -1,0 +1,6 @@
+.producerRegisterSection {
+  text-align: left; /* Align text to the left */
+  padding: 20px; /* Add some padding to ensure text is inside the box */
+  border: 1px solid #ccc; /* Add a border to visualize the box */
+  margin-bottom: 20px; /* Add some space below the section */
+}
