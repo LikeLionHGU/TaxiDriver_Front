@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./PageHeader.module.css";
 
-// import NoteImg from "../../assets/SaleTable/note.svg"; 
+import NoteImg from "../../assets/SaleTable/note.svg"; 
 import CartImg from "../../assets/SaleTable/cart.svg";
 
 
