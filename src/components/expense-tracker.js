@@ -9,8 +9,8 @@ export function ExpenseTracker() {
       <div className={auctionStyles.pageContainer}>
         <PageHeader 
             image="registar"
-            title="수산물 등록"
-            content="판매할 수산물을 등록하세요."/>
+            content="판매할 수산물을 등록하세요." 
+            title="수산물 등록" />
         <ReceiptForm />
       </div>
     </div>
