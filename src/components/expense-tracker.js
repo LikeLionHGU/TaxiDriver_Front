@@ -1,5 +1,5 @@
-import ReceiptForm from "./receipt-form"
-import auctionStyles from "./AuctionPage/AuctionPage.module.css";
+import { ReceiptForm } from "./receipt-form"
+import auctionStyles from "./AuctionPage/Auction.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"
 
 export function ExpenseTracker() {

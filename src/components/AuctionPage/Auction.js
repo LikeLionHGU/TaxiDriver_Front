@@ -1,11 +1,11 @@
 import React from "react";
-import styles from "../AuctionPage/AuctionPage.module.css";
+import styles from "./Auction.module.css";
 
 import PageHeader from "../SalesSettlementPage/PageHeader";
 import SelcetButton from "./SelectButton";
 import AuctionTable from "./AuctionTable";
 
-function AuctionPage() {
+function Auction() {
   return (
     <>
       <div className={styles.main}>
@@ -23,4 +23,4 @@ function AuctionPage() {
   );
 }
 
-export default AuctionPage;
+export default Auction;

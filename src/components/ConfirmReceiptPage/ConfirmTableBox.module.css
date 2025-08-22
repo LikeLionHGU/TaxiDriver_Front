@@ -1,0 +1,20 @@
+.tableWrap{
+  width: 100%;
+}
+
+.header{
+  height:18px;
+
+  display: grid;
+  grid-template-columns: 0.4fr 0.4fr 0.3fr 0.4fr 0.42fr 0.4fr 0.3fr; 
+  justify-items: start;
+  gap: 16px;                     
+  align-items: center;
+
+  padding: 12px 20px 12px 78px;
+  background: #F9FAFB;
+  color: #757575;
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid #E5E7EB;
+}
