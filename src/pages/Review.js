@@ -3,6 +3,9 @@ import styles from "../styles/Review.module.css"
 import tableStyles from "../components/styles/product-table.module.css"
 import ReviewIcon from "../assets/review.svg"
 import StatsCards from "../components/stats-cards2"
+import ProductDetailModal from "../components/ProductDetailModal"
+import RejectedModal from "../components/RejectedModal"
+import PendingReviewModal from "../components/PendingReviewModal"
 
 export default function Dashboard() {
   const requestData = [
@@ -49,6 +52,10 @@ export default function Dashboard() {
   ]
 
   const [activeCard, setActiveCard] = useState("all")
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+  const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false)
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false)
 
   const stats = {
     pending: requestData.filter((item) => item.status === "검토요청").length,
@@ -58,6 +65,24 @@ export default function Dashboard() {
 
   const handleCardSelect = (key) => {
     setActiveCard(key)
+  }
+
+  const handleDetailClick = (item) => {
+    setSelectedItem(item)
+    if (item.status === "승인") {
+      setIsDetailModalOpen(true)
+    } else if (item.status === "승인거부") {
+      setIsRejectedModalOpen(true)
+    } else if (item.status === "검토요청") {
+      setIsPendingModalOpen(true)
+    }
+  }
+
+  const closeModal = () => {
+    setIsDetailModalOpen(false)
+    setIsRejectedModalOpen(false)
+    setIsPendingModalOpen(false)
+    setSelectedItem(null)
   }
 
   const filteredData = requestData.filter((item) => {
@@ -131,10 +156,15 @@ export default function Dashboard() {
                       </span>
                     </td>
                     <td>
-                    <button className={`${tableStyles.detailBtn} ${item.status === "검토요청" ? tableStyles.reviewBtn : ""}`}>
-                      {item.status === "검토요청" ? "검토하기" : "상세보기"}
-                    </button>
-                  </td>
+                      <button
+                        className={`${tableStyles.detailBtn} ${
+                          item.status === "검토요청" ? tableStyles.reviewBtn : ""
+                        }`}
+                        onClick={() => handleDetailClick(item)}
+                      >
+                        {item.status === "검토요청" ? "검토하기" : "상세보기"}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -152,6 +182,27 @@ export default function Dashboard() {
           <button className={styles.pageButton}>›</button>
         </div>
       </main>
+      {isDetailModalOpen && selectedItem && (
+        <ProductDetailModal
+          open={isDetailModalOpen}
+          onClose={closeModal}
+          product={selectedItem}
+        />
+      )}
+      {isRejectedModalOpen && selectedItem && (
+        <RejectedModal
+          open={isRejectedModalOpen}
+          onClose={closeModal}
+          product={selectedItem}
+        />
+      )}
+      {isPendingModalOpen && selectedItem && (
+        <PendingReviewModal
+          open={isPendingModalOpen}
+          onClose={closeModal}
+          product={selectedItem}
+        />
+      )}
     </div>
   )
 }

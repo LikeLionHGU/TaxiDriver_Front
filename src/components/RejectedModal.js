@@ -60,27 +60,22 @@ export default function RejectedModal({ open, onClose, product, onSave }) {
     // AI 분석결과
     cardBlock(
       "AI 분석결과",
-      h("div", { className: styles.scoreWrap },
-        h("div", { className: styles.rejectBadge }, "질병 감지"),
-        h("div", { className: styles.rejectValue }, String(product.aiScore ?? 13.0)),
-        h("div", { className: styles.progressWrap },
-          h("div", { className: `${styles.progress} ${styles.progressDanger}` },
-            h("span", { style: { width: `${Math.min(100, product.aiScore ?? 13)}%` } })
-          ),
-          h("div", { className: styles.progressLabels },
-            ["0","25","50","75","100"].map((t,i)=>h("span",{key:i},t))
+      h(React.Fragment, null,
+        h("div", { className: styles.scoreWrap },
+          h("div", { className: styles.rejectBadge }, "질병 감지"),
+          h("div", { className: styles.rejectValue }, String(product.aiScore ?? 13.0)),
+          h("div", { className: styles.progressWrap },
+            h("div", { className: `${styles.progress} ${styles.progressDanger}` },
+              h("span", { style: { width: `${Math.min(100, product.aiScore ?? 13)}%` } })
+            ),
+            h("div", { className: styles.progressLabels },
+              ["0","25","50","75","100"].map((t,i)=>h("span",{key:i},t))
+            )
           )
-        )
-      )
-    ),
-
-    // AI 판정 근거 (카드 전체 회색으로 쓰고 싶다면 noteCard/noteText 조합 사용)
-    cardBlock(
-      "AI 판정 근거",
-      h("div", { className: styles.noteCard },
-        h("p", { className: styles.noteText },
-          "검사된 결과, 학습된 데이터와 비교했을 때 이상 징후가 발견되어 정상 범위를 벗어났습니다."
         ),
+        h("p", { className: styles.noteText },
+          "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다."
+        )
       )
     )
   );

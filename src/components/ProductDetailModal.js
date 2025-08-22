@@ -47,28 +47,24 @@ export default function ProductDetailModal({ open, onClose, product }) {
     // AI 분석결과(질병)
     cardBlock(
       "AI 분석결과(질병)",
-      h("div", { className: styles.scoreWrap },
-        h("div", { className: styles.scoreLabel }, "정상"),
-        h("div", { className: styles.scoreValue }, String(product.aiScore || 91.3)),
-        h("div", { className: styles.progressWrap },
-        h("div", { className: styles.progress },
-        h("span", { style: { width: "91%" } })   //  실제 진행률
-    ),
-        h("div", { className: styles.progressLabels },
-        ["0", "25", "50", "75", "100"].map((label, i) =>
-        h("span", { key: i }, label)
-    )
-  )
-)
-
-      )
-    ),
-
-    // AI 판정 근거
-    cardBlock(
-      "AI 판정 근거",
-      h("p", { className: styles.note },
-        "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다."
+      h(React.Fragment, null,
+        h("div", { className: styles.scoreWrap },
+          h("div", { className: styles.scoreLabel }, "정상"),
+          h("div", { className: styles.scoreValue }, String(product.aiScore || 91.3)),
+          h("div", { className: styles.progressWrap },
+            h("div", { className: styles.progress },
+              h("span", { style: { width: "91%" } })
+            ),
+            h("div", { className: styles.progressLabels },
+              ["0", "25", "50", "75", "100"].map((label, i) =>
+                h("span", { key: i }, label)
+              )
+            )
+          )
+        ),
+        h("p", { className: styles.noteText },
+          "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다."
+        )
       )
     )
   );
