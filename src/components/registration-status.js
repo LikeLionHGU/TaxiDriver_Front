@@ -5,7 +5,8 @@ import { useState, useEffect} from "react"
 import StatsCards from "./stats-cards"
 import ProducerMainTable from "./producermain-table"
 import styles from "./styles/registration-status.module.css"
-import regIconUrl from "../assets/registar.svg"
+import auctionStyles from "./AuctionPage/AuctionPage.module.css";
+import PageHeader from "./SalesSettlementPage/PageHeader"
 
 const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 }
 const MOCK = {
@@ -117,15 +118,13 @@ export default function RegistrationStatus() {
     const paginated = filteredProducts.slice(start, start + pageSize)
 
   return (
-    <div className={styles.container}>
-      {/* 헤더 */}
-      <div className={styles.header}>
-        <img src={regIconUrl} alt="등록 현황 아이콘" className={styles.iconImage} />
-        <div className={styles.headerText}>
-          <h1 className={styles.title}>등록 현황</h1>
-          <p className={styles.subtitle}>내가 등록한 상품의 승인 여부를 확인하세요.</p>
-        </div>
-      </div>
+    <div className={auctionStyles.main}>
+      <div className={auctionStyles.gradientBox}/>
+      <div className={auctionStyles.pageContainer}>
+      <PageHeader
+            image="registar"
+            title="등록 현황"
+            content="내가 등록한 상품의 승인 여부를 확인하세요."/>
 
       {/* 카드 */}
       <StatsCards
@@ -150,6 +149,7 @@ export default function RegistrationStatus() {
         totalPages={totalPages}
         onChange={setPage}
       />
+      </div>
     </div>
   )
 

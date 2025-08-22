@@ -2,7 +2,7 @@
 .purchase-history-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 150.5px; /* 필요 시 정상 값으로 조정 */
+  padding: 2rem; /* Adjusted padding */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #F9FAFB; /* 바깥 배경 */
   min-height: 100vh;
@@ -12,7 +12,7 @@
 .purchase-section {
   background: transparent;        /* 섹션은 투명 */
   border-radius: 8px;
-  padding: 30px;
+  padding: 0; /* Removed padding as it's now handled by container */
   box-shadow: none;               /* 섀도 제거 */
 }
 
@@ -26,41 +26,25 @@
   border-bottom: none;
 }
 
-/* ⬇️ 왼쪽 묶음: 아이콘 + 텍스트 스택 */
-.title-area {
-  display: flex;
-  align-items: center;  /* 아이콘과 텍스트 수직 정렬 */
-  gap: 12px;
-}
+/* ⬇️ Left group: Icon + Text Stack */
+/* Removed .title-area, .title-icon, .title-texts as they are no longer needed */
 
-.title-icon {
-  width: 82.3px;   /* 필요 시 24~32px로 조정 */
-  height: 67.7px;
-  flex: 0 0 auto;
-}
-
-.title-texts {
-  display: flex;
-  flex-direction: column;  /* 제목 위, 통계 아래 */
-  gap: 2px;                /* 제목/통계 간격 */
-}
-
-/* 제목/통계 기본 스타일 */
+/* Title/Stats basic styles */
 .section-title {
   margin: 0;
   font-size: 24px;
   color: #333;
   font-weight: 600;
-  line-height: 1.1;   /* 아이콘과 수평선 맞추기 */
+  line-height: 1.1;
 }
 
 .purchase-stats {
   font-size: 14px;
   color: #6c757d;
-  margin: 0;          /* 위쪽 여백 제거 (세로 정렬 깔끔) */
+  margin: 0;
 }
 
-/* 모바일에서 헤더 스택 */
+/* Mobile header stack */
 @media (max-width: 768px) {
   .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
