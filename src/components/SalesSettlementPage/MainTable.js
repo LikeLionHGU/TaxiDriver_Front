@@ -61,7 +61,7 @@ function MainTable() {
         <div className={styles.tableContent}>
           <MainTableBox items={filteredItems}/>
         </div>
-
+ 
       </div>
     </>
   );
