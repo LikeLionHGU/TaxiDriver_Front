@@ -1,11 +1,14 @@
 .row{
+  height:40px;
   display: grid;
   /* 체크박스, 상품, 수량, 낙찰가, 낙찰일 */
-  grid-template-columns: 40px 1.6fr 0.7fr 1fr 0.9fr;
+  grid-template-columns: 0.18fr 0.2fr 0.2fr 0.2fr 0.2fr; 
+  justify-items: start;
   align-items: center;
-  padding: 18px 20px;
+  padding: 18px 20px 18px 68px;
   border-top: 1px solid #E5E7EB;
   background: #FFF;
+  color: #757575;
 }
 
 /* 셀들 */
@@ -14,32 +17,80 @@
   justify-content: center;
 }
 
+.checkCell input{
+  /* 기본 체크박스 외형 제거 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  margin: 0;                /* 사파리 여백 제거 */
+  border: 1.5px solid #C5C5C5;   /* ← 이제 테두리 적용됨 */
+  border-radius: 3px;            /* 필요 없으면 0 */
+  background: #FFF;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+}
+
+/* 포커스 접근성(선택) */
+.checkCell input:focus {
+  outline: 2px solid #93C5FD;
+  outline-offset: 2px;
+}
+
+/* 체크된 상태 */
+.checkCell input:checked {
+  background: #2563EB;
+  border-color: #2563EB;
+}
+
+/* 체크 아이콘 (간단한 CSS 체크마크) */
+.checkCell input:checked::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+
 .productCell{
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
 }
 
 .productName{
+  color: #525252;
+  font-size: 16.123px;
   font-weight: 700;
-  color: #111827;
 }
 
 .origin{
   font-size: 14px;
-  color: #6B7280;
+  font-weight: 700;
+  color: #757575;
 }
 
 .qtyCell{
-  color: #4B5563;
-  font-weight: 500;
+  font-size: 16.123px;
+  font-weight: 600;
 }
 
 .priceCell{
-  color: #111827;
-  font-weight: 700;
+  color: #343434;
+  font-size: 17.5px;
+  font-weight: 600;
 }
 
 .dateCell{
-  color: #6B7280;
+  font-size: 16.123px;
+  font-weight: 500;
 }
