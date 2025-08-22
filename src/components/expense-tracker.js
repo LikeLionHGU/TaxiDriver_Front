@@ -1,4 +1,4 @@
-import { ReceiptForm } from "./receipt-form"
+import ReceiptForm from "./receipt-form"
 import auctionStyles from "./AuctionPage/AuctionPage.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"
 

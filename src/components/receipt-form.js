@@ -1,8 +1,10 @@
-"use client"
-
 import React, { useState, useRef, useEffect } from 'react';
-import styles from "./styles/receipt-form.module.css"
-import fishSpeciesData from '../data/fishSpecies.json';
+import uploadIcon from '../assets/사진업로드.svg';
+
+const fishSpeciesData = [
+  "고등어", "삼치", "전어", "갈치", "방어", "참치", "연어", "광어", "우럭", "농어",
+  "도미", "볼락", "조기", "민어", "부세", "가자미", "넙치", "양미리", "멸치", "정어리"
+];
 
 const fishList = fishSpeciesData;
 
@@ -39,14 +41,15 @@ function consonantSearch(query, word) {
     return wordChosung.includes(query);
 }
 
-
-export function ReceiptForm() {
-  const [statusType, setStatusType] = useState("live")
-  const [saleType, setSaleType] = useState("weight")
+export default function ReceiptForm() {
+  // 초기 상태를 빈 값으로 변경
+  const [statusType, setStatusType] = useState("")  // "live" -> ""
+  const [saleType, setSaleType] = useState("")      // "weight" -> ""
   const [packUnit, setPackUnit] = useState("sp")      // sp | box | net
   const [sizeUnit, setSizeUnit] = useState("L")       // L | M | S
   const [specPerFish, setSpecPerFish] = useState("")  // 중량판매: 마리당 kg
   const [totalCount, setTotalCount] = useState(0)
+  const [minPrice, setMinPrice] = useState("")
 
   // Autocomplete state
   const [fishQuery, setFishQuery] = useState("");
@@ -54,7 +57,6 @@ export function ReceiptForm() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedFish, setSelectedFish] = useState(null);
   const searchContainerRef = useRef(null);
-
 
   // ── 업로드 관련 상태 ─────────────────────────────────────────────
   const MAX_FILES = 6
@@ -115,20 +117,12 @@ export function ReceiptForm() {
       const form = new FormData()
       form.append("file", item.file)
 
-      // 필요시 추가 메타데이터도 함께 전송 가능
-      // form.append("statusType", statusType)
-      // form.append("saleType", saleType)
-
-      const res = await fetch("/api/uploads", {
-        method: "POST",
-        body: form,
-      })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json() // { url: "..."} 형태라고 가정
+      // 실제 업로드 API가 없으므로 임시로 성공으로 처리
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       setImages(prev =>
         prev.map(x =>
-          x.url === item.url ? { ...x, status: "done", serverUrl: data?.url } : x
+          x.url === item.url ? { ...x, status: "done", serverUrl: "/mock-url" } : x
         )
       )
     } catch (e) {
@@ -208,47 +202,530 @@ export function ReceiptForm() {
     };
   }, [searchContainerRef]);
 
-  return (
-    <div className={styles.container}>
-      {/* 헤더
-      <div className={styles.header}>
-        <div className={styles.iconContainer}>
-          <img src={fishIcon} alt="수산물 아이콘" className={styles.iconImg} />
-        </div>
-        <div>
-          <h1 className={styles.title}>수산물 등록</h1>
-          <p className={styles.subtitle}>내가 잡은 수산물을 등록해 경매에 참여하세요.</p>
-        </div>
-      </div> */}
+  const styles = {
+    container: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '20px',
+      backgroundColor: '#f8fafc',
+      minHeight: '100vh',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '16px',
+      marginBottom: '24px',
+      padding: '20px',
+      background: 'white',
+      borderRadius: '8px',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+    },
+    iconContainer: {
+      flexShrink: 0
+    },
+    iconImg: {
+      width: '48px',
+      height: '48px',
+      borderRadius: '8px'
+    },
+    title: {
+      fontSize: '24px',
+      fontWeight: '600',
+      color: '#1f2937',
+      margin: '0 0 4px 0'
+    },
+    subtitle: {
+      fontSize: '14px',
+      color: '#6b7280',
+      margin: 0
+    },
+    card: {
+      background: 'white',
+      borderRadius: '8px',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden'
+    },
+    grid: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '24px',
+      padding: '24px'
+    },
+    formSection: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px',
+      textAlign: 'left'
+    },
+    priceSection: {
+      background: '#f9fafb',
+      padding: '20px',
+      borderRadius: '8px',
+      border: '1px solid #e5e7eb',
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'left',
+      marginLeft: '10px'
+    },
+    priceTitle: {
+      fontSize: '16px',
+      fontWeight: '600',
+      color: '#1f2937',
+      margin: '0 0 16px 0',
+      marginLeft: '10px',
+      textAlign: 'left'
+    },
+    priceList: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      flex: 1
+    },
+    priceItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '4px 0'
+    },
+    priceLabel: {
+      fontSize: '13px',
+      color: '#6b7280'
+    },
+    priceValue: {
+      fontSize: '13px',
+      fontWeight: '500',
+      color: '#1f2937'
+    },
+    priceDivider: {
+      border: 'none',
+      borderTop: '1px solid #e5e7eb',
+      margin: '12px 0'
+    },
+    totalItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: '8px'
+    },
+    totalLabel: {
+      fontSize: '14px',
+      fontWeight: '600',
+      color: '#1f2937'
+    },
+    totalValue: {
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#3b82f6'
+    },
+    priceImage: {
+      width: '100%',
+      height: '200px',
+      objectFit: 'cover',
+      borderRadius: '8px',
+      marginTop: '16px',
+      border: '1px solid #e5e7eb'
+    },
+    inputGroup: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px'
+    },
+    label: {
+      fontSize: '13px',
+      fontWeight: '600',
+      color: '#374151',
+      marginBottom: '4px'
+    },
+    input: {
+      padding: '10px 12px',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      fontSize: '13px',
+      transition: 'border-color 0.2s',
+      background: 'white'
+    },
+    inputFocus: {
+      outline: 'none',
+      borderColor: '#3b82f6',
+      boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+    },
+    searchContainer: {
+      position: 'relative'
+    },
+    searchInput: {
+      paddingLeft: '36px',
+      minWidth: '300px',
+      width: '92%'
+    },
+    searchIcon: {
+      position: 'absolute',
+      left: '10px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '16px',
+      height: '16px',
+      color: '#9ca3af'
+    },
+    autocompleteDropdown: {
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      background: 'white',
+      border: '1px solid #d1d5db',
+      borderTop: 'none',
+      borderRadius: '0 0 6px 6px',
+      maxHeight: '200px',
+      overflowY: 'auto',
+      zIndex: 10,
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    },
+    autocompleteItem: {
+      padding: '10px 12px',
+      cursor: 'pointer',
+      borderBottom: '1px solid #f3f4f6',
+      fontSize: '13px'
+    },
+    selectedFish: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '6px',
+      background: '#eff6ff',
+      color: '#1d4ed8',
+      padding: '6px 10px',
+      borderRadius: '16px',
+      fontSize: '12px',
+      fontWeight: '500',
+      marginTop: '4px'
+    },
+    toggleGroup: {
+      display: 'flex',
+      gap: '8px',
+      flexWrap: 'wrap'
+    },
+    toggleCard: {
+      flex: 1,
+      minWidth: '100px',
+      padding: '12px',
+      border: '1px solid #e5e7eb',
+      borderRadius: '6px',
+      background: 'white',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      textAlign: 'center'
+    },
+    toggleCardSmall: {
+      flex: 1,
+      minWidth: '80px',
+      padding: '12px',
+      border: '1px solid #e5e7eb',
+      borderRadius: '6px',
+      background: 'white',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      textAlign: 'center'
+    },
+    toggleCardLarge: {
+      flex: 1,
+      minWidth: '120px',
+      padding: '12px',
+      border: '1px solid #e5e7eb',
+      borderRadius: '6px',
+      background: 'white',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      textAlign: 'center'
+    },
+    toggleActive: {
+      borderColor: '#3b82f6',
+      background: '#eff6ff'
+    },
+    toggleTitle: {
+      fontSize: '13px',
+      fontWeight: '600',
+      color: '#1f2937'
+    },
+    toggleDesc: {
+      fontSize: '11px',
+      color: '#6b7280',
+      lineHeight: '1.3'
+    },
+    chipGroup: {
+      display: 'flex',
+      gap: '6px',
+      flexWrap: 'wrap'
+    },
+    chip: {
+      padding: '6px 12px',
+      border: '1px solid #d1d5db',
+      borderRadius: '16px',
+      background: 'white',
+      cursor: 'pointer',
+      fontSize: '12px',
+      transition: 'all 0.2s',
+      fontWeight: '500'
+    },
+    chipActive: {
+      background: '#3b82f6',
+      color: 'white',
+      borderColor: '#3b82f6'
+    },
+    stepper: {
+      width: '100%',
+      height: '40px',
+      position: 'relative',
+      borderRadius: '10px',
+      border: '1px solid #d1d5db',
+      background: '#FFF',
+      display: 'flex',
+      alignItems: 'center',
+      transition: 'border-color 0.2s'
+    },
+    stepperInput: {
+      flex: 1,
+      padding: '8px 12px',
+      border: 'none',
+      background: 'transparent',
+      textAlign: 'left',
+      fontSize: '13px',
+      outline: 'none',
+      paddingRight: '80px'
+    },
+    stepperButtons: {
+      position: 'absolute',
+      right: '8px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      display: 'flex',
+      gap: '4px'
+    },
+    stepperBtn: {
+      width: '32px',
+      height: '32px',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      background: 'white',
+      cursor: 'pointer',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.2s'
+    },
+    uploadArea: {
+      border: '2px dashed #d1d5db',
+      borderRadius: '6px',
+      padding: '40px',
+      textAlign: 'center',
+      transition: 'border-color 0.2s',
+      background: '#fafafa',
+      width: 'calc(100% - 40px)', 
+      minHeight: '300px',
+      margin: '0 auto'
+    },
+    uploadInner: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '16px',
+      width: '100%',
+      maxWidth: '600px',
+      margin: '0 auto'
+    },
+    uploadIcon: {
+      width: '48px',
+      height: '48px',
+      color: '#9ca3af'
+    },
+    uploadText: {
+      color: '#6b7280',
+      fontSize: '14px',
+      lineHeight: '1.4',
+      margin: 0,
+      maxWidth: '400px'
+    },
+    uploadButton: {
+      padding: '12px 24px',
+      background: '#3b82f6',
+      color: 'white',
+      border: 'none',
+      borderRadius: '6px',
+      fontSize: '14px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s'
+    },
+    thumbGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+      gap: '16px',
+      width: '100%',
+      maxWidth: '800px',
+      margin: '0 auto'
+    },
+    thumb: {
+      position: 'relative',
+      aspectRatio: '1',
+      borderRadius: '6px',
+      overflow: 'hidden',
+      border: '1px solid #e5e7eb'
+    },
+    thumbImg: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    },
+    thumbRemove: {
+      position: 'absolute',
+      top: '4px',
+      right: '4px',
+      width: '24px',
+      height: '24px',
+      background: 'rgba(0, 0, 0, 0.7)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      cursor: 'pointer',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    addMoreImagesButton: {
+      aspectRatio: '1',
+      border: '2px dashed #d1d5db',
+      borderRadius: '6px',
+      background: '#f9fafb',
+      cursor: 'pointer',
+      fontSize: '24px',
+      color: '#9ca3af',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.2s'
+    },
+    badgeUploading: {
+      position: 'absolute',
+      bottom: '4px',
+      left: '4px',
+      right: '4px',
+      background: 'rgba(0, 0, 0, 0.8)',
+      color: 'white',
+      fontSize: '10px',
+      padding: '3px 6px',
+      borderRadius: '3px',
+      textAlign: 'center'
+    },
+    badgeError: {
+      position: 'absolute',
+      bottom: '4px',
+      left: '4px',
+      right: '4px',
+      background: 'rgba(239, 68, 68, 0.9)',
+      color: 'white',
+      fontSize: '10px',
+      padding: '3px 6px',
+      borderRadius: '3px',
+      textAlign: 'center'
+    },
+    uploadWarning: {
+      color: '#dc2626',
+      fontSize: '12px',
+      marginTop: '12px',
+      whiteSpace: 'pre-line'
+    },
+    actionSection: {
+      borderTop: '1px solid #e5e7eb',
+      padding: '16px 24px',
+      background: '#f9fafb'
+    },
+    actionButtons: {
+      display: 'flex',
+      gap: '8px',
+      justifyContent: 'flex-end'
+    },
+    cancelButton: {
+      marginRight: '30px',
+      width: '538.146px',
+  height: '47.045px',
+  border: '1px solid #d1d5db',
+  borderRadius: '6px',
+  background: 'white',
+  color: '#374151',
+  fontSize: '13px',
+  fontWeight: '500',
+  cursor: 'pointer',
+  transition: 'all 0.2s'
+    },
+    submitButton: {
+      marginRight: '30px',
+      width: '538.146px',
+  height: '47.045px',
+  background: '#3b82f6',
+  color: 'white',
+  border: 'none',
+  borderRadius: '6px',
+  fontSize: '13px',
+  fontWeight: '500',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s'
+    },
+    popularFishContent: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10px',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      backgroundColor: '#f9fafb'
+    },
+    popularFishText: {
+      fontSize: '13px',
+      color: '#6b7280'
+    }
+  };
 
-      <div className={styles.card}>
-        <div className={styles.grid}>
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.grid}>
           {/* Left */}
-          <div className={styles.formSection}>
+          <div style={styles.formSection}>
             {/* 어종 선택 */}
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>어종 선택</label>
-              <div className={styles.searchContainer} ref={searchContainerRef}>
-                <svg className={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>어종 선택</label>
+              <div style={styles.searchContainer} ref={searchContainerRef}>
+                <svg style={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input
                   type="text"
                   placeholder="어종명을 입력하세요."
-                  className={`${styles.input} ${styles.searchInput}`}
+                  style={{...styles.input, ...styles.searchInput}}
                   value={fishQuery}
                   onChange={handleFishInputChange}
                   onFocus={() => setIsDropdownOpen(true)}
                   onKeyDown={handleKeyDown}
                 />
                 {isDropdownOpen && filteredFish.length > 0 && (
-                  <div className={styles.autocompleteDropdown}>
+                  <div style={styles.autocompleteDropdown}>
                     {filteredFish.map((fish, index) => (
                       <div
                         key={index}
-                        className={styles.autocompleteItem}
+                        style={styles.autocompleteItem}
                         onClick={() => handleFishSelect(fish)}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                       >
                         {fish}
                       </div>
@@ -257,48 +734,76 @@ export function ReceiptForm() {
                 )}
               </div>
               {selectedFish && (
-                <div className={styles.selectedFish}>
+                <div style={styles.selectedFish}>
                   <span>{selectedFish}</span>
-                  <button onClick={removeSelectedFish}>×</button>
+                  <button
+                    onClick={removeSelectedFish}
+                    style={{background: 'none', border: 'none', color: '#1d4ed8', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', padding: 0, marginLeft: '2px'}}
+                  >
+                    ×
+                  </button>
                 </div>
               )}
             </div>
 
+            {/* 인기 어종 */}
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>인기 어종</label>
+              <div style={styles.popularFishContent}>
+                <p style={styles.popularFishText}>인기 어종이 여기에 표시됩니다.</p>
+              </div>
+            </div>
+
             {/* 상태 선택 */}
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>상태 선택</label>
-              <div className={styles.toggleGroup}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>상태 선택</label>
+              <div style={styles.toggleGroup}>
                 <button type="button" onClick={() => setStatusType("live")}
-                        className={`${styles.toggleCardSmall} ${statusType === "live" ? styles.toggleActive : ""}`}>
-                  <span className={styles.toggleTitle}>활어</span>
-                  <span className={styles.toggleDesc}>살아있는 상태</span>
+                        style={{
+                          ...styles.toggleCardSmall,
+                          ...(statusType === "live" ? styles.toggleActive : {})
+                        }}>
+                  <span style={styles.toggleTitle}>활어</span>
+                  <span style={styles.toggleDesc}>살아있는 상태</span>
                 </button>
                 <button type="button" onClick={() => setStatusType("fresh")}
-                        className={`${styles.toggleCardSmall} ${statusType === "fresh" ? styles.toggleActive : ""}`}>
-                  <span className={styles.toggleTitle}>선어</span>
-                  <span className={styles.toggleDesc}>신선 냉장 상태</span>
+                        style={{
+                          ...styles.toggleCardSmall,
+                          ...(statusType === "fresh" ? styles.toggleActive : {})
+                        }}>
+                  <span style={styles.toggleTitle}>선어</span>
+                  <span style={styles.toggleDesc}>신선 냉장 상태</span>
                 </button>
                 <button type="button" onClick={() => setStatusType("frozen")}
-                        className={`${styles.toggleCardSmall} ${statusType === "frozen" ? styles.toggleActive : ""}`}>
-                  <span className={styles.toggleTitle}>냉동</span>
-                  <span className={styles.toggleDesc}>급속 냉동 상태</span>
+                        style={{
+                          ...styles.toggleCardSmall,
+                          ...(statusType === "frozen" ? styles.toggleActive : {})
+                        }}>
+                  <span style={styles.toggleTitle}>냉동</span>
+                  <span style={styles.toggleDesc}>급속 냉동 상태</span>
                 </button>
               </div>
             </div>
 
             {/* 판매 방식 */}
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>판매 방식</label>
-              <div className={styles.toggleGroup}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>판매 방식</label>
+              <div style={styles.toggleGroup}>
                 <button type="button" onClick={() => setSaleType("weight")}
-                        className={`${styles.toggleCard} ${saleType === "weight" ? styles.toggleActive : ""}`}>
-                  <span className={styles.toggleTitle}>중량 판매</span>
-                  <span className={styles.toggleDesc}>kg 단위로 판매</span>
+                        style={{
+                          ...styles.toggleCard,
+                          ...(saleType === "weight" ? styles.toggleActive : {})
+                        }}>
+                  <span style={styles.toggleTitle}>중량 판매</span>
+                  <span style={styles.toggleDesc}>kg 단위로 판매</span>
                 </button>
                 <button type="button" onClick={() => setSaleType("package")}
-                        className={`${styles.toggleCardLarge} ${saleType === "package" ? styles.toggleActive : ""}`}>
-                  <span className={styles.toggleTitle}>포장 판매</span>
-                  <span className={styles.toggleDesc}>박스/S/P 단위</span>
+                        style={{
+                          ...styles.toggleCardLarge,
+                          ...(saleType === "package" ? styles.toggleActive : {})
+                        }}>
+                  <span style={styles.toggleTitle}>포장 판매</span>
+                  <span style={styles.toggleDesc}>박스/S/P 단위</span>
                 </button>
               </div>
             </div>
@@ -306,21 +811,20 @@ export function ReceiptForm() {
             {/* 중량 판매 필드 */}
             {saleType === "weight" && (
               <>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>규격 (마리당 kg)</label>
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>규격 (마리당 kg)</label>
                   <input
                     type="text"
                     value={specPerFish}
                     onChange={e => setSpecPerFish(e.target.value)}
                     placeholder="예: 4 (마리당 4kg)"
-                    className={styles.input}
-                    style={{ width: "100%", paddingLeft: 12, marginLeft:8 }}
+                    style={{...styles.input, width: "95%", paddingLeft: 12, marginLeft: 0}}
                   />
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>총 수량</label>
-                  <div className={styles.stepper}>
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>총 수량</label>
+                  <div style={styles.stepper}>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -329,10 +833,12 @@ export function ReceiptForm() {
                         const v = e.target.value.replace(/[^0-9]/g, "")
                         setTotalCount(v === "" ? 0 : parseInt(v, 10))
                       }}
-                      className={styles.stepperInput}
+                      style={styles.stepperInput}
                     />
-                    <button type="button" className={styles.stepperBtn} onClick={inc}>＋</button>
-                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
+                    <div style={styles.stepperButtons}>
+                      <button type="button" style={styles.stepperBtn} onClick={dec}>−</button>
+                      <button type="button" style={styles.stepperBtn} onClick={inc}>＋</button>
+                    </div>
                   </div>
                 </div>
               </>
@@ -341,33 +847,51 @@ export function ReceiptForm() {
             {/* 포장 판매 필드 */}
             {saleType === "package" && (
               <>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>포장 단위</label>
-                  <div className={styles.chipGroup}>
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>포장 단위</label>
+                  <div style={styles.chipGroup}>
                     <button type="button" onClick={() => setPackUnit("sp")}
-                            className={`${styles.chip} ${packUnit === "sp" ? styles.chipActive : ""}`}>S/P</button>
+                            style={{
+                              ...styles.chip,
+                              ...(packUnit === "sp" ? styles.chipActive : {})
+                            }}>S/P</button>
                     <button type="button" onClick={() => setPackUnit("box")}
-                            className={`${styles.chip} ${packUnit === "box" ? styles.chipActive : ""}`}>Box</button>
+                            style={{
+                              ...styles.chip,
+                              ...(packUnit === "box" ? styles.chipActive : {})
+                            }}>Box</button>
                     <button type="button" onClick={() => setPackUnit("net")}
-                            className={`${styles.chip} ${packUnit === "net" ? styles.chipActive : ""}`}>그물망</button>
+                            style={{
+                              ...styles.chip,
+                              ...(packUnit === "net" ? styles.chipActive : {})
+                            }}>그물망</button>
                   </div>
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>크기 단위</label>
-                  <div className={styles.chipGroup}>
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>크기 단위</label>
+                  <div style={styles.chipGroup}>
                     <button type="button" onClick={() => setSizeUnit("L")}
-                            className={`${styles.chip} ${sizeUnit === "L" ? styles.chipActive : ""}`}>대</button>
+                            style={{
+                              ...styles.chip,
+                              ...(sizeUnit === "L" ? styles.chipActive : {})
+                            }}>대</button>
                     <button type="button" onClick={() => setSizeUnit("M")}
-                            className={`${styles.chip} ${sizeUnit === "M" ? styles.chipActive : ""}`}>중</button>
+                            style={{
+                              ...styles.chip,
+                              ...(sizeUnit === "M" ? styles.chipActive : {})
+                            }}>중</button>
                     <button type="button" onClick={() => setSizeUnit("S")}
-                            className={`${styles.chip} ${sizeUnit === "S" ? styles.chipActive : ""}`}>소</button>
+                            style={{
+                              ...styles.chip,
+                              ...(sizeUnit === "S" ? styles.chipActive : {})
+                            }}>소</button>
                   </div>
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>총 수량 ({unitLabel})</label>
-                  <div className={styles.stepper}>
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>총 수량 ({unitLabel})</label>
+                  <div style={styles.stepper}>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -376,118 +900,146 @@ export function ReceiptForm() {
                         const v = e.target.value.replace(/[^0-9]/g, "")
                         setTotalCount(v === "" ? 0 : parseInt(v, 10))
                       }}
-                      className={styles.stepperInput}
+                      style={styles.stepperInput}
                     />
-                    <button type="button" className={styles.stepperBtn} onClick={inc}>＋</button>
-                    <button type="button" className={styles.stepperBtn} onClick={dec}>−</button>
+                    <div style={styles.stepperButtons}>
+                      <button type="button" style={styles.stepperBtn} onClick={dec}>−</button>
+                      <button type="button" style={styles.stepperBtn} onClick={inc}>＋</button>
+                    </div>
                   </div>
                 </div>
               </>
             )}
-
-            {/* ── 사진 업로드 ─────────────────────────────────────────*/}
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>사진 업로드</label>
-
-              <div
-                className={styles.uploadArea}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-              >
-                {images.length === 0 && (
-                  <div className={styles.uploadInner}>
-                    <div className={styles.uploadIcon} aria-hidden>⤴</div>
-                    <p className={styles.uploadText}>
-                      수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
-                      JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
-                    </p>
-
-                    <button
-                      type="button"
-                      className={styles.uploadButton}
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={images.length >= MAX_FILES}
-                    >
-                      파일 선택하기
-                    </button>
-
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      hidden
-                      accept="image/jpeg,image/png"
-                      multiple
-                      onChange={onPick}
-                    />
-                  </div>
-                )}
-
-                {images.length > 0 && (
-                  <div className={styles.thumbGrid}>
-                    {images.map(img => (
-                      <div key={img.url} className={styles.thumb}>
-                        <img src={img.url} alt="" className={styles.thumbImg} />
-                        <button
-                          type="button"
-                          className={styles.thumbRemove}
-                          onClick={() => removeImage(img.url)}
-                          aria-label="삭제"
-                        >
-                          ×
-                        </button>
-                        {img.status !== "done" && (
-                          <span
-                            className={
-                              img.status === "uploading"
-                                ? styles.badgeUploading
-                                : styles.badgeError
-                            }
-                          >
-                            {img.status === "uploading" ? "업로드 중…" : "실패"}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                    {images.length < MAX_FILES && (
-                      <button
-                        type="button"
-                        className={styles.addMoreImagesButton}
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                {uploadMessage && (
-                  <p className={styles.uploadWarning}>{uploadMessage}</p>
-                )}
-              </div>
-            {/* ───────────────────────────────────────────────────────*/}
           </div>
-          </div> {/* <-- Added missing closing tag for .formSection */}
 
           {/* Right - 가격 정보 */}
-          <div className={styles.priceSection}>
-            <h3 className={styles.priceTitle}>가격 정보</h3>
-            <div className={styles.priceList}>
-              <div className={styles.priceItem}><span className={styles.priceLabel}>상품 배송료</span><span className={styles.priceValue}>₩25,000</span></div>
-              <div className={styles.priceItem}><span className={styles.priceLabel}>할인 가격 할인</span><span className={styles.priceValue}>₩13,000</span></div>
-              <div className={styles.priceItem}><span className={styles.priceLabel}>총금 요금료</span><span className={styles.priceValue}>₩11,000</span></div>
-              <hr className={styles.priceDivider} />
-              <div className={styles.totalItem}><span className={styles.totalLabel}>최저 수락가</span><span className={styles.totalValue}>₩49,000</span></div>
+          <div>
+            <h3 style={styles.priceTitle}>가격 정보</h3>
+            <div style={styles.priceSection}>
+              <div style={styles.priceList}>
+                <div style={styles.priceItem}>
+                  <span style={styles.priceLabel}>어제 낙찰가</span>
+                  <span style={styles.priceValue}>₩25,000</span>
+                </div>
+                <div style={styles.priceItem}>
+                  <span style={styles.priceLabel}>최근 7일 평균</span>
+                  <span style={styles.priceValue}>₩13,000</span>
+                </div>
+                <div style={styles.priceItem}>
+                  <span style={styles.priceLabel}>등급 최고가</span>
+                  <span style={styles.priceValue}>₩11,000</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 최저 수락가 설정 섹션 */}
+            <div style={styles.inputGroup}>
+              <label style={{...styles.label, marginLeft: '-440px', marginTop: '16px'}}>최저 수락가 설정</label>
+              <input
+                type="text"
+                value={`₩${minPrice.toLocaleString()}`}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  setMinPrice(value === "" ? 0 : parseInt(value, 10));
+                }}
+                style={{...styles.input, width: "95%", paddingLeft: 12, marginLeft: 10}}
+                placeholder="kg당 최저 수락가"
+              />
+              <div style={styles.chipGroup}>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 1000)}>+1천원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 10000)}>+1만원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 50000)}>+5만원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 100000)}>+10만원</button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 하단 버튼 */}
-        <div className={styles.actionSection}>
-          <div className={styles.actionButtons}>
-            <button className={styles.cancelButton}>취소</button>
-            <button className={styles.submitButton}>등록 완료</button>
+        {/* 사진 업로드 - 그리드 외부에서 전체 너비 사용 */}
+        <div style={{...styles.inputGroup, padding: '0 24px 24px 24px'}}>
+          <label style={{...styles.label, marginLeft: '-1065px'}}>사진 업로드</label>
+          <div
+            style={styles.uploadArea}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+          >
+            {images.length === 0 && (
+              <div style={styles.uploadInner}>
+                <img src={uploadIcon} alt="사진 업로드" style={styles.uploadIcon} />
+                <p style={styles.uploadText}>
+                  수산물 이미지를 드래그하여 놓거나 클릭하여 업로드하세요<br/>
+                  JPG, PNG 파일만 업로드 가능합니다(최대 10MB, 최대 {MAX_FILES}장)
+                </p>
+
+                <button
+                  type="button"
+                  style={styles.uploadButton}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={images.length >= MAX_FILES}
+                >
+                  파일 선택하기
+                </button>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  hidden
+                  accept="image/jpeg,image/png"
+                  multiple
+                  onChange={onPick}
+                />
+              </div>
+            )}
+
+            {images.length > 0 && (
+              <div style={styles.thumbGrid}>
+                {images.map(img => (
+                  <div key={img.url} style={styles.thumb}>
+                    <img src={img.url} alt="" style={styles.thumbImg} />
+                    <button
+                      type="button"
+                      style={styles.thumbRemove}
+                      onClick={() => removeImage(img.url)}
+                      aria-label="삭제"
+                    >
+                      ×
+                    </button>
+                    {img.status !== "done" && (
+                      <span
+                        style={
+                          img.status === "uploading"
+                            ? styles.badgeUploading
+                            : styles.badgeError
+                        }
+                      >
+                        {img.status === "uploading" ? "업로드 중…" : "실패"}
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {images.length < MAX_FILES && (
+                  <button
+                    type="button"
+                    style={styles.addMoreImagesButton}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    +
+                  </button>
+                )}
+              </div>
+            )}
+
+            {uploadMessage && (
+              <p style={styles.uploadWarning}>{uploadMessage}</p>
+            )}
           </div>
         </div>
+
+        {/* 하단 버튼 */}
+          <div style={styles.actionButtons}>
+            <button style={styles.cancelButton}>취소</button>
+            <button style={styles.submitButton}>등록 신청</button>
+          </div>
       </div>
     </div>
   )
