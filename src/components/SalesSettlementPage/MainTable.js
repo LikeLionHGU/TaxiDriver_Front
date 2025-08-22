@@ -55,9 +55,6 @@ function MainTable() {
           )}
         </div>
 
-{/*-------------------------------------------------------------------  */}
-
-
         <div className={styles.tableContent}>
           <MainTableBox items={filteredItems}/>
         </div>
