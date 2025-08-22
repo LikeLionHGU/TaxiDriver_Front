@@ -1,62 +1,58 @@
 import React from "react";
 import styles from "./ConfirmRow.module.css";
 
-// 통화 포맷
 const formatKRW = (n) =>
-  new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(n);
+  new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(n);
 
-// 상태 배지
-function StatusBadge({ status }) {
+// 수령 상태 Pill
+function ReceivePill({ state }) {
   const map = {
-    IN_PROGRESS: { label: "진행중", bg: "#FFF8B0", color: "#A57113" },
-    PENDING:     { label: "대기중", bg: "#C6E7F8", color: "#115C6D" },
-    DONE:        { label: "종료",   bg: "#E5E5E5", color: "#757575" },
+    WAITING: { label: "수령대기", bg: "none", color: "#000", border: "#2775E7" },
+    DONE:    { label: "수령완료", bg: "#E5E5E5", color: "#757575", border: "none" },
   };
-  const s = map[status] || map.PENDING;
+  const s = map[state] ?? map.WAITING;
   return (
-    <span
-      className={styles.badge}
-      style={{ background: s.bg, color: s.color }}
+    <button
+      type="button"
+      className={styles.statusPill}
+      style={{ background: s.bg, color: s.color, borderColor: s.border }}
+      disabled
     >
       {s.label}
-    </span>
+    </button>
   );
 }
 
-function AuctionRow({ item }) {
-  const displayTime =
-    item.time ??
-    (item.endAt
-      ? new Date(item.endAt).toLocaleTimeString("ko-KR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        })
-      : "");
-
+function ConfirmRow({ item }) {
   return (
-    <div className={styles.row}>
-      <div className={styles.info}>
-        <div className={styles.productTitle}>{item.productName}</div>
-        <div className={styles.productText}>
-          {item.unit} | {item.quantity}
-        </div>
+    <div className={styles.row} role="row">
+      {/* 수산물 정보 */}
+      <div className={styles.productCell}>
+        <div className={styles.productName}>{item.productName}</div>
+        <div className={styles.subText}>{item.origin} | {item.weight}</div>
       </div>
 
-      <div className={styles.price}>{formatKRW(item.startPrice)}</div>
-      <div className={styles.seller}>{item.sellerName}</div>
-      <div className={styles.status}><StatusBadge status={item.status} /></div>
-      <div className={styles.time}>{displayTime}</div>
+      {/* 낙찰 금액 */}
+      <div className={styles.priceCell}>{formatKRW(item.bidPrice)}</div>
 
-      <div className={styles.action}>
-        <button className={styles.detailBtn}>상세보기</button>
+      {/* 구매자 / 판매자 */}
+      <div className={styles.buyerCell}>{item.buyerName}</div>
+      <div className={styles.sellerCell}>{item.sellerName}</div>
+
+      {/* 수령 장소 */}
+      <div className={styles.placeCell}>{item.pickupPlace}</div>
+
+      {/* 수령 기한(날짜/시간) */}
+      <div className={styles.dueCell}>
+        <div className={styles.dueDate}>{item.dueDate}</div>
+        <div className={styles.dueTime}>{item.dueTime}</div>
+      </div>
+
+      {/* 수령 상태 */}
+      <div className={styles.statusCell}>
+        <ReceivePill state={item.receiveStatus} />
       </div>
     </div>
   );
 }
-
-export default AuctionRow;
+export default ConfirmRow;

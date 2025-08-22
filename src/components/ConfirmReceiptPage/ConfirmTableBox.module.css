@@ -3,10 +3,10 @@
 }
 
 .header{
-  height:21px;
+  height:18px;
 
   display: grid;
-  grid-template-columns: 0.68fr 0.6fr 0.6fr 0.6fr 0.55fr 0.5fr; 
+  grid-template-columns: 0.4fr 0.4fr 0.3fr 0.4fr 0.42fr 0.4fr 0.3fr; 
   justify-items: start;
   gap: 16px;                     
   align-items: center;

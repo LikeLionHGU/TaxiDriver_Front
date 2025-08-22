@@ -5,36 +5,66 @@ import ConfirmTableBox from "./ConfirmTableBox";
 
 function ConfirmTable() {
 
-  const mk = (id, name, unit, qty, price, status, time, addSec = 870) => ({
-    id,
-    productName: name,
-    unit,
-    quantity: qty,
-    startPrice: price,
-    sellerName: "김철수",
-    status,           
-    time,         
-    endAt: new Date(Date.now() + addSec * 1000).toISOString(), // 카운트다운 쓸 때 사용
-  });
-
-  const data = {
-    items: [
-      mk(101, "(활)광어", "2kg/마리", 10, 35000, "PENDING", "14:30"),
-      mk(102, "(선)갈치", "0.5kg/마리", 30, 15000, "PENDING", "14:30"),
-      mk(103, "(선)갈치", "0.5kg/마리",  4, 25000, "PENDING", "14:30"),
-      mk(104, "(선)전어", "박스",      25, 12000, "PENDING", "14:30"),
-    ],
-  };
+  const items = [
+    {
+      id: 1,
+      productName: "대게",
+      origin: "포항",
+      weight: "25.5kg",
+      bidPrice: 275000,                 // 낙찰 금액
+      buyerName: "부산수산",             // 구매자
+      sellerName: "김철수",             // 판매자
+      pickupPlace: "포항수협 죽도위판장 2층",
+      dueDate: "2024-11-19",            // 수령 기한(날짜)
+      dueTime: "15:30",                 // 수령 기한(시간)
+      receiveStatus: "WAITING",         // WAITING | DONE
+    },
+    {
+      id: 2,
+      productName: "대게",
+      origin: "포항",
+      weight: "25.5kg",
+      bidPrice: 185000,
+      buyerName: "서울수산",
+      sellerName: "이영희",
+      pickupPlace: "포항수협 죽도위판장 2층",
+      dueDate: "2024-11-19",
+      dueTime: "15:30",
+      receiveStatus: "DONE",
+    },
+    {
+      id: 3,
+      productName: "대게",
+      origin: "포항",
+      weight: "25.5kg",
+      bidPrice: 185000,
+      buyerName: "대구유통",
+      sellerName: "박민수",
+      pickupPlace: "포항수협 죽도위판장 2층",
+      dueDate: "2024-11-19",
+      dueTime: "15:30",
+      receiveStatus: "DONE",
+    },
+    {
+      id: 4,
+      productName: "대게",
+      origin: "포항",
+      weight: "25.5kg",
+      bidPrice: 185000,
+      buyerName: "인천수산",
+      sellerName: "정수진",
+      pickupPlace: "포항수협 죽도위판장 2층",
+      dueDate: "2024-11-19",
+      dueTime: "15:30",
+      receiveStatus: "DONE",
+    },
+  ];
+  
 
   return (
     <>
       <div className={styles.main}>
-        <div className={styles.topContainer}>
-          <div className={styles.searchContainer}>
-            수산물을 검색하세요
-          </div>
-        </div>
-        <ConfirmTableBox items={data.items} />
+        <ConfirmTableBox items={items} />
       </div>
     </>
   );
