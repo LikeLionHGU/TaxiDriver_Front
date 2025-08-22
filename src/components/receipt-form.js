@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styles from "./styles/receipt-form.module.css"
-import fishIcon from "../assets/수산물.svg"
 import fishSpeciesData from '../data/fishSpecies.json';
 
 const fishList = fishSpeciesData;
@@ -211,7 +210,7 @@ export function ReceiptForm() {
 
   return (
     <div className={styles.container}>
-      {/* 헤더 */}
+      {/* 헤더
       <div className={styles.header}>
         <div className={styles.iconContainer}>
           <img src={fishIcon} alt="수산물 아이콘" className={styles.iconImg} />
@@ -220,7 +219,7 @@ export function ReceiptForm() {
           <h1 className={styles.title}>수산물 등록</h1>
           <p className={styles.subtitle}>내가 잡은 수산물을 등록해 경매에 참여하세요.</p>
         </div>
-      </div>
+      </div> */}
 
       <div className={styles.card}>
         <div className={styles.grid}>
