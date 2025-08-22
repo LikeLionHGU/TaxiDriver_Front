@@ -17,7 +17,6 @@ function Header() {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.logo}>
-
         </div>
 
          <nav className={styles.nav} aria-label="main">

@@ -1,13 +1,18 @@
-import { Navigation } from "./navigation"
 import { ReceiptForm } from "./receipt-form"
+import auctionStyles from "./AuctionPage/AuctionPage.module.css";
+import PageHeader from "./SalesSettlementPage/PageHeader"
 
 export function ExpenseTracker() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-6">
+    <div className={auctionStyles.main}>
+      <div className={auctionStyles.gradientBox}/>
+      <div className={auctionStyles.pageContainer}>
+        <PageHeader 
+            image="registar"
+            title="수산물 등록"
+            content="판매할 수산물을 등록하세요."/>
         <ReceiptForm />
-      </main>
+      </div>
     </div>
   )
 }

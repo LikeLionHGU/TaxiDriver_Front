@@ -5,8 +5,8 @@ import React, { useState } from "react"
 import styles from "../styles/Purchasehistory.module.css"
 // SVG 파일 import 방식은 사용자의 환경에 따라 다를 수 있습니다.
 // .src가 필요 없는 환경일 수 있으므로 원래대로 되돌립니다.
-import logo from "../assets/logo.svg";
 import excelIcon from "../assets/excel.svg";
+import logo from "../assets/SaleTable/cart.svg";
 
 const PurchaseHistoryPage = () => {
   const [activeFilter, setActiveFilter] = useState("전체")

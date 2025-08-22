@@ -1,16 +1,6 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
   background: white;
   min-height: 100vh;
-}
-
-.header {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 12px;
 }
 
 .iconWrapper {
@@ -30,17 +20,8 @@
   color: white;
 }
 
-.iconImage { width:57.7px; height: 65.85px; display: block; }
-
 .headerContent {
   flex: 1;
-}
-
-.headerText {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 2px; /* 시각 정렬 미세조정 */
 }
 
 .tabs {
@@ -56,26 +37,6 @@
   background: #fff;
   font-size: 14px;
   color: #374151;
-}
-
-.title {
-  font-size: 24px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #1f2937;
-  margin-top:0px;
-  margin-left: -160px;
-  margin-bottom: 2px;
-  letter-spacing: -0.2px;
-}
-
-.subtitle {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #6b7280;
-  margin: 0;
-  margin-bottom:48px;
-  max-width: 290px;
 }
 
 .activeTab {
@@ -166,4 +127,45 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                                   테이블 필터                                  */
+/* -------------------------------------------------------------------------- */
+
+.filterContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.searchBox {
+  position: relative;
+  width: 320px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+.periodSelector {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
 }
