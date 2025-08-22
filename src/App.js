@@ -6,8 +6,9 @@ import PurchaseHistoryPage from "./pages/Purchasehistory";
 import Producermain from "./pages/Producermain";
 import SalesSettlement from "./pages/SalesSettlement";
 import Produceregistar from "./pages/Produceregistar";
-import Auction from "./pages/Auction";
+import Auction from "./pages/AuctionPage";
 import Review from "./pages/Review";
+import Confirm from "./pages/ConfirmReceiptPage"
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/producermain" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
           <Route path="/auction" element={<Auction />} />
+          <Route path="/confirm-receipt" element={<Confirm />} />
 
           <Route path="/review" element={<Review />} />
         </Routes>

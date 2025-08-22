@@ -5,7 +5,7 @@ import { useState, useEffect} from "react"
 import StatsCards from "./stats-cards"
 import ProducerMainTable from "./producermain-table"
 import styles from "./styles/registration-status.module.css"
-import auctionStyles from "./AuctionPage/AuctionPage.module.css";
+import auctionStyles from "./AuctionPage/Auction.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"
 
 const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 }
