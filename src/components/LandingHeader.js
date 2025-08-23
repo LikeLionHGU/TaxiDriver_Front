@@ -4,9 +4,7 @@ import styles from "./styles/landing-header.module.css";
 
 const LandingHeader = () => {
   const handleLogin = () => {
-    // 로그인 페이지로 이동 또는 모달 열기
-    console.log("로그인 버튼 클릭");
-    // 예: window.location.href = "/login";
+    window.location.href = "https://www.likelion.info/login/oauth2/google";
   };
 
   const handleSignup = () => {

@@ -106,6 +106,8 @@ export default function ReceiptForm() {
   const [uploadMessage, setUploadMessage] = useState("")
   const fileInputRef = useRef(null)
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const unitLabel = packUnit === "sp" ? "S/P" : packUnit === "box" ? "Box" : "그물망"
   const inc = () => {
     if (packUnit === "sp" || packUnit === "box") {
@@ -234,6 +236,14 @@ export default function ReceiptForm() {
 
   const removeSelectedFish = () => {
     setSelectedFish(null)
+  }
+
+  const handleSubmit = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   useEffect(() => {
@@ -575,6 +585,8 @@ export default function ReceiptForm() {
       transition: "border-color 0.2s",
       background: "#fafafa",
       width: "100%",
+      boxSizing: "border-box",
+      maxWidth: "100%",
       minHeight: "300px",
     },
     uploadInner: {
@@ -735,6 +747,79 @@ export default function ReceiptForm() {
     popularFishText: {
       fontSize: "13px",
       color: "#6b7280",
+    },
+    modalOverlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+    },
+    modalContent: {
+      backgroundColor: "white",
+      borderRadius: "12px",
+      padding: "32px",
+      width: "400px",
+      maxWidth: "90vw",
+      textAlign: "center",
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    },
+    modalIcon: {
+      width: "48px",
+      height: "48px",
+      backgroundColor: "#3b82f6",
+      borderRadius: "50%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "0 auto 16px",
+    },
+    modalTitle: {
+      fontSize: "18px",
+      fontWeight: "600",
+      color: "#111827",
+      marginBottom: "12px",
+    },
+    modalMessage: {
+      fontSize: "14px",
+      color: "#6b7280",
+      lineHeight: "1.5",
+      marginBottom: "8px",
+    },
+    modalSubMessage: {
+      fontSize: "12px",
+      color: "#9ca3af",
+      marginBottom: "24px",
+    },
+    modalButtons: {
+      display: "flex",
+      gap: "12px",
+      justifyContent: "center",
+    },
+    modalCancelButton: {
+      padding: "8px 24px",
+      border: "1px solid #d1d5db",
+      borderRadius: "6px",
+      backgroundColor: "white",
+      color: "#374151",
+      fontSize: "14px",
+      fontWeight: "500",
+      cursor: "pointer",
+    },
+    modalConfirmButton: {
+      padding: "8px 24px",
+      border: "none",
+      borderRadius: "6px",
+      backgroundColor: "#3b82f6",
+      color: "white",
+      fontSize: "14px",
+      fontWeight: "500",
+      cursor: "pointer",
     },
   }
 
@@ -1138,7 +1223,7 @@ export default function ReceiptForm() {
         </div>
 
         {/* 사진 업로드 - 그리드 외부에서 전체 너비 사용 */}
-        <div style={{ ...styles.inputGroup, padding: "0 24px 24px 24px" }}>
+        <div style={{ ...styles.inputGroup, padding: "0 24px 24px 24px", maxWidth: "100%", boxSizing: "border-box" }}>
           <label style={{ ...styles.label }}>사진 업로드</label>
           <div style={styles.uploadArea} onDragOver={onDragOver} onDrop={onDrop}>
             {images.length === 0 && (
@@ -1209,9 +1294,45 @@ export default function ReceiptForm() {
         {/* 하단 버튼 */}
         <div style={styles.actionButtons}>
           <button style={styles.cancelButton}>취소</button>
-          <button style={styles.submitButton}>등록 신청</button>
+          <button style={styles.submitButton} onClick={handleSubmit}>
+            등록 신청
+          </button>
         </div>
       </div>
+
+      {/* Modal component */}
+      {isModalOpen && (
+        <div style={styles.modalOverlay} onClick={closeModal}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalIcon}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <h3 style={styles.modalTitle}>등록 정보 확인</h3>
+            <p style={styles.modalMessage}>
+              등록하려는 어종은 광어이고, 마리당 4kg짜리<br/> 
+              광어 4마리를 경매에 등록합니다.
+              <br />
+              위 내용이 맞으면 확인을 눌러주세요.
+            </p>
+            <div style={styles.modalButtons}>
+              <button style={styles.modalCancelButton} onClick={closeModal}>
+                취소
+              </button>
+              <button style={styles.modalConfirmButton} onClick={closeModal}>
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
