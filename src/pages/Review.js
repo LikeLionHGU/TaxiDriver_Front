@@ -6,6 +6,7 @@ import StatsCards from "../components/stats-cards2"
 import ProductDetailModal from "../components/ProductDetailModal"
 import RejectedModal from "../components/RejectedModal"
 import PendingReviewModal from "../components/PendingReviewModal"
+import ApprovalConfirmationModal from "../components/ApprovalConfirmationModal"
 
 export default function Dashboard() {
   const requestData = [
@@ -64,6 +65,7 @@ export default function Dashboard() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false)
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false)
+  const [isApprovalConfirmationModalOpen, setIsApprovalConfirmationModalOpen] = useState(false)
 
   const stats = {
     pending: requestData.filter((item) => item.status === "검토요청").length,
@@ -93,10 +95,18 @@ export default function Dashboard() {
     }
   };
 
+  const handleApproveProduct = () => {
+    setIsPendingModalOpen(false); // Close the pending review modal
+    setIsApprovalConfirmationModalOpen(true); // Open the approval confirmation modal
+    // Optionally, update the status of the selectedItem in requestData here
+    // For example: setSelectedItem(prev => prev ? { ...prev, status: "승인" } : null);
+  };
+
   const closeModal = () => {
     setIsDetailModalOpen(false)
     setIsRejectedModalOpen(false)
     setIsPendingModalOpen(false)
+    setIsApprovalConfirmationModalOpen(false) // Close the new modal as well
     setSelectedItem(null)
   }
 
@@ -216,6 +226,13 @@ export default function Dashboard() {
           open={isPendingModalOpen}
           onClose={closeModal}
           product={selectedItem}
+          onApprove={handleApproveProduct}
+        />
+      )}
+      {isApprovalConfirmationModalOpen && (
+        <ApprovalConfirmationModal
+          open={isApprovalConfirmationModalOpen}
+          onClose={closeModal}
         />
       )}
     </div>

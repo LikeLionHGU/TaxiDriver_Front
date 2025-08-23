@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import styles from "./styles/modal.module.css";
 import pendingIcon from "../assets/검토중.svg"; 
 
-export default function PendingReviewModal({ open, onClose, product }) {
+export default function PendingReviewModal({ open, onClose, product, onApprove }) {
   const [showRejectionReasonInput, setShowRejectionReasonInput] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
@@ -161,7 +161,7 @@ export default function PendingReviewModal({ open, onClose, product }) {
         h(
           "button",
           {
-            onClick: () => { /* Assuming onApprove is passed and handles the logic */ onClose(); }, // Close modal on approve
+            onClick: onApprove, // Call onApprove prop
             style: {
               width: "408.241px",
               height: "50px",
