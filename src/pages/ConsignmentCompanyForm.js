@@ -6,8 +6,8 @@ import styles from "../styles/consignment-company-form.module.css"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 
 export default function LocationSelector() {
-  const [selectedProvince, setSelectedProvince] = useState("경상도")
-  const [selectedLocation, setSelectedLocation] = useState("포항 구룡포")
+  const [selectedProvince, setSelectedProvince] = useState("")
+  const [selectedLocation, setSelectedLocation] = useState("")
 
   const provinces = ["강원도", "경상도", "경기/인천", "전라도", "제주도", "충청도"]
 
@@ -92,25 +92,31 @@ export default function LocationSelector() {
             ))}
           </div>
 
-          <div className={styles.locationGrid}>
-            {locations.map((location, index) => (
-              <div
-                key={index}
-                className={`${styles.locationCard} ${selectedLocation === location.name ? styles.locationCardSelected : ""}`}
-                onClick={() => setSelectedLocation(location.name)}
-              >
-                <div className={styles.locationCardContent}>
-                  <LocationIcon className={styles.locationIcon} />
-                  <div className={styles.locationInfo}>
-                    <div className={`${styles.locationName} ${selectedLocation === location.name ? styles.locationNameSelected : ""}`}>
-                      {location.name}
+          {selectedProvince ? (
+            <div className={styles.locationGrid}>
+              {locations.map((location, index) => (
+                <div
+                  key={index}
+                  className={`${styles.locationCard} ${selectedLocation === location.name ? styles.locationCardSelected : ""}`}
+                  onClick={() => setSelectedLocation(location.name)}
+                >
+                  <div className={styles.locationCardContent}>
+                    <LocationIcon className={styles.locationIcon} />
+                    <div className={styles.locationInfo}>
+                      <div className={`${styles.locationName} ${selectedLocation === location.name ? styles.locationNameSelected : ""}`}>
+                        {location.name}
+                      </div>
+                      <div className={styles.locationCity}>{location.city}</div>
                     </div>
-                    <div className={styles.locationCity}>{location.city}</div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyStateText}>위 지역 탭을 선택하여 위판장을 선택해주세요</p>
+            </div>
+          )}
         </div>
 
         <div className={styles.inputSection}>
