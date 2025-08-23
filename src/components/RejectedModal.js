@@ -7,6 +7,14 @@ import styles from "./styles/modal.module.css";
 export default function RejectedModal({ open, onClose, product, onSave }) {
   // 훅(Hook)들을 컴포넌트 최상단으로 이동시켜 항상 동일한 순서로 호출되도록 합니다.
   const [reason, setReason] = useState(product?.rejectedReason ?? "");
+  const [pathname, setPathname] = useState(""); // 현재 경로 상태
+
+  // 현재 경로 가져오기
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   // 제품이 바뀔 때 동기화
   useEffect(() => {
@@ -60,13 +68,13 @@ export default function RejectedModal({ open, onClose, product, onSave }) {
     // AI 분석결과
     cardBlock(
       "AI 분석결과",
-      h(React.Fragment, null,
+      h("div", { className: styles.aiAnalysisContent }, // New wrapper div
         h("div", { className: styles.scoreWrap },
           h("div", { className: styles.rejectBadge }, "질병 감지"),
-          h("div", { className: styles.rejectValue }, String(product.aiScore ?? 13.0)),
+          h("div", { className: styles.rejectValue }, String(product.aiScore)),
           h("div", { className: styles.progressWrap },
             h("div", { className: `${styles.progress} ${styles.progressDanger}` },
-              h("span", { style: { width: `${Math.min(100, product.aiScore ?? 13)}%` } })
+              h("span", { style: { width: `${Math.min(100, product.aiScore)}%` } })
             ),
             h("div", { className: styles.progressLabels },
               ["0","25","50","75","100"].map((t,i)=>h("span",{key:i},t))
@@ -74,9 +82,10 @@ export default function RejectedModal({ open, onClose, product, onSave }) {
           )
         ),
         h("p", { className: styles.noteText },
-          "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다."
+          product.aiAnalysisText
         )
-      )
+      ),
+      { full: true } // Add full: true here
     )
   );
 
@@ -89,39 +98,41 @@ export default function RejectedModal({ open, onClose, product, onSave }) {
   const bottom = cardBlock("상품 사진", h("div", { className: styles.photoArea }, photos), { full: true });
 
   // 반려 사유: 입력만
-const rejectReason = cardBlock(
-  "반려 사유",
-  h("textarea", {
-    className: styles.rejectReasonInput,
-    placeholder: "반려 사유를 입력하세요...",
-    value: reason,
-    onChange: (e) => setReason(e.target.value),
-  }),
-  { full: true }
-);
+  const rejectReason = cardBlock(
+    "반려 사유",
+    h("textarea", {
+      className: styles.rejectReasonInput,
+      placeholder: "반려 사유를 입력하세요...",
+      value: reason,
+      onChange: (e) => setReason(e.target.value),
+    }),
+    { full: true }
+  );
 
-// 하단 확인 버튼 (전체 폭)
-const confirmBar = h(
-  "div",
-  { className: styles.modalFooter },
-  h(
-    "button",
-    {
-      className: styles.confirmBtn,
-      onClick: () => {
-        if (typeof onSave === "function") {
-          onSave({ ...product, rejectedReason: reason });
-        }
-        onClose?.();
+  // 하단 확인 버튼 (전체 폭) - producermain 경로에서는 숨김
+  const shouldShowConfirmButton = pathname !== "/producermain";
+  
+  const confirmBar = shouldShowConfirmButton ? h(
+    "div",
+    { className: styles.modalFooter },
+    h(
+      "button",
+      {
+        className: styles.confirmBtn,
+        onClick: () => {
+          if (typeof onSave === "function") {
+            onSave({ ...product, rejectedReason: reason });
+          }
+          onClose?.();
+        },
       },
-    },
-    "확인"
-  )
-);
+      "확인"
+    )
+  ) : null;
 
-return h(
-  Modal,
-  { open, onClose, title: "승인거부 - 상세" },
-  h(React.Fragment, null, grid, bottom, rejectReason, confirmBar)
-);
+  return h(
+    Modal,
+    { open, onClose, title: "승인거부 - 상세" },
+    h(React.Fragment, null, grid, bottom, rejectReason, confirmBar)
+  );
 }

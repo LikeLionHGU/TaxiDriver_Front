@@ -142,7 +142,7 @@ export default function ProducerMainTable({
       </div>
 
       {modal.kind === "approved" && (
-        <ProductDetailModal open={modal.open} onClose={closeModal} product={modal.product} />
+        <ProductDetailModal open={modal.open} onClose={closeModal} product={modal.product} isApproved={true} />
       )}
       {modal.kind === "pending" && (
         <PendingReviewModal open={modal.open} onClose={closeModal} product={modal.product} />

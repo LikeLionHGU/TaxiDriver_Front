@@ -18,6 +18,8 @@ export default function Dashboard() {
       status: "승인",
       progress: 100,
       price: 175750,
+      aiScore: 91.3,
+      aiAnalysisText: "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.",
     },
     {
       id: 2,
@@ -28,6 +30,8 @@ export default function Dashboard() {
       status: "검토요청",
       progress: 60,
       price: 200000,
+      aiScore: 50.0,
+      aiAnalysisText: "AI 분석 결과가 아직 확정되지 않았습니다. 추가 검토가 필요합니다.",
     },
     {
       id: 3,
@@ -38,6 +42,8 @@ export default function Dashboard() {
       status: "승인",
       progress: 100,
       price: 180000,
+      aiScore: 95.0,
+      aiAnalysisText: "학습된 질병 데이터의 평균 특징과 95.0만큼 떨어져 있습니다. 매우 정상일 가능성이 높습니다.",
     },
     {
       id: 4,
@@ -48,6 +54,8 @@ export default function Dashboard() {
       status: "승인거부",
       progress: 30,
       price: 160000,
+      aiScore: 13.0,
+      aiAnalysisText: "학습된 질병 데이터의 평균 특징과 13.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다.",
     },
   ]
 
