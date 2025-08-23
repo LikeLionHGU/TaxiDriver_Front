@@ -67,10 +67,10 @@
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   display: flex;
-  height:16%;
+  height: 16%;
   flex-direction: column;
   text-align: left;
-  margin-left:10px;
+  margin-left: 10px;
 }
 
 .priceTitle {
@@ -78,7 +78,7 @@
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 16px 0;
-  margin-left:10px;
+  margin-left: 10px;
   text-align: left;
 }
 
@@ -322,7 +322,7 @@
   position: relative;
   border-radius: 10px;
   border: 1px solid #d1d5db;
-  background: #FFF;
+  background: #fff;
   display: flex;
   align-items: center;
   /* 아이콘 그림자 */
@@ -380,11 +380,9 @@
   transition: border-color 0.2s;
   background: #fafafa;
   height: auto;
- 
-}
-
-.uploadArea:hover {
-  border-color: #3b82f6;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
 }
 
 .uploadInner {
@@ -594,6 +592,7 @@
     flex-direction: column;
   }
 }
+
 .popularFishContent {
   display: flex;
   align-items: center;
