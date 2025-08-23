@@ -2,6 +2,12 @@ import styles from "./TestModal.module.css";
 // eslint-disable-next-line
 import React, { useState } from "react";
 
+/*
+모달 사용법 !!
+1. 사용하고자 하는 파일에 모달 import
+2. 모달 열고 닫는 하는 함수..?랑 변수 선언 (confirmReceipt.js에 주석 달아둠!)
+3. 코드 아래쪽에 모달 import한거 넣어주기*/
+
 
 const TestModal = ({ open, close }) => {
 

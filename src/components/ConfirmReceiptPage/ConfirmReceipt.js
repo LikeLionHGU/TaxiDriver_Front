@@ -10,8 +10,8 @@ import TestModal from "../Modal/TestModal";
 
 function ConfirmReceipt() {
 
+// 1) test용 모달 생성
   const [testModalOpen, setTestModalOpen] = useState(false);
-    // eslint-disable-next-line no-unused-vars
     const openTestModal = () => {
       setTestModalOpen(true);
       document.body.style.overflow = "hidden";
