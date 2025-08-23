@@ -17,8 +17,8 @@ export const NAV_BY_ROLE = {
     { key: "confirm-receipt",  label: "수령 확인",     href: "/confirm-receipt" },
   ],
   [ROLES.JUNGDOMAEIN]: [
-    { key: "auction-live",     label: "실시간 경매",   href: "/auction-live" },
-    { key: "receiving-status", label: "수령 현황",     href: "/receipts" },
+    { key: "auction-live",     label: "실시간 경매",   href: "/auction" },
+    { key: "receiving-status", label: "수령 현황",     href: "/confirm-receipt" },
     { key: "purchase-history", label: "구매 내역",     href: "/purchase-history" },
 
   ],
