@@ -8,10 +8,12 @@ import SalesSettlement from "./pages/SalesSettlement";
 import Produceregistar from "./pages/Produceregistar";
 import Auction from "./pages/AuctionPage";
 import Review from "./pages/Review";
+import AuctionDetail from "./pages/AuctionDetail";
 import Confirm from "./pages/ConfirmReceiptPage"
 import ConsignmentCompanyForm from "./pages/ConsignmentCompanyForm";
 import BuyerForm from "./pages/BuyerForm";
 import FishmanForm from "./pages/FishmanForm";
+
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -28,6 +30,7 @@ function App() {
           <Route path="/producermain" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
           <Route path="/auction" element={<Auction />} />
+          <Route path="/auction/detail" element={<AuctionDetail />} />
           <Route path="/confirm-receipt" element={<Confirm />} />
 
           <Route path="/review" element={<Review />} />

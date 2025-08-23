@@ -1,14 +1,14 @@
 import React from "react";
 
-import AuctionPage from "../components/AuctionPage/Auction";
+import Auction from "../components/AuctionPage/Auction";
 
 
-function Auction() {
+function AuctionPage() {
   return (
     <>
-      <AuctionPage />
+      <Auction />
     </>
   );
 }
 
-export default Auction;
+export default AuctionPage;

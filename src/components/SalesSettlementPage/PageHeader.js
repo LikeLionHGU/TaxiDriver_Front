@@ -16,13 +16,17 @@ const icons = {
 function PageHeader({ image = "", title = "", content = "" }) {
   const iconSrc = icons[image] || CartImg;
 
+  const hasContent = content != null && String(content).trim() !== "";
+
   return (
     <>
       <div className={styles.main}>
         <img src={iconSrc} alt="iconImg" />
         <div className={styles.textContainer}>
           <span className={styles.title}>{title}</span>
-          <span className={styles.content}>{content}</span>
+          {hasContent && (
+            <span className={styles.content}>{content}</span>
+          )}
         </div>
       </div>
     </>
