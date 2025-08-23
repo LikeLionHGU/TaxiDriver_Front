@@ -2,24 +2,20 @@
 
 import { useState } from "react"
 import styles from "../styles/consignment-company-form.module.css"
-
+import { regions } from "../data/regions"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 
 export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("")
 
-  const provinces = ["강원도", "경상도", "경기/인천", "전라도", "제주도", "충청도"]
+  const provinces = Object.keys(regions);
+  const locations = selectedProvince ? regions[selectedProvince] : [];
 
-  const locations = [
-    { name: "포항 죽도시장", city: "포항" },
-    { name: "포항 구룡포", city: "포항" },
-    { name: "부산 자갈치시장", city: "부산" },
-    { name: "부산 기장", city: "부산" },
-    { name: "통영 중앙시장", city: "통영" },
-    { name: "거제 외포항", city: "거제" },
-    { name: "울산 울진", city: "울산" },
-  ]
+  const handleProvinceSelect = (province) => {
+    setSelectedProvince(province);
+    setSelectedLocation(""); // Reset location when province changes
+  };
 
   return (
     <div className={styles.container}>
@@ -93,7 +89,7 @@ export default function LocationSelector() {
             {provinces.map((province) => (
               <button
                 key={province}
-                onClick={() => setSelectedProvince(province)}
+                onClick={() => handleProvinceSelect(province)}
                 className={`${styles.provinceTab} ${selectedProvince === province ? styles.provinceTabActive : ""}`}
               >
                 {province}
