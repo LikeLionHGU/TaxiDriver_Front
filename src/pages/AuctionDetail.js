@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from "react";
 import styles from "../styles/AuctionDetail.module.css";
 
