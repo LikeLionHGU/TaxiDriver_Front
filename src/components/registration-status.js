@@ -4,7 +4,42 @@ import { useState, useEffect} from "react"
 
 import StatsCards from "./stats-cards"
 import ProducerMainTable from "./producermain-table"
-import styles from "./styles/registration-status.module.css"
+import React from 'react';
+import styles from './styles/registration-status.module.css';
+import PaginatedTable from '../common/PaginatedTable';
+import registrationMockData from '../../data/registrationMockData';
+
+const RegistrationStatus = () => {
+  const headers = ['등록일', '생산자', '품목', '상태', '승인/반려'];
+
+  const renderRow = (data) => (
+    <tr key={data.id}>
+      <td>{data.registrationDate}</td>
+      <td>{data.producer}</td>
+      <td>{data.item}</td>
+      <td>{data.status}</td>
+      <td>
+        {data.status === '검토요청' && (
+          <>
+            <button>승인</button>
+            <button>반려</button>
+          </>
+        )}
+      </td>
+    </tr>
+  );
+
+  return (
+    <div className={styles.registrationStatusContainer}>
+      <PaginatedTable
+        data={registrationMockData}
+        headers={headers}
+        renderRow={renderRow}
+      />
+    </div>
+  );
+};
+
 import auctionStyles from "./AuctionPage/Auction.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"
 
@@ -16,6 +51,22 @@ const MOCK = {
         { id: 2, name: "광어", category: "완도", weight: "10kg", testResult: "", price: 80000, origin: "이영희(어민 정보 추가)", status: "approved", registrationDate: "2025-08-15", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 91.3 },
         { id: 3, name: "오징어", category: "주문진", weight: "50kg", testResult: "", price: 250000, origin: "박준호(어민 정보 추가)", status: "approved", registrationDate: "2025-07-25", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 91.3만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 91.3 },
         { id: 4, name: "고등어", category: "부산", weight: "30kg", testResult: "", price: 120000, origin: "최유리(어민 정보 추가)", status: "rejected", registrationDate: "2025-05-10", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 13.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다." },
+        { id: 5, name: "새우", category: "제주", weight: "5kg", testResult: "", price: 50000, origin: "김민준(어민 정보 추가)", status: "pending", registrationDate: "2025-08-19" },
+        { id: 6, name: "참치", category: "원양", weight: "100kg", testResult: "", price: 1000000, origin: "박서준(어민 정보 추가)", status: "approved", registrationDate: "2025-08-18", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 95.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 95.0 },
+        { id: 7, name: "갈치", category: "목포", weight: "15kg", testResult: "", price: 150000, origin: "이하은(어민 정보 추가)", status: "pending", registrationDate: "2025-08-17" },
+        { id: 8, name: "전복", category: "완도", weight: "2kg", testResult: "", price: 200000, origin: "정수민(어민 정보 추가)", status: "rejected", registrationDate: "2025-08-16", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 15.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다." },
+        { id: 9, name: "문어", category: "동해", weight: "20kg", testResult: "", price: 300000, origin: "최지우(어민 정보 추가)", status: "approved", registrationDate: "2025-08-14", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 92.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 92.0 },
+        { id: 10, name: "멍게", category: "통영", weight: "3kg", testResult: "", price: 30000, origin: "김도현(어민 정보 추가)", status: "pending", registrationDate: "2025-08-13" },
+        { id: 11, name: "해삼", category: "남해", weight: "1kg", testResult: "", price: 70000, origin: "박지훈(어민 정보 추가)", status: "approved", registrationDate: "2025-08-12", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 90.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 90.0 },
+        { id: 12, name: "아귀", category: "서해", weight: "7kg", testResult: "", price: 60000, origin: "이서연(어민 정보 추가)", status: "rejected", registrationDate: "2025-08-11", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 18.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다." },
+        { id: 13, name: "도미", category: "제주", weight: "8kg", testResult: "", price: 90000, origin: "정우진(어민 정보 추가)", status: "pending", registrationDate: "2025-08-10" },
+        { id: 14, name: "병어", category: "군산", weight: "4kg", testResult: "", price: 40000, origin: "최윤서(어민 정보 추가)", status: "approved", registrationDate: "2025-08-09", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 93.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 93.0 },
+        { id: 15, name: "장어", category: "고창", weight: "6kg", testResult: "", price: 110000, origin: "김태희(어민 정보 추가)", status: "pending", registrationDate: "2025-08-08" },
+        { id: 16, name: "가자미", category: "강릉", weight: "3kg", testResult: "", price: 35000, origin: "박하준(어민 정보 추가)", status: "approved", registrationDate: "2025-08-07", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 94.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 94.0 },
+        { id: 17, name: "대구", category: "속초", weight: "12kg", testResult: "", price: 130000, origin: "이시우(어민 정보 추가)", status: "pending", registrationDate: "2025-08-06" },
+        { id: 18, name: "삼치", category: "여수", weight: "9kg", testResult: "", price: 85000, origin: "정은우(어민 정보 추가)", status: "rejected", registrationDate: "2025-08-05", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 16.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다." },
+        { id: 19, name: "명태", category: "동해", weight: "10kg", testResult: "", price: 75000, origin: "최민준(어민 정보 추가)", status: "approved", registrationDate: "2025-08-04", aiAnalysisResult: "정상", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 96.0만큼 떨어져 있습니다. 일반적인 질병패턴의 범위를 벗어나 정상일 가능성이 높습니다.", distance: 96.0 },
+        { id: 20, name: "홍어", category: "흑산도", weight: "15kg", testResult: "", price: 200000, origin: "김서아(어민 정보 추가)", status: "pending", registrationDate: "2025-08-03" },
     ],
 }
 
@@ -26,7 +77,7 @@ export default function RegistrationStatus() {
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedPeriod, setSelectedPeriod] = useState("기간 선택")
     const [page, setPage] = useState(1)
-    const pageSize = 10
+    const pageSize = 4
 
     useEffect(() => {
         // Mock 데이터를 사용하므로 fetch 로직은 주석 처리하거나 유지할 수 있습니다.
