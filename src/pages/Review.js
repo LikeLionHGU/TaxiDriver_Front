@@ -76,15 +76,22 @@ export default function Dashboard() {
   }
 
   const handleDetailClick = (item) => {
-    setSelectedItem(item)
-    if (item.status === "승인") {
-      setIsDetailModalOpen(true)
-    } else if (item.status === "승인거부") {
-      setIsRejectedModalOpen(true)
-    } else if (item.status === "검토요청") {
-      setIsPendingModalOpen(true)
+    const updatedItem = { ...item };
+    if (item.aiScore && item.aiAnalysisText) {
+      updatedItem.aiAnalysisResult = {
+        diseasePercentage: item.aiScore,
+        diseaseDescription: item.aiAnalysisText,
+      };
     }
-  }
+    setSelectedItem(updatedItem);
+    if (item.status === "승인") {
+      setIsDetailModalOpen(true);
+    } else if (item.status === "승인거부") {
+      setIsRejectedModalOpen(true);
+    } else if (item.status === "검토요청") {
+      setIsPendingModalOpen(true);
+    }
+  };
 
   const closeModal = () => {
     setIsDetailModalOpen(false)

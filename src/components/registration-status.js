@@ -15,7 +15,7 @@ const MOCK = {
         { id: 1, name: "대게", category: "포항", weight: "25.5kg", testResult: "", price: 175750, origin: "김철수(어민 정보 추가)", status: "pending", registrationDate: "2025-08-20" },
         { id: 2, name: "광어", category: "완도", weight: "10kg", testResult: "", price: 80000, origin: "이영희(어민 정보 추가)", status: "approved", registrationDate: "2025-08-15" },
         { id: 3, name: "오징어", category: "주문진", weight: "50kg", testResult: "", price: 250000, origin: "박준호(어민 정보 추가)", status: "approved", registrationDate: "2025-07-25" },
-        { id: 4, name: "고등어", category: "부산", weight: "30kg", testResult: "", price: 120000, origin: "최유리(어민 정보 추가)", status: "rejected", registrationDate: "2025-05-10" },
+        { id: 4, name: "고등어", category: "부산", weight: "30kg", testResult: "", price: 120000, origin: "최유리(어민 정보 추가)", status: "rejected", registrationDate: "2025-05-10", aiAnalysisText: "학습된 질병 데이터의 평균 특징과 13.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다." },
     ],
 }
 

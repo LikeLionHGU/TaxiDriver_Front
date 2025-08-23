@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
-import styles from "./styles/modal.module.css";
+import styles from './styles/modal.module.css';
 
 export default function RejectedModal({ open, onClose, product, onSave }) {
   // 훅(Hook)들을 컴포넌트 최상단으로 이동시켜 항상 동일한 순서로 호출되도록 합니다.
