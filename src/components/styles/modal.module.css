@@ -9,6 +9,11 @@
   line-height: 1; color: #6b7280; }
 .body { padding: 16px 20px 24px; overflow: auto; background: #fff;scrollbar-color: #07F transparent; }
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; align-items: stretch;}
+.aiAnalysisContent {
+  display: flex;
+  gap: 16px; /* Adjust gap as needed */
+  align-items: flex-start; /* Align items to the start of the cross axis */
+}
 .kv { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .kv li { display: flex; justify-content: space-between; gap: 12px; }
 .kv span { color: #6b7280; font-size: 14px; }
@@ -19,7 +24,9 @@
   align-items: center;   
   gap: 8px;
   text-align: center;
-  width: 100%;          
+  width: 100%;
+  flex: 1; 
+           
 }
 
 
@@ -67,6 +74,7 @@
   color: #374151;
   line-height: 1.4;
   background: transparent; /*  회색 중첩 방지 */
+  flex: 1; /* Added for 5:5 ratio */
 }
 
 /* 반려 사유 입력 */
@@ -161,6 +169,7 @@
   color: #374151;
   line-height: 1.6;
   background: transparent;
+  flex: 1; /* Added for 5:5 ratio */
 }
 
 /* (선택) 소제목 */
@@ -177,14 +186,10 @@
 }
 
 .photoPlaceholder {
+  min-height:200px;
   height: 140px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  border: none;          /* 테두리 제거 */
-  border-radius: 8px;
-  background: #fafafa;
+  display:flex; align-items:center; justify-content:center;
+  color:#9ca3af; border:1px dashed #d1d5db; border-radius:8px; background:#fafafa;
 }
 
 
@@ -340,6 +345,7 @@
   cursor: pointer;
 }
 .rejectReasonBtnGhost:hover { background: #f9fafb; }
+
 
 
 
