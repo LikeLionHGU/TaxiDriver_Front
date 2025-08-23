@@ -1,0 +1,27 @@
+.loading{
+  width:100vw;
+  height:100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+
+  font-size: 48px;
+  font-weight: 900;
+}
+
+.loadingText .error{
+  margin-bottom: 30px;
+}
+
+.retryBtn{
+  font-size: 24px;
+  font-weight: 700;
+
+  background: #2775E7;
+  border-radius: 10px;
+  border:none;
+  color: #FFF;
+  padding: 12px 20px;
+}
