@@ -6,10 +6,11 @@ import styles from "../styles/Purchasehistory.module.css"
 // SVG 파일 import 방식은 사용자의 환경에 따라 다를 수 있습니다.
 // .src가 필요 없는 환경일 수 있으므로 원래대로 되돌립니다.
 import excelIcon from "../assets/excel.svg";
-import logo from "../assets/SaleTable/cart.svg";
+import logo from "../assets/logo.svg";
 
 const PurchaseHistoryPage = () => {
   const [activeFilter, setActiveFilter] = useState("전체")
+  const [checkedItems, setCheckedItems] = useState({}) // 체크박스 상태 관리
 
   // Sample purchase data
   const purchaseData = [
@@ -20,7 +21,6 @@ const PurchaseHistoryPage = () => {
       quantity: "30마리",
       price: 250000,
       date: "2025. 8. 9.",
-      status: "수령대기",
     },
     {
       id: 2,
@@ -29,7 +29,6 @@ const PurchaseHistoryPage = () => {
       quantity: "100마리",
       price: 85000,
       date: "2025. 8. 10.",
-      status: "수령완료",
     },
     {
       id: 3,
@@ -38,7 +37,6 @@ const PurchaseHistoryPage = () => {
       quantity: "200마리",
       price: 120000,
       date: "2025. 8. 11.",
-      status: "수령대기",
     },
     {
       id: 4,
@@ -47,15 +45,11 @@ const PurchaseHistoryPage = () => {
       quantity: "80마리",
       price: 95000,
       date: "2025. 8. 12.",
-      status: "수령완료",
     },
   ]
 
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
-  // Calculate totals
-  const totalRecords = purchaseData.length
-  const totalAmount = purchaseData.reduce((sum, item) => sum + item.price, 0)
 
   // Filter data based on active filter
   const filteredData =
@@ -65,15 +59,37 @@ const PurchaseHistoryPage = () => {
     setActiveFilter(filter)
   }
 
+  // 체크박스 상태 변경 핸들러
+  const handleCheckboxChange = (itemId) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }))
+  }
+
+  // 전체 선택/해제 핸들러
+  const handleSelectAll = (isChecked) => {
+    const newCheckedItems = {}
+    if (isChecked) {
+      filteredData.forEach(item => {
+        newCheckedItems[item.id] = true
+      })
+    }
+    setCheckedItems(newCheckedItems)
+  }
+
+  // 전체 선택 여부 확인
+  const isAllChecked = filteredData.length > 0 && filteredData.every(item => checkedItems[item.id])
+  const isIndeterminate = filteredData.some(item => checkedItems[item.id]) && !isAllChecked
+
   const handleExcelDownload = () => {
     const csvContent = [
-      ["상품명", "수량", "낙찰가", "낙찰일", "상태"],
+      ["상품명", "수량", "낙찰가", "낙찰일"],
       ...filteredData.map((item) => [
-        item.productName,
+        `${item.productName} (${item.description})`,
         item.quantity,
         `₩${item.price.toLocaleString()}`,
         item.date,
-        item.status,
       ]),
     ]
       .map((row) => row.join(","))
@@ -90,22 +106,6 @@ const PurchaseHistoryPage = () => {
     document.body.removeChild(link)
   }
 
-  // 2. getStatusClass가 styles 객체의 클래스 이름을 대괄호 표기법으로 반환하도록 수정
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "수령완료":
-        return styles['status-completed'];
-      case "수령대기":
-        return styles['status-pending'];
-      case "처리중":
-        return styles['status-processing'];
-      case "취소됨":
-        return styles['status-cancelled'];
-      default:
-        return ""; // 기본값 설정
-    }
-  }
-
   return (
     // 3. 모든 className을 대괄호 표기법 styles['class-name']을 사용하여 적용
     <div className={styles['purchase-history-container']}>
@@ -117,10 +117,7 @@ const PurchaseHistoryPage = () => {
     <div className={styles['title-texts']}>
       <h2 className={styles['section-title']}>구매 내역</h2>
       <div className={styles['purchase-stats']}>
-        조회된 건수: {totalRecords}건 | 총 구매액:{' '}
-        <span className={styles['amount']}>
-        ₩{totalAmount.toLocaleString()}
-    </span>
+        구매한 상품 내역을 한눈에 보고, 엑셀파일로 쉽게 관리하세요.
 </div>
 
     </div>
@@ -151,16 +148,34 @@ const PurchaseHistoryPage = () => {
           <table className={styles['purchase-table']}>
             <thead>
               <tr>
+                <th className={styles['checkbox-column']}>
+                  <input
+                    type="checkbox"
+                    checked={isAllChecked}
+                    ref={input => {
+                      if (input) input.indeterminate = isIndeterminate;
+                    }}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className={styles['checkbox']}
+                  />
+                </th>
                 <th>상품명</th>
                 <th>수량</th>
                 <th>낙찰가</th>
                 <th>낙찰일</th>
-                <th>상태</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((item) => (
                 <tr key={item.id}>
+                  <td className={styles['checkbox-column']}>
+                    <input
+                      type="checkbox"
+                      checked={checkedItems[item.id] || false}
+                      onChange={() => handleCheckboxChange(item.id)}
+                      className={styles['checkbox']}
+                    />
+                  </td>
                   <td>
                     <div className={styles['product-name']}>{item.productName}</div>
                     <div className={styles['product-description']}>{item.description}</div>
@@ -168,11 +183,6 @@ const PurchaseHistoryPage = () => {
                   <td>{item.quantity}</td>
                   <td className={styles['price']}>₩{item.price.toLocaleString()}</td>
                   <td className={styles['date']}>{item.date}</td>
-                  <td>
-                    <span className={`${styles['status-badge']} ${getStatusClass(item.status)}`}>
-                      {item.status}
-                    </span>
-                  </td>
                 </tr>
               ))}
             </tbody>

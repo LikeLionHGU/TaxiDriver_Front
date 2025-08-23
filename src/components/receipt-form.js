@@ -266,14 +266,12 @@ export default function ReceiptForm() {
       display: 'flex',
       flexDirection: 'column',
       textAlign: 'left',
-      marginLeft: '10px'
     },
     priceTitle: {
       fontSize: '16px',
       fontWeight: '600',
       color: '#1f2937',
       margin: '0 0 16px 0',
-      marginLeft: '10px',
       textAlign: 'left'
     },
     priceList: {
@@ -335,7 +333,8 @@ export default function ReceiptForm() {
       fontSize: '13px',
       fontWeight: '600',
       color: '#374151',
-      marginBottom: '4px'
+      marginBottom: '4px',
+      textAlign: 'left'
     },
     input: {
       padding: '10px 12px',
@@ -529,9 +528,8 @@ export default function ReceiptForm() {
       textAlign: 'center',
       transition: 'border-color 0.2s',
       background: '#fafafa',
-      width: 'calc(100% - 40px)', 
+      width: '100%',
       minHeight: '300px',
-      margin: '0 auto'
     },
     uploadInner: {
       display: 'flex',
@@ -934,22 +932,25 @@ export default function ReceiptForm() {
 
             {/* 최저 수락가 설정 섹션 */}
             <div style={styles.inputGroup}>
-              <label style={{...styles.label, marginLeft: '-440px', marginTop: '16px'}}>최저 수락가 설정</label>
-              <input
-                type="text"
-                value={`₩${minPrice.toLocaleString()}`}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, "");
-                  setMinPrice(value === "" ? 0 : parseInt(value, 10));
-                }}
-                style={{...styles.input, width: "95%", paddingLeft: 12, marginLeft: 10}}
-                placeholder="kg당 최저 수락가"
-              />
-              <div style={styles.chipGroup}>
-                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 1000)}>+1천원</button>
-                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 10000)}>+1만원</button>
-                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 50000)}>+5만원</button>
-                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => prev + 100000)}>+10만원</button>
+              <label style={{...styles.label, marginTop: '16px'}}>최저 수락가 설정</label>
+              <div style={{position: 'relative', display: 'flex', alignItems: 'center', width: '95%', marginLeft: 10}}>
+                <input
+                  type="text"
+                  value={minPrice.toLocaleString()}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    setMinPrice(value === "" ? "" : parseInt(value, 10));
+                  }}
+                  style={{...styles.input, width: '100%', paddingRight: '35px'}}
+                  placeholder="kg당 최저 수락가"
+                />
+                <span style={{position: 'absolute', right: '12px', fontSize: '13px', color: '#6b7280'}}>원</span>
+              </div>
+              <div style={{...styles.chipGroup, marginLeft: 10, marginTop: 8}}>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => (Number(prev) || 0) + 1000)}>+1천원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => (Number(prev) || 0) + 10000)}>+1만원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => (Number(prev) || 0) + 50000)}>+5만원</button>
+                <button type="button" style={styles.chip} onClick={() => setMinPrice(prev => (Number(prev) || 0) + 100000)}>+10만원</button>
               </div>
             </div>
           </div>
@@ -957,7 +958,7 @@ export default function ReceiptForm() {
 
         {/* 사진 업로드 - 그리드 외부에서 전체 너비 사용 */}
         <div style={{...styles.inputGroup, padding: '0 24px 24px 24px'}}>
-          <label style={{...styles.label, marginLeft: '-1065px'}}>사진 업로드</label>
+          <label style={{...styles.label}}>사진 업로드</label>
           <div
             style={styles.uploadArea}
             onDragOver={onDragOver}
