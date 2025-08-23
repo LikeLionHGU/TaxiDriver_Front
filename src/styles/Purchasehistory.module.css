@@ -3,8 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem; /* Adjusted padding */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #F9FAFB; /* 바깥 배경 */
+  font-family: JalpullineunharuOTF;
   min-height: 100vh;
 }
 
@@ -18,6 +17,7 @@
 
 /* Section Header */
 .section-header {
+  margin-top:50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,8 +26,22 @@
   border-bottom: none;
 }
 
-/* ⬇️ Left group: Icon + Text Stack */
-/* Removed .title-area, .title-icon, .title-texts as they are no longer needed */
+/* Title Area - 로고와 텍스트를 가로로 배치 */
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* 로고와 텍스트 사이 간격 */
+}
+
+.title-icon {
+  flex-shrink: 0; /* 크기 고정 */
+}
+
+.title-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 /* Title/Stats basic styles */
 .section-title {
@@ -36,6 +50,8 @@
   color: #333;
   font-weight: 600;
   line-height: 1.1;
+  margin-left:-260px;
+  font-family: JalpullineunharuOTF;
 }
 
 .purchase-stats {
@@ -46,19 +62,32 @@
 
 /* Mobile header stack */
 @media (max-width: 768px) {
-  .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .section-header { 
+    flex-direction: column; 
+    gap: 12px; 
+    align-items: flex-start; 
+  }
+  
+  .title-area {
+    flex-direction: row; /* 모바일에서도 가로 유지 */
+    gap: 10px;
+  }
+  
+  .title-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+    margin-left: 0; /* 모바일에서는 margin 제거 */
+  }
 }
-.section-title {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+.amount {
+  color: #2563EB;   /* 파란색 */
+  font-weight: 600; /* 선택: 강조 */
 }
-.section-title::before { content: none; }
-.purchase-stats { font-size: 14px; color: #6c757d; margin-top: 5px; }
 
 /* 엑셀 버튼 */
 .excel-download-btn {
@@ -73,6 +102,7 @@
   align-items: center;
   gap: 5px;
   transition: background-color 0.2s ease;
+  flex-shrink: 0; /* 버튼 크기 고정 */
 }
 .excel-download-btn:hover { background: #218838; }
 
@@ -117,7 +147,6 @@
   margin-right: -20px;
   border-collapse: collapse;
   margin-top: 20px;
-
   border-top: 1px solid #C5C5C5;
 }
 
@@ -146,17 +175,25 @@
   padding-left:12px;
 }
 
-.amount {
-  color: #2563EB;   /* 파란색 */
-  font-weight: 600; /* 선택: 강조 */
+/* 체크박스 열 스타일 */
+.checkbox-column {
+  width: 60px;
+  text-align: center !important;
+  padding: 15px 12px;
 }
 
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
 
 .product-name, .product-description { margin: 0; line-height: 1.4; display:block;}
 .product-name { margin-bottom:4px; }
 .product-description { font-size: 12px; color: #6c757d; }
 
-/* Status Badges */
+/* Status Badges - 더이상 사용하지 않지만 유지 */
 .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; }
 .status-completed { background: #DCfCE7; color: #166534; border:1px solid #86EFAC;}
 .status-processing { background: #d1ecf1; color: #0c5460; }
@@ -199,9 +236,6 @@
   color: #757575;
 }
 
-
-
-
 /* (모바일) */
 @media (max-width: 768px) {
   .purchase-history-container { padding: 10px; }
@@ -210,4 +244,13 @@
   .purchase-table { font-size: 12px; }
   .purchase-table th, .purchase-table td { padding: 10px 8px; }
   .filter-buttons { flex-wrap: wrap; }
+  
+  .checkbox-column {
+    width: 50px;
+  }
+  
+  .checkbox {
+    width: 16px;
+    height: 16px;
+  }
 }
