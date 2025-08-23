@@ -1,15 +1,15 @@
+// LandingPage.jsx
 import React from "react";
-import styles from "../styles/Landing.module.css";
+import LandingHeader from '../components/LandingHeader';
+import styles from '../components/styles/landing-header.module.css';
 
-
-function Landing() {
+const LandingPage = () => {
   return (
-    <>
-      <div className={styles.main}>
-        landing page
-      </div>
-    </>
+    <div className={styles.landingPage}>
+      {/* 헤더 */}
+      <LandingHeader />
+    </div>
   );
-}
+};
 
-export default Landing;
+export default LandingPage;
