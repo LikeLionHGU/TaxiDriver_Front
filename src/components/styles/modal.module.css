@@ -286,7 +286,7 @@
   background: #F7F7F7;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 4px 7.2px -1px rgba(0,0,0,0.07);
+  box-shadow: 0 4px 7.2px -1px rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -351,4 +351,40 @@
 
 @media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
+}
+
+.aiAnalysisGraphContainer {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+  height: 25px; /* Fixed height for the bar */
+}
+
+.aiAnalysisGraphBar {
+  height: 100%;
+  background-color: #4CAF50; /* Green color for the bar */
+  text-align: right; /* Text inside the bar */
+  color: white;
+  line-height: 25px; /* Center text vertically */
+  padding-right: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.aiAnalysisGraphText {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  line-height: 25px;
+  color: #333; /* Darker color for text outside the bar */
+  font-weight: bold;
+}
+
+.aiAnalysisDescription {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
 }
