@@ -27,7 +27,7 @@ function AuctionPeople() {
             <span>명</span>
           </div>
         </div>
-
+{/* 
         <div className={styles.list} role="list">
           {MOCK_PEOPLE.map((p) => (
             <PeopleRow
@@ -38,6 +38,14 @@ function AuctionPeople() {
               note={p.note}
             />
           ))}
+        </div> */}
+
+        <div className={styles.beforeStart}>
+          <div className={styles.beforeStartContainer}>
+            <img src={people} alt="people"/>
+            <span className={styles.beforeStartText}>경매 시작 전입니다</span>
+            <span>14:30에 경매가 시작됩니다</span>
+          </div>
         </div>
       </div>
     </>
