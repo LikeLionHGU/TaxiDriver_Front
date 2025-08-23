@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import styles from "../styles/consignment-company-form.module.css"
+import { regions } from "../data/regions"
 
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 
@@ -9,43 +10,10 @@ export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("") // 빈 문자열로 초기화
   const [selectedLocation, setSelectedLocation] = useState("") // 빈 문자열로 초기화
 
-  const provinces = ["강원도", "경상도", "경기/인천", "전라도", "제주도", "충청도"]
-
-  // 지역별 위판장 데이터
-  const locationsByProvince = {
-    "강원도": [
-      { name: "강릉 중앙시장", city: "강릉" },
-      { name: "속초 동명항", city: "속초" },
-    ],
-    "경상도": [
-      { name: "포항 죽도시장", city: "포항" },
-      { name: "포항 구룡포", city: "포항" },
-      { name: "부산 자갈치시장", city: "부산" },
-      { name: "부산 기장", city: "부산" },
-      { name: "통영 중앙시장", city: "통영" },
-      { name: "거제 외포항", city: "거제" },
-      { name: "울산 울진", city: "울산" },
-    ],
-    "경기/인천": [
-      { name: "인천 소래포구", city: "인천" },
-      { name: "인천 연안부두", city: "인천" },
-    ],
-    "전라도": [
-      { name: "완도 수산시장", city: "완도" },
-      { name: "여수 돌산대교", city: "여수" },
-    ],
-    "제주도": [
-      { name: "제주 동문시장", city: "제주" },
-      { name: "서귀포 올레시장", city: "서귀포" },
-    ],
-    "충청도": [
-      { name: "보령 대천항", city: "보령" },
-      { name: "태안 안면도", city: "태안" },
-    ]
-  }
+  const provinces = Object.keys(regions);
 
   // 선택된 도에 따른 위판장 목록
-  const currentLocations = selectedProvince ? locationsByProvince[selectedProvince] || [] : []
+  const currentLocations = selectedProvince ? regions[selectedProvince] : []
 
   const handleProvinceSelect = (province) => {
     setSelectedProvince(province)
