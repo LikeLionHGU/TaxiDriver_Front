@@ -1,10 +1,59 @@
 .footerContainer{
   width: 100vw;
-  height: 300px;
+  height: 312px;
   flex-shrink: 0;
 
   display: flex;
+  flex-direction: column;
+  text-align: start;
+
+  padding: 48px 150px 106px 150px;
+ box-sizing: border-box;
+
+  background: #272E3C;
+  color: #F9FAFB;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.footerTopContainer{
+  display: flex;
+  flex-direction: row;
+}
+
+.mainText{
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.leftWidth{
+  width: 580px;
+
+  text-align: bottom;
+}
+
+.sideText{
+  margin-top: 10px;
+}
+
+.footerBottomContainer{
+  display: flex;
   flex-direction: row;
 
-  background: #979797;
+  margin-top: 43px;
+}
+
+.leftContainer{
+  display: flex;
+  flex-direction: column;
+  width: 580px;
+
+  gap:15px;
+}
+
+.rightContainer{
+  display: flex;
+  flex-direction: column;
+
+  gap:7px;
 }
