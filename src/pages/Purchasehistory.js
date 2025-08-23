@@ -50,9 +50,6 @@ const PurchaseHistoryPage = () => {
 
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
-  // Calculate totals
-  const totalRecords = purchaseData.length
-  const totalAmount = purchaseData.reduce((sum, item) => sum + item.price, 0)
 
   // Filter data based on active filter
   const filteredData =
