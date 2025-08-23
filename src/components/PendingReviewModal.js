@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import styles from "./styles/modal.module.css";
 import pendingIcon from "../assets/검토중.svg"; 
 
-export default function PendingReviewModal({ open, onClose, product, onApprove }) {
+export default function PendingReviewModal({ open, onClose, product, onApprove, hideApprovalButtons }) {
   const [showRejectionReasonInput, setShowRejectionReasonInput] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
@@ -201,6 +201,6 @@ export default function PendingReviewModal({ open, onClose, product, onApprove }
   return h(
     Modal,
     { open, onClose, title: "상품 상세 검토" },
-    h(React.Fragment, null, grid, bottom, rejectionReasonTextarea, actionButtons)
+    h(React.Fragment, null, grid, bottom, rejectionReasonTextarea, !hideApprovalButtons && actionButtons)
   );
 }
