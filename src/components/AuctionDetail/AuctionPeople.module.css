@@ -1,0 +1,21 @@
+.main{
+  width:40%;
+  height: 694px;
+
+  padding: 27px;
+
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+
+  margin-top: 16px;
+}
+
+/* .beforemain{
+  height: 694px !important;
+} */
+
+.titleContainer{
+  display: flex;
+  flex-direction: row;
+}
