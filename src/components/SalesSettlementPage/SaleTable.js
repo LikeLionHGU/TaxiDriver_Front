@@ -7,7 +7,7 @@ import MainTable from "./MainTable";
 import excel from "../../assets/excel.svg";
 
 
-function SaleTable() {
+function SaleTable({ data }) {
   return (
     <>
       <div className={styles.main}>
@@ -22,7 +22,7 @@ function SaleTable() {
             <img src={excel} alt="excel"/>
             <span>엑셀 다운로드</span>
           </button>
-          <MainTable />
+          <MainTable data={data} />
         </div>
       </div>
     </>
