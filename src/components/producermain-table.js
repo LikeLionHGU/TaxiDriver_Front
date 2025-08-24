@@ -49,7 +49,7 @@ export default function ProducerMainTable({
           <span className={styles.productWeight}>{`${product.category} | ${product.weight}`}</span>
         </div>
       </td>
-      <td className={styles.price}>{`₩${product.price.toLocaleString()}`}</td>
+      <td className={styles.price}>{`₩${product.price?.toLocaleString() || '0'}`}</td>
       <td>{product.origin}</td>
       <td>{getStatusBadge(product.status)}</td>
       <td>{product.registrationDate}</td>

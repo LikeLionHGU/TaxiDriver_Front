@@ -1,9 +1,8 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
-
-import axios from 'axios';
-import '../components/styles/receipt-form.module.css';
+import { useState, useEffect, useRef } from "react"
+import axios from "axios"
+import "../components/styles/receipt-form.module.css"
 
 const fishSpeciesData = [
   "고등어",
@@ -223,18 +222,96 @@ export default function ReceiptForm() {
 
   const [submissionStatus, setSubmissionStatus] = useState(null) // 'success' or 'failure'
 
-  const handleSubmit = () => {
-    // Basic validation before opening the confirmation modal
-    if (!selectedFish || !statusType || !saleType || !minPrice) {
-      alert("모든 필수 정보를 입력해주세요.")
-      return
-    }
-    if (images.length === 0) {
-      alert("사진을 등록해주세요.")
+  const handleSubmit = async () => {
+    console.log("등록 버튼 클릭됨")
+
+    // 1. 어종 선택 확인
+    if (!selectedFish) {
+      console.error("어종이 선택되지 않았습니다.")
+      alert("어종을 선택해주세요.")
       return
     }
 
-    setIsModalOpen(true)
+    // 2. 상태 확인
+    if (!statusType) {
+      console.error("상태가 선택되지 않았습니다.")
+      alert("상태를 선택해주세요.")
+      return
+    }
+
+    if (!minPrice) {
+      console.error("최저 수락가가 입력되지 않았습니다.")
+      alert("최저 수락가를 입력해주세요.")
+      return
+    }
+
+    const payload = {
+      name: selectedFish,
+      fishStatus: statusType,
+      salesMethod: "", // Will be set based on saleType and packUnit
+      fishCount: 0,
+      fishWeight: "", // Will be set based on salesMethod
+      reservePrice: typeof minPrice === "number" ? minPrice : Number(minPrice) || 0,
+    }
+
+    // 판매 방식별 데이터 설정
+    if (saleType === "weight") {
+      payload.salesMethod = "kg"
+      payload.fishCount = Number(totalCount) || 0
+      payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값을 문자열로 변환
+    } else if (saleType === "package") {
+      if (packUnit === "sp") {
+        payload.salesMethod = "s/p"
+        payload.fishCount = Number(quantity) || 0
+        payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값 사용
+      } else if (packUnit === "box") {
+        payload.salesMethod = "box"
+        payload.fishCount = Number(quantity) || 0
+        payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값 사용
+      } else if (packUnit === "net") {
+        payload.salesMethod = "net"
+        payload.fishCount = Number(totalCount) || 0
+        payload.fishWeight = sizeUnit || "L" // net일 때는 "S", "M", "L"
+      }
+    }
+
+    console.log("최종 payload:", payload)
+
+    try {
+      const formData = new FormData()
+
+      // 이미지 파일들 추가
+      images.forEach((imageItem) => {
+        if (imageItem.file) {
+          formData.append("image", imageItem.file)
+        }
+      })
+
+      // JSON 데이터를 "post" 파트로 추가
+      const postBlob = new Blob([JSON.stringify(payload)], {
+        type: "application/json",
+      })
+      formData.append("post", postBlob)
+
+      const response = await axios.post("https://likelion.info/post/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+
+      console.log("Registration response:", response.data)
+
+      if (response.data && response.data.isSuccess === 1) {
+        setSubmissionStatus("success")
+      } else {
+        setSubmissionStatus("failure")
+      }
+      setIsCompletionModalOpen(true)
+    } catch (error) {
+      console.error("Registration failed:", error)
+      setSubmissionStatus("failure")
+      setIsCompletionModalOpen(true)
+    }
   }
 
   const closeModal = () => {
@@ -243,8 +320,8 @@ export default function ReceiptForm() {
   }
 
   const handleConfirm = async () => {
-    console.log("=== 폼 제출 시작 ===");
-    setIsModalOpen(false);
+    console.log("=== 폼 제출 시작 ===")
+    setIsModalOpen(false)
 
     // 1. 기본 상태 확인
     console.log("현재 상태:", {
@@ -258,130 +335,102 @@ export default function ReceiptForm() {
       unitPrice,
       packUnit,
       sizeUnit,
-      imagesCount: images.length
-    });
+      imagesCount: images.length,
+    })
 
     // 2. 필수 필드 검증
     if (!selectedFish) {
-      console.error("어종이 선택되지 않았습니다.");
-      alert("어종을 선택해주세요.");
-      return;
+      console.error("어종이 선택되지 않았습니다.")
+      alert("어종을 선택해주세요.")
+      return
     }
-    
+
     if (!statusType) {
-      console.error("상태가 선택되지 않았습니다.");
-      alert("상태를 선택해주세요.");
-      return;
+      console.error("상태가 선택되지 않았습니다.")
+      alert("상태를 선택해주세요.")
+      return
     }
-    
+
     if (!saleType) {
-      console.error("판매 방식이 선택되지 않았습니다.");
-      alert("판매 방식을 선택해주세요.");
-      return;
+      console.error("판매 방식이 선택되지 않았습니다.")
+      alert("판매 방식을 선택해주세요.")
+      return
     }
-    
+
     if (!minPrice) {
-      console.error("최저 수락가가 입력되지 않았습니다.");
-      alert("최저 수락가를 입력해주세요.");
-      return;
+      console.error("최저 수락가가 입력되지 않았습니다.")
+      alert("최저 수락가를 입력해주세요.")
+      return
     }
 
     // 3. payload 생성
     const payload = {
       name: selectedFish,
       fishStatus: statusType,
-      salesMethod: saleType,
+      salesMethod: "", // Will be set based on saleType and packUnit
       fishCount: 0,
-      fishWeight: "",
-      reservePrice: typeof minPrice === 'number' ? minPrice : Number(minPrice) || 0
-    };
+      fishWeight: "", // Will be set based on salesMethod
+      reservePrice: typeof minPrice === "number" ? minPrice : Number(minPrice) || 0,
+    }
 
     // 4. 판매 방식별 데이터 설정
     if (saleType === "weight") {
-      payload.fishCount = Number(totalCount) || 0;
-      payload.fishWeight = specPerFish ? `${specPerFish}kg` : "0kg";
+      payload.salesMethod = "kg"
+      payload.fishCount = Number(totalCount) || 0
+      payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값을 문자열로 변환
     } else if (saleType === "package") {
-      if (packUnit === "sp" || packUnit === "box") {
-        payload.fishCount = Number(quantity) || 0;
-        payload.fishWeight = unitPrice ? `${unitPrice}원/${packUnit}` : `0원/${packUnit}`;
+      if (packUnit === "sp") {
+        payload.salesMethod = "s/p"
+        payload.fishCount = Number(quantity) || 0
+        payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값 사용
+      } else if (packUnit === "box") {
+        payload.salesMethod = "box"
+        payload.fishCount = Number(quantity) || 0
+        payload.fishWeight = String(Number(specPerFish) || 0) // 실제 무게값 사용
       } else if (packUnit === "net") {
-        payload.fishCount = Number(totalCount) || 0;
-        payload.fishWeight = sizeUnit || "L";
+        payload.salesMethod = "net"
+        payload.fishCount = Number(totalCount) || 0
+        payload.fishWeight = sizeUnit || "L" // net일 때는 "S", "M", "L"
       }
     }
 
-    console.log("최종 payload:", payload);
+    console.log("최종 payload:", payload)
 
     // 5. FormData 생성 및 확인
     try {
-      const formData = new FormData();
-      
-      // JSON 데이터 추가
-      const jsonBlob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-      formData.append("post", jsonBlob);
-      console.log("JSON 데이터 추가 완료");
+      const formData = new FormData()
 
-      // 이미지가 있을 경우만 추가 (required=false이므로)
-      if (images && images.length > 0) {
-        console.log("이미지가 있습니다. 이미지와 함께 전송합니다.");
-        images.forEach((img, index) => {
-          if (img.file) {
-            formData.append("image", img.file);
-            console.log(`이미지 ${index + 1} 추가:`, img.file.name, img.file.size, "bytes");
-          }
-        });
-      } else {
-        console.log("이미지가 없습니다. JSON 데이터만 전송합니다.");
-        // required=false이므로 빈 파일을 보낼 필요 없음
-      }
-
-      console.log("FormData entries:");
-      for (let [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          console.log(`${key}: File(${value.name}, ${value.size} bytes)`);
-        } else {
-          console.log(`${key}: ${value}`);
+      // 이미지 파일들 추가
+      images.forEach((imageItem) => {
+        if (imageItem.file) {
+          formData.append("image", imageItem.file)
         }
-      }
+      })
 
-      console.log("서버로 요청 전송 중...");
-      
-      // 6. 서버 요청 (Content-Type을 명시하지 않아 브라우저가 자동 설정하도록)
+      // JSON 데이터를 "post" 파트로 추가
+      const postBlob = new Blob([JSON.stringify(payload)], {
+        type: "application/json",
+      })
+      formData.append("post", postBlob)
+
       const response = await axios.post("https://likelion.info/post/add", formData, {
-        headers:{"Content-Type": "multipart/form-data"},
-        withCredentials: true,
-      });
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
 
-      console.log("서버 응답 성공:", response);
-      console.log("응답 데이터:", response.data);
+      console.log("Registration response:", response.data)
 
-      if (response.data === 1 || (response.data && response.data.isSuccess === 1)) {
-        setSubmissionStatus("success");
-        console.log("등록 성공!");
+      if (response.data && response.data.isSuccess === 1) {
+        setSubmissionStatus("success")
       } else {
-        console.log("서버에서 실패 응답 반환:", response.data);
-        setSubmissionStatus("failure");
+        setSubmissionStatus("failure")
       }
-
+      setIsCompletionModalOpen(true)
     } catch (error) {
-      console.error("=== 오류 발생 ===");
-      console.error("오류 타입:", error.constructor.name);
-      console.error("오류 메시지:", error.message);
-      
-      if (error.response) {
-        console.error("서버 응답 상태:", error.response.status);
-        console.error("서버 응답 데이터:", error.response.data);
-        console.error("서버 응답 헤더:", error.response.headers);
-      } else if (error.request) {
-        console.error("요청이 만들어졌으나 응답을 받지 못함:", error.request);
-      } else {
-        console.error("요청 설정 중 오류:", error.message);
-      }
-      
-      setSubmissionStatus("failure");
-    } finally {
-      setIsCompletionModalOpen(true);
-      console.log("=== 폼 제출 완료 ===");
+      console.error("Registration failed:", error)
+      setSubmissionStatus("failure")
+      setIsCompletionModalOpen(true)
     }
   }
 
@@ -1559,9 +1608,7 @@ export default function ReceiptForm() {
               )}
             </div>
 
-            <h3 style={styles.modalTitle}>
-              {submissionStatus === "success" ? "등록 완료" : "등록 실패"}
-            </h3>
+            <h3 style={styles.modalTitle}>{submissionStatus === "success" ? "등록 완료" : "등록 실패"}</h3>
             <p style={styles.modalMessage}>
               {submissionStatus === "success"
                 ? "수산물이 성공적으로 등록되었습니다."
