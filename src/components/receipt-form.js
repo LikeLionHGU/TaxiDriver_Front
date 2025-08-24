@@ -1,6 +1,9 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect, useRef } from 'react';
+
+import axios from 'axios';
+import '../components/styles/receipt-form.module.css';
 
 const fishSpeciesData = [
   "고등어",
@@ -239,17 +242,69 @@ export default function ReceiptForm() {
     setSelectedFish(null)
   }
 
+  const [submissionStatus, setSubmissionStatus] = useState(null) // 'success' or 'failure'
+
   const handleSubmit = () => {
+    // Basic validation before opening the confirmation modal
+    if (!selectedFish || !statusType || !saleType || !minPrice) {
+      alert("모든 필수 정보를 입력해주세요.")
+      return
+    }
+
+    // Construct the message for the confirmation modal
+    
+
+    // Update the modal message state if you have one, or pass it directly
+    // For now, I'll assume the modal content is dynamically generated or updated.
+    // You might need to add a state for modal message if it's not already dynamic.
+    // For this example, I'll directly use the message in the modal's render.
     setIsModalOpen(true)
   }
 
   const closeModal = () => {
     setIsModalOpen(false)
+    setSubmissionStatus(null) // Reset status when closing modal
   }
 
-  const handleConfirm = () => {
-    setIsModalOpen(false)
-    setIsCompletionModalOpen(true)
+  const handleConfirm = async () => {
+    setIsModalOpen(false) // Close the confirmation modal
+
+    const payload = {
+      name: selectedFish,
+      fishStatus: statusType,
+      salesMethod: saleType,
+      fishCount: 0,
+      fishWeight: "",
+      reservePrice: Number(minPrice),
+    }
+
+    if (saleType === "weight") {
+      payload.fishCount = totalCount
+      payload.fishWeight = `${specPerFish}kg`
+    } else if (saleType === "package") {
+      if (packUnit === "sp" || packUnit === "box") {
+        payload.fishCount = quantity
+        payload.fishWeight = `${unitPrice}원/${packUnit}`
+      } else if (packUnit === "net") {
+        payload.fishCount = totalCount
+        payload.fishWeight = sizeUnit
+      }
+    }
+
+    try {
+      const response = await axios.post("https://likelion.info/post/add", payload);
+
+      if (response.data.isSuccess === 1) {
+        setSubmissionStatus("success");
+      } else {
+        setSubmissionStatus("failure");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmissionStatus("failure");
+    } finally {
+      setIsCompletionModalOpen(true); // Open the completion modal regardless of success/failure
+    }
   }
 
   const closeCompletionModal = () => {
@@ -1328,7 +1383,20 @@ export default function ReceiptForm() {
 
             <h3 style={styles.modalTitle}>등록 정보 확인</h3>
             <p style={styles.modalMessage}>
-              등록하려는 어종은 광어이고, 마리당 4kg짜리 광어 4마리를 경매에 등록합니다.
+              {(() => {
+                let message = `등록하려는 어종은 ${selectedFish}이고, `
+                if (saleType === "weight") {
+                  message += `마리당 ${specPerFish}kg짜리 ${totalCount}마리를 경매에 등록합니다.`
+                } else if (saleType === "package") {
+                  if (packUnit === "sp" || packUnit === "box") {
+                    message += `${packUnit}당 ${unitPrice}원짜리 ${quantity}${packUnit}를 경매에 등록합니다.`
+                  } else if (packUnit === "net") {
+                    message += `${sizeUnit} 크기 ${totalCount}그물망을 경매에 등록합니다.`
+                  }
+                }
+                message += `\n최저 수락가는 ${minPrice.toLocaleString()}원입니다.`
+                return message
+              })()}
               <br />위 내용이 맞으면 확인을 눌러주세요.
             </p>
             <div style={styles.modalButtons}>
@@ -1351,26 +1419,44 @@ export default function ReceiptForm() {
                 width: "48px",
                 height: "48px",
                 borderRadius: "50%",
-                backgroundColor: "#D1FAE5",
+                backgroundColor: submissionStatus === "success" ? "#D1FAE5" : "#FEE2E2",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 margin: "0 auto 16px",
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M9 12L11 14L15 10"
-                  stroke="#10B981"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              {submissionStatus === "success" ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M9 12L11 14L15 10"
+                    stroke="#10B981"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 9V13M12 15H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                    stroke="#EF4444"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </div>
 
-            <h3 style={styles.modalTitle}>등록완료</h3>
-            <p style={styles.modalMessage}>수산물이 성공적으로 등록되었습니다.</p>
+            <h3 style={styles.modalTitle}>
+              {submissionStatus === "success" ? "등록 완료" : "등록 실패"}
+            </h3>
+            <p style={styles.modalMessage}>
+              {submissionStatus === "success"
+                ? "수산물이 성공적으로 등록되었습니다."
+                : "수산물 등록에 실패했습니다. 다시 시도해주세요."}
+            </p>
             <div style={styles.modalButtons}>
               <button
                 style={{
