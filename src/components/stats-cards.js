@@ -6,8 +6,9 @@ import rejectedIcon from "../assets/승인거부.svg"
 export default function StatsCards({ stats, onSelect, activeKey }) {
   if (!stats) return null
 
-  const totalCount =
-    (stats.pending || 0) + (stats.approved || 0) + (stats.rejected || 0)
+  // 수정된 부분: 백엔드의 totalCount를 직접 사용
+  const totalCount = stats.total || 
+    ((stats.pending || 0) + (stats.approved || 0) + (stats.rejected || 0))
 
   const cardData = [
     { key: "all",      icon: null,        label: "전체보기", count: totalCount },
