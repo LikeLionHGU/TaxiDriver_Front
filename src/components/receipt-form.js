@@ -107,6 +107,7 @@ export default function ReceiptForm() {
   const fileInputRef = useRef(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false)
 
   const unitLabel = packUnit === "sp" ? "S/P" : packUnit === "box" ? "Box" : "그물망"
   const inc = () => {
@@ -244,6 +245,15 @@ export default function ReceiptForm() {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const handleConfirm = () => {
+    setIsModalOpen(false)
+    setIsCompletionModalOpen(true)
+  }
+
+  const closeCompletionModal = () => {
+    setIsCompletionModalOpen(false)
   }
 
   useEffect(() => {
@@ -764,7 +774,7 @@ export default function ReceiptForm() {
       backgroundColor: "white",
       borderRadius: "12px",
       padding: "32px",
-      width: "400px",
+      width: "260px",
       maxWidth: "90vw",
       textAlign: "center",
       boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
@@ -1304,29 +1314,71 @@ export default function ReceiptForm() {
       {isModalOpen && (
         <div style={styles.modalOverlay} onClick={closeModal}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18.1572" cy="18.002" r="17.5" fill="#DBEAFE" />
+              <circle cx="18.1566" cy="17.6459" r="7.45908" stroke="#2775E7" strokeWidth="1.74855" />
+              <path
+                d="M18.5632 19.1475L18.8079 13.3779H17.5059L17.7417 19.1475H18.5632Z"
+                fill="#2775E7"
+                stroke="#2775E7"
+                strokeWidth="0.874274"
+              />
+              <circle cx="18.1571" cy="21.6024" r="0.948127" fill="#2775E7" />
+            </svg>
+
+            <h3 style={styles.modalTitle}>등록 정보 확인</h3>
+            <p style={styles.modalMessage}>
+              등록하려는 어종은 광어이고, 마리당 4kg짜리 광어 4마리를 경매에 등록합니다.
+              <br />위 내용이 맞으면 확인을 눌러주세요.
+            </p>
+            <div style={styles.modalButtons}>
+              <button style={styles.modalCancelButton} onClick={closeModal}>
+                취소
+              </button>
+              <button style={styles.modalConfirmButton} onClick={handleConfirm}>
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isCompletionModalOpen && (
+        <div style={styles.modalOverlay} onClick={closeCompletionModal}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "50%",
+                backgroundColor: "#D1FAE5",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  stroke="white"
+                  d="M9 12L11 14L15 10"
+                  stroke="#10B981"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
             </div>
-            <h3 style={styles.modalTitle}>등록 정보 확인</h3>
-            <p style={styles.modalMessage}>
-              등록하려는 어종은 광어이고, 마리당 4kg짜리<br/> 
-              광어 4마리를 경매에 등록합니다.
-              <br />
-              위 내용이 맞으면 확인을 눌러주세요.
-            </p>
+
+            <h3 style={styles.modalTitle}>등록완료</h3>
+            <p style={styles.modalMessage}>수산물이 성공적으로 등록되었습니다.</p>
             <div style={styles.modalButtons}>
-              <button style={styles.modalCancelButton} onClick={closeModal}>
-                취소
-              </button>
-              <button style={styles.modalConfirmButton} onClick={closeModal}>
+              <button
+                style={{
+                  ...styles.modalConfirmButton,
+                  width: "100%",
+                }}
+                onClick={closeCompletionModal}
+              >
                 확인
               </button>
             </div>
