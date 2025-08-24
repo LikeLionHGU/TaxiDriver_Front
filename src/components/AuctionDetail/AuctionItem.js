@@ -1,31 +1,3 @@
-// import React from "react";
-// import styles from "./AuctionItem.module.css";
-
-// function AuctionItem() {
-
-//   return (
-//     <>
-//       <div className={styles.main}>
-//         <div className={styles.textContainer}>
-//           <div className={styles.textContainer}>
-          
-//           </div>
-//         </div>
-//         <div className={styles.pictureContainer}>
-          
-//         </div>
-//         <div className={styles.auctionTextContainer}>
-
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-
-// export default AuctionItem;
-
-
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./AuctionItem.module.css";
 
