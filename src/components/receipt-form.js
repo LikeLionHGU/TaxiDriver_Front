@@ -229,6 +229,10 @@ export default function ReceiptForm() {
       alert("모든 필수 정보를 입력해주세요.")
       return
     }
+    if (images.length === 0) {
+      alert("사진을 등록해주세요.")
+      return
+    }
 
     setIsModalOpen(true)
   }
@@ -344,7 +348,8 @@ export default function ReceiptForm() {
       
       // 6. 서버 요청 (Content-Type을 명시하지 않아 브라우저가 자동 설정하도록)
       const response = await axios.post("https://likelion.info/post/add", formData, {
-        timeout: 30000
+        headers:{"Content-Type": "multipart/form-data"},
+        withCredentials: true,
       });
 
       console.log("서버 응답 성공:", response);
