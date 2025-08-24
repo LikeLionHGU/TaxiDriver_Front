@@ -61,7 +61,8 @@ const transformStatsData = (statsData) => {
   return {
     pending: Number(statsData.readyCount) || 0,
     approved: Number(statsData.approvedCount) || 0,
-    rejected: Number(statsData.rejectedCount) || 0
+    rejected: Number(statsData.rejectedCount) || 0,
+    total: Number(statsData.totalCount) || 0 // totalCount 추가
   };
 };
 
@@ -73,11 +74,11 @@ const getApiEndpoint = (activeTab, value) => {
     case "all":
       return `${baseUrl}/all/${value}`;
     case "pending":
-      return `${baseUrl}/ready/${value}`;
+      return `${baseUrl}/READY/${value}`;
     case "approved":
-      return `${baseUrl}/success/${value}`;
+      return `${baseUrl}/APPROVED/${value}`;
     case "rejected":
-      return `${baseUrl}/failed/${value}`;
+      return `${baseUrl}/REJECTED/${value}`;
     default:
       return `${baseUrl}/all/${value}`;
   }
@@ -264,7 +265,9 @@ export default function RegistrationStatus() {
 
         // 검색어 필터링 (수산물 이름)
         if (searchTerm.trim()) {
-            products = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+           products = products.filter(item =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
         }
         
         setFilteredProducts(products);

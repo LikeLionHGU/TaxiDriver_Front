@@ -3,6 +3,7 @@
 import React from "react";
 import axios from "axios";
 import LandingHeader from '../components/LandingHeader';
+import { Link } from 'react-router-dom';
 
 // axios.defaults.withCredentials = true;
 
@@ -436,7 +437,8 @@ const Landing = () => {
       {/* Features Section */}
       <section style={styles.featuresSection}>
         <div style={styles.featureCards}>
-          <div 
+          <Link
+            to="consignment-company"
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
@@ -477,8 +479,9 @@ const Landing = () => {
 </svg>
             </div>
             <h3 style={styles.featureTitle}>위판장 관리자</h3>
-          </div>
-          <div 
+          </Link>
+          <Link
+            to="/buyer"
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
@@ -504,8 +507,9 @@ const Landing = () => {
 </svg>
             </div>
             <h3 style={styles.featureTitle}>구매업체</h3>
-          </div>
-          <div 
+          </Link>
+          <Link
+            to="/fishman"
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
@@ -526,7 +530,7 @@ const Landing = () => {
 <stop stop-color="#15BAF6"/>
 <stop offset="1" stop-color="#2A50E3"/>
 </linearGradient>
-<linearGradient id="paint2_linear_2165_3683" x1="11.5333" y1="-6.41633" x2="40.4601" y2="45.0936" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint2_linear_2165_3683" x1="11.5333" y1="-6.41633" x2="40.4601" y2="45.0936" gradientSpaceOnUse>
 <stop stop-color="#DFF1FF"/>
 <stop offset="1" stop-color="#A7CFEF"/>
 </linearGradient>
@@ -534,7 +538,7 @@ const Landing = () => {
 </svg>
             </div>
             <h3 style={styles.featureTitle}>어민/생산자</h3>
-          </div>
+          </Link>
         </div>
       </section>
 
