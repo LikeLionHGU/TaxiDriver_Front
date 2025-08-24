@@ -39,21 +39,10 @@ export default function Producermain() { // Renamed from Home to Producermain fo
     return (
         <div className="min-h-screen bg-gray-50">
             <RegistrationStatus
-                data={allRegistrations} // Pass all data for counts
+                data={filteredRegistrations} // Pass filtered data
                 onFilterChange={handleFilterChange}
             />
-            <div style={{ padding: '20px' }}>
-                <h2>Filtered Registrations ({currentFilter})</h2>
-                {filteredRegistrations.length > 0 ? (
-                    <ul>
-                        {filteredRegistrations.map(item => (
-                            <li key={item.id}>{item.name} - {item.status}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No items found for this status.</p>
-                )}
-            </div>
+            
         </div>
     );
 }
