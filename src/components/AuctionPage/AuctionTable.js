@@ -11,9 +11,34 @@ import searchImg from "../../assets/search.svg";
   const join = (...xs) => xs.filter(Boolean).join(" | ");
   const joinUnit = (w, m) => [w, m].filter(Boolean).join("/");
 
-// HH:mm 포맷
-  const fmtHHmm = (d) =>
-  d ? new Date(d).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+// // HH:mm 포맷
+//   const fmtHHmm = (d) =>
+//   d ? new Date(d).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+
+  const parseLocalDateTime = (s) => {
+  if (!s) return null;
+  try {
+    // 날짜/시간 분리
+    const [datePart, timePartRaw] = s.split("T");
+    if (!datePart || !timePartRaw) return new Date(s); // 혹시 다른 포맷이면 브라우저 파서에 위임
+
+    // 초 뒤 마이크로초 제거
+    const [timePart] = timePartRaw.split("."); // "08:29:11.368214" → "08:29:11"
+
+    const [y, m, d] = datePart.split("-").map(Number);
+    const [hh = "0", mm = "0", ss = "0"] = (timePart || "").split(":");
+    return new Date(y, (m - 1), d, Number(hh), Number(mm), Number(ss));
+  } catch {
+    return null;
+  }
+};
+
+const fmtHHmmFromRegistered = (registeredDateStr) => {
+  const dt = parseLocalDateTime(registeredDateStr);
+  return dt
+    ? dt.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false })
+    : "";
+};
 
 
 function AuctionTable({ activeStatus = "ALL",
@@ -64,7 +89,7 @@ function AuctionTable({ activeStatus = "ALL",
           // 상태
           status, // "PROGRESS" | "PENDING" | "DONE"
           // 시간 정보(표시용: startedAt)
-          time: fmtHHmm(a.startedAt),
+          time: fmtHHmmFromRegistered(a.registeredDate),
           // 카운트다운 등에서 사용할 종료 예정 시각
           endAt,
         };
