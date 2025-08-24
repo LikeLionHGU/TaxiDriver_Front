@@ -6,39 +6,8 @@ import StatsCards from "./stats-cards"
 import ProducerMainTable from "./producermain-table"
 import React from 'react';
 import styles from './styles/registration-status.module.css';
-import PaginatedTable from '../common/PaginatedTable';
-import registrationMockData from '../../data/registrationMockData';
 
-const RegistrationStatus = () => {
-  const headers = ['등록일', '생산자', '품목', '상태', '승인/반려'];
 
-  const renderRow = (data) => (
-    <tr key={data.id}>
-      <td>{data.registrationDate}</td>
-      <td>{data.producer}</td>
-      <td>{data.item}</td>
-      <td>{data.status}</td>
-      <td>
-        {data.status === '검토요청' && (
-          <>
-            <button>승인</button>
-            <button>반려</button>
-          </>
-        )}
-      </td>
-    </tr>
-  );
-
-  return (
-    <div className={styles.registrationStatusContainer}>
-      <PaginatedTable
-        data={registrationMockData}
-        headers={headers}
-        renderRow={renderRow}
-      />
-    </div>
-  );
-};
 
 import auctionStyles from "./AuctionPage/Auction.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"

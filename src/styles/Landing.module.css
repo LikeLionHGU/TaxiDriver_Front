@@ -1,4 +1,361 @@
-.main{
-  width: 100vw;
-  height: 100vh;
+.landingPage {
+  width: 100%;
+  background: #f9fafb;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* Hero Section */
+.heroSection {
+  background: linear-gradient(180deg, #e3f1ff 0%, #ffffff 76.76%);
+  padding: 120px 0;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.heroTitle {
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 58px;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.heroSubtitle {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #444444;
+  margin-bottom: 0;
+}
+
+/* Features Section */
+.featuresSection {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+.featureCards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+.featureCard {
+  background: #fdfeff;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  padding: 40px 30px;
+  text-align: center;
+  flex: 1;
+  max-width: 280px;
+}
+
+.featureIcon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.featureTitle {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  margin-bottom: 12px;
+}
+
+.featureDescription {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #666666;
+  margin: 0;
+}
+
+/* Innovation Section */
+.innovationSection {
+  padding: 80px 0;
+  background: #f9fafb;
+}
+
+.innovationContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 60px;
+  padding: 0 20px;
+  align-items: flex-start;
+}
+
+.innovationLeft {
+  flex: 1;
+}
+
+.innovationTitle {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 36px;
+  color: #000000;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.problemList {
+  background: #fdfeff;
+  border: 1px solid #2775e7;
+  border-radius: 5px;
+  padding: 30px;
+}
+
+.problemItem h4 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.problemItem ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.problemItem li {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+  margin-bottom: 16px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.problemItem li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #2775e7;
+}
+
+.innovationRight {
+  flex: 1;
+}
+
+.solutionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.solutionButton {
+  background: #2775e7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 20px 30px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.solutionButton:hover {
+  background: #1e5bb8;
+  transform: translateY(-2px);
+}
+
+/* Process Section */
+.processSection {
+  padding: 80px 0;
+  background: #ffffff;
+  text-align: center;
+}
+
+.processTitle {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 36px;
+  color: #000000;
+  margin-bottom: 60px;
+}
+
+.processFlow {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.processStep {
+  position: relative;
+}
+
+.processStep:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -50px;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, #8ed7ff, #599fff);
+  transform: translateY(-50%);
+}
+
+.processCircle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffffff;
+  position: relative;
+}
+
+.processCircle.step1 {
+  background: linear-gradient(135deg, #8ed7ff, #599fff);
+}
+
+.processCircle.step2 {
+  background: linear-gradient(135deg, #599fff, #548aff);
+}
+
+.processCircle.step3 {
+  background: linear-gradient(135deg, #548aff, #afd3ff);
+}
+
+.processCircle.step4 {
+  background: linear-gradient(135deg, #afd3ff, #8ed7ff);
+}
+
+/* Team Section */
+.teamSection {
+  padding: 80px 0;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.teamTitle {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 36px;
+  color: #000000;
+  margin-bottom: 60px;
+}
+
+.skillsGrid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.skillCircle {
+  width: 140px;
+  height: 140px;
+  background: #2775e7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* CTA Section */
+.ctaSection {
+  background: linear-gradient(183.37deg, #8ed7ff -10.01%, #599fff -3.82%, #548aff 2.88%, #afd3ff 43.62%, #f9fafb 97.25%);
+  box-shadow: 0px -11px 14px rgba(37, 99, 235, 0.07);
+  padding: 100px 0;
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ctaTitle {
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 43px;
+  color: #000000;
+  margin-bottom: 16px;
+}
+
+.ctaSubtitle {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #444444;
+  margin-bottom: 40px;
+}
+
+.ctaButton {
+  background: #2775e7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 40px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  background: #1e5bb8;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .featureCards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .innovationContent {
+    flex-direction: column;
+  }
+
+  .processFlow {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .processStep:not(:last-child)::after {
+    display: none;
+  }
+
+  .skillsGrid {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .heroTitle {
+    font-size: 36px;
+    line-height: 43px;
+  }
 }
