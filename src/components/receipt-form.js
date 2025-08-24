@@ -158,31 +158,10 @@ export default function ReceiptForm() {
     const newItems = accepted.map((f) => ({
       file: f,
       url: URL.createObjectURL(f),
-      status: "uploading",
+      status: "ready", // 실제 서버 업로드가 아니므로 ready로 설정
     }))
 
-    setImages((prev) => {
-      const next = [...prev, ...newItems]
-      // 업로드 비동기 시작
-      newItems.forEach((item) => uploadOne(item))
-      return next
-    })
-  }
-
-  // 단일 파일 업로드
-  async function uploadOne(item) {
-    try {
-      const form = new FormData()
-      form.append("file", item.file)
-
-      // 실제 업로드 API가 없으므로 임시로 성공으로 처리
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      setImages((prev) => prev.map((x) => (x.url === item.url ? { ...x, status: "done", serverUrl: "/mock-url" } : x)))
-    } catch (e) {
-      console.warn("업로드 실패:", e)
-      setImages((prev) => prev.map((x) => (x.url === item.url ? { ...x, status: "error" } : x)))
-    }
+    setImages((prev) => [...prev, ...newItems])
   }
 
   // 파일 선택/드랍 핸들러
@@ -251,13 +230,6 @@ export default function ReceiptForm() {
       return
     }
 
-    // Construct the message for the confirmation modal
-    
-
-    // Update the modal message state if you have one, or pass it directly
-    // For now, I'll assume the modal content is dynamically generated or updated.
-    // You might need to add a state for modal message if it's not already dynamic.
-    // For this example, I'll directly use the message in the modal's render.
     setIsModalOpen(true)
   }
 
@@ -267,43 +239,144 @@ export default function ReceiptForm() {
   }
 
   const handleConfirm = async () => {
-    setIsModalOpen(false) // Close the confirmation modal
+    console.log("=== 폼 제출 시작 ===");
+    setIsModalOpen(false);
 
+    // 1. 기본 상태 확인
+    console.log("현재 상태:", {
+      selectedFish,
+      statusType,
+      saleType,
+      minPrice,
+      totalCount,
+      quantity,
+      specPerFish,
+      unitPrice,
+      packUnit,
+      sizeUnit,
+      imagesCount: images.length
+    });
+
+    // 2. 필수 필드 검증
+    if (!selectedFish) {
+      console.error("어종이 선택되지 않았습니다.");
+      alert("어종을 선택해주세요.");
+      return;
+    }
+    
+    if (!statusType) {
+      console.error("상태가 선택되지 않았습니다.");
+      alert("상태를 선택해주세요.");
+      return;
+    }
+    
+    if (!saleType) {
+      console.error("판매 방식이 선택되지 않았습니다.");
+      alert("판매 방식을 선택해주세요.");
+      return;
+    }
+    
+    if (!minPrice) {
+      console.error("최저 수락가가 입력되지 않았습니다.");
+      alert("최저 수락가를 입력해주세요.");
+      return;
+    }
+
+    // 3. payload 생성
     const payload = {
       name: selectedFish,
       fishStatus: statusType,
       salesMethod: saleType,
       fishCount: 0,
       fishWeight: "",
-      reservePrice: Number(minPrice),
-    }
+      reservePrice: typeof minPrice === 'number' ? minPrice : Number(minPrice) || 0
+    };
 
+    // 4. 판매 방식별 데이터 설정
     if (saleType === "weight") {
-      payload.fishCount = totalCount
-      payload.fishWeight = `${specPerFish}kg`
+      payload.fishCount = Number(totalCount) || 0;
+      payload.fishWeight = specPerFish ? `${specPerFish}kg` : "0kg";
     } else if (saleType === "package") {
       if (packUnit === "sp" || packUnit === "box") {
-        payload.fishCount = quantity
-        payload.fishWeight = `${unitPrice}원/${packUnit}`
+        payload.fishCount = Number(quantity) || 0;
+        payload.fishWeight = unitPrice ? `${unitPrice}원/${packUnit}` : `0원/${packUnit}`;
       } else if (packUnit === "net") {
-        payload.fishCount = totalCount
-        payload.fishWeight = sizeUnit
+        payload.fishCount = Number(totalCount) || 0;
+        payload.fishWeight = sizeUnit || "L";
       }
     }
 
-    try {
-      const response = await axios.post("https://likelion.info/post/add", payload);
+    console.log("최종 payload:", payload);
 
-      if (response.data.isSuccess === 1) {
-        setSubmissionStatus("success");
+    // 5. FormData 생성 및 확인
+    try {
+      const formData = new FormData();
+      
+      // JSON 데이터 추가
+      const jsonBlob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+      formData.append("post", jsonBlob);
+      console.log("JSON 데이터 추가 완료");
+
+      // 이미지가 있을 경우만 추가 (required=false이므로)
+      if (images && images.length > 0) {
+        console.log("이미지가 있습니다. 이미지와 함께 전송합니다.");
+        images.forEach((img, index) => {
+          if (img.file) {
+            formData.append("image", img.file);
+            console.log(`이미지 ${index + 1} 추가:`, img.file.name, img.file.size, "bytes");
+          }
+        });
       } else {
+        console.log("이미지가 없습니다. JSON 데이터만 전송합니다.");
+        // required=false이므로 빈 파일을 보낼 필요 없음
+      }
+
+      console.log("FormData entries:");
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`${key}: File(${value.name}, ${value.size} bytes)`);
+        } else {
+          console.log(`${key}: ${value}`);
+        }
+      }
+
+      console.log("서버로 요청 전송 중...");
+      
+      // 6. 서버 요청 (Content-Type을 명시하지 않아 브라우저가 자동 설정하도록)
+      const response = await axios.post("https://likelion.info/post/add", formData, {
+        timeout: 30000
+      });
+
+      console.log("서버 응답 성공:", response);
+      console.log("응답 데이터:", response.data);
+
+      if (response.data === 1 || (response.data && response.data.isSuccess === 1)) {
+        setSubmissionStatus("success");
+        console.log("등록 성공!");
+      } else {
+        console.log("서버에서 실패 응답 반환:", response.data);
         setSubmissionStatus("failure");
       }
+
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("=== 오류 발생 ===");
+      console.error("오류 타입:", error.constructor.name);
+      console.error("오류 메시지:", error.message);
+      
+      if (error.response) {
+        console.error("서버 응답 상태:", error.response.status);
+        console.error("서버 응답 데이터:", error.response.data);
+        console.error("서버 응답 헤더:", error.response.headers);
+      } else if (error.request) {
+        console.error("요청이 만들어졌으나 응답을 받지 못함:", error.request);
+      } else {
+        console.error("요청 설정 중 오류:", error.message);
+      }
+      
       setSubmissionStatus("failure");
     } finally {
-      setIsCompletionModalOpen(true); // Open the completion modal regardless of success/failure
+      setIsCompletionModalOpen(true);
+      console.log("=== 폼 제출 완료 ===");
     }
   }
 
@@ -383,7 +456,9 @@ export default function ReceiptForm() {
       background: "#f9fafb",
       padding: "20px",
       borderRadius: "8px",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
       display: "flex",
       flexDirection: "column",
       textAlign: "left",
@@ -443,7 +518,9 @@ export default function ReceiptForm() {
       objectFit: "cover",
       borderRadius: "8px",
       marginTop: "16px",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
     },
     inputGroup: {
       display: "flex",
@@ -459,7 +536,9 @@ export default function ReceiptForm() {
     },
     input: {
       padding: "10px 12px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       fontSize: "13px",
       transition: "border-color 0.2s",
@@ -493,7 +572,9 @@ export default function ReceiptForm() {
       left: 0,
       right: 0,
       background: "white",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderTop: "none",
       borderRadius: "0 0 6px 6px",
       maxHeight: "200px",
@@ -528,7 +609,9 @@ export default function ReceiptForm() {
       flex: 1,
       minWidth: "100px",
       padding: "12px",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
       borderRadius: "6px",
       background: "white",
       cursor: "pointer",
@@ -542,7 +625,9 @@ export default function ReceiptForm() {
       flex: 1,
       minWidth: "80px",
       padding: "12px",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
       borderRadius: "6px",
       background: "white",
       cursor: "pointer",
@@ -556,7 +641,9 @@ export default function ReceiptForm() {
       flex: 1,
       minWidth: "120px",
       padding: "12px",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
       borderRadius: "6px",
       background: "white",
       cursor: "pointer",
@@ -587,7 +674,9 @@ export default function ReceiptForm() {
     },
     chip: {
       padding: "6px 12px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "16px",
       background: "white",
       cursor: "pointer",
@@ -605,7 +694,9 @@ export default function ReceiptForm() {
       height: "40px",
       position: "relative",
       borderRadius: "10px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       background: "#FFF",
       display: "flex",
       alignItems: "center",
@@ -632,7 +723,9 @@ export default function ReceiptForm() {
     stepperBtn: {
       width: "32px",
       height: "32px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       background: "white",
       cursor: "pointer",
@@ -643,7 +736,9 @@ export default function ReceiptForm() {
       transition: "all 0.2s",
     },
     uploadArea: {
-      border: "2px dashed #d1d5db",
+      borderWidth: "2px",
+      borderStyle: "dashed",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       padding: "40px",
       textAlign: "center",
@@ -699,7 +794,9 @@ export default function ReceiptForm() {
       aspectRatio: "1",
       borderRadius: "6px",
       overflow: "hidden",
-      border: "1px solid #e5e7eb",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#e5e7eb",
     },
     thumbImg: {
       width: "100%",
@@ -724,7 +821,9 @@ export default function ReceiptForm() {
     },
     addMoreImagesButton: {
       aspectRatio: "1",
-      border: "2px dashed #d1d5db",
+      borderWidth: "2px",
+      borderStyle: "dashed",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       background: "#f9fafb",
       cursor: "pointer",
@@ -779,7 +878,9 @@ export default function ReceiptForm() {
       marginRight: "30px",
       width: "538.146px",
       height: "47.045px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       background: "white",
       color: "#374151",
@@ -805,7 +906,9 @@ export default function ReceiptForm() {
       display: "flex",
       alignItems: "center",
       padding: "10px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       backgroundColor: "#f9fafb",
     },
@@ -868,7 +971,9 @@ export default function ReceiptForm() {
     },
     modalCancelButton: {
       padding: "8px 24px",
-      border: "1px solid #d1d5db",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#d1d5db",
       borderRadius: "6px",
       backgroundColor: "white",
       color: "#374151",
@@ -1333,7 +1438,7 @@ export default function ReceiptForm() {
                     >
                       ×
                     </button>
-                    {img.status !== "done" && (
+                    {img.status !== "ready" && img.status !== "done" && (
                       <span style={img.status === "uploading" ? styles.badgeUploading : styles.badgeError}>
                         {img.status === "uploading" ? "업로드 중…" : "실패"}
                       </span>
