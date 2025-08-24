@@ -35,7 +35,7 @@ function Auction() {
             pageSize={pageSize}
             onTotalChange={setTotalPages}
           />
-
+ 
           <Pagination
             page={page}
             totalPages={totalPages}
