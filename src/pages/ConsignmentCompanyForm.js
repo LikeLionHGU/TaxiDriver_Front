@@ -4,10 +4,13 @@ import { useState } from "react"
 import styles from "../styles/consignment-company-form.module.css"
 import { regions } from "../data/regions"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
+import axios from 'axios';
 
 export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("")
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const provinces = Object.keys(regions);
   const locations = selectedProvince ? regions[selectedProvince] : [];
@@ -15,6 +18,35 @@ export default function LocationSelector() {
   const handleProvinceSelect = (province) => {
     setSelectedProvince(province);
     setSelectedLocation(""); // Reset location when province changes
+  };
+
+  const handleRegister = async () => {
+    if (!name || !phoneNumber || !selectedLocation) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+
+    const data = {
+      name: name,
+      phoneNumber: phoneNumber,
+      location: selectedLocation,
+    };
+
+    console.log("Sending registration data:", data);
+
+    try {
+      const response = await axios.post("https://likelion.info/user/signin/admin", data);
+      console.log("Response:", response.data);
+      if (response.data === true) {
+        alert("회원가입에 성공했습니다!");
+        // TODO: Redirect to another page or clear the form
+      } else {
+        alert("회원가입에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -117,12 +149,29 @@ export default function LocationSelector() {
 
         <div className={styles.inputSection}>
           <label className={styles.inputLabel}>관리자명</label>
-          <input type="text" placeholder="예: 홍길동" className={styles.input} />
+          <input 
+            type="text" 
+            placeholder="예: 홍길동" 
+            className={styles.input} 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className={styles.inputSection}>
+          <label className={styles.inputLabel}>전화번호</label>
+          <input 
+            type="text" 
+            placeholder="예: 010-1234-5678" 
+            className={styles.input} 
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
         </div>
 
         <div className={styles.buttonContainer}>
           <button className={styles.cancelButton}>취소</button>
-          <button className={styles.primaryButton}>✓ 회원가입 완료</button>
+          <button className={styles.primaryButton} onClick={handleRegister}>✓ 회원가입 완료</button>
         </div>
       </div>
       </div>
