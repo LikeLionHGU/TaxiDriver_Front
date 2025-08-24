@@ -3,6 +3,8 @@ import styles from "./AuctionTable.module.css";
 
 import AuctionTableBox from "./AuctionTableBox";
 
+import searchImg from "../../assets/search.svg";
+
 function AuctionTable({ activeStatus = "ALL",
   searchTerm = "",
   setSearchTerm,
@@ -114,13 +116,13 @@ function AuctionTable({ activeStatus = "ALL",
       <div className={styles.main}>
         <div className={styles.topContainer}>
           <div className={styles.searchContainer}>
+            <img src={searchImg} alt="icon" />
             <input
               type="text"
               placeholder="수산물을 검색하세요"
               value={searchTerm}
               onChange={(e) => setSearchTerm?.(e.target.value)}
               className={styles.searchInput}
-              style={{ width: 300, height: 40, borderRadius: 10, border: '1px solid #D9D9D9', padding: '0 14px' }}
             />
           </div>
         </div>
