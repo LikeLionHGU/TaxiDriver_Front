@@ -105,11 +105,11 @@ function AuctionPeople() {
               name={p.name}
               status={p.status}
               lastBid={p.lastBid}
-              note={p.note}
+              note={p.note} 
             />
           ))}
         </div>
-      ) : (
+      ) : ( 
         <div className={styles.beforeStart}>
           <div className={styles.beforeStartContainer}>
             <img src={peopleIcon} alt="people" />
