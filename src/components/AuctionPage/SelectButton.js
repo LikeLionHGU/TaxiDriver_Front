@@ -7,8 +7,8 @@ import BlueButton from "../../assets/AuctionTable/blue.svg";
 import YellowButton from "../../assets/AuctionTable/yellow.svg";
 import RedButton from "../../assets/AuctionTable/red.svg";
 
-function SelectButton() {
-  const [selected, setSelected] = useState("all");
+function SelectButton({ value = "ALL", onChange }) {
+  const [selected, setSelected] = useState("ALL");
   const [status, setStatus] = useState({
     totalCount: 0,
     readyCount: 0,
@@ -21,6 +21,8 @@ function SelectButton() {
 // 여기 부터 !!!!! 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => setSelected(value), [value]);
 
   const fetchData = async () => {
     try {
@@ -62,10 +64,10 @@ function SelectButton() {
 
   const OPTIONS = useMemo(
     () => [
-      { key: "all",     label: "전체보기", count: status.totalCount,  icon: null,        variant: "neutral" },
-      { key: "pending", label: "대기 중",  count: status.readyCount,  icon: BlueButton,  variant: "blue"    },
-      { key: "progress",label: "진행 중",  count: status.currentCount,icon: YellowButton,variant: "yellow"  },
-      { key: "done",    label: "종료",     count: status.finishCount, icon: RedButton,   variant: "red"     },
+      { key: "ALL",     label: "전체보기", count: status.totalCount,  icon: null,        variant: "neutral" },
+      { key: "PENDING", label: "대기 중",  count: status.readyCount,  icon: BlueButton,  variant: "blue"    },
+      { key: "PROGRESS",label: "진행 중",  count: status.currentCount,icon: YellowButton,variant: "yellow"  },
+      { key: "DONE",    label: "종료",     count: status.finishCount, icon: RedButton,   variant: "red"     },
     ],
     [status]
   );
@@ -100,6 +102,10 @@ function SelectButton() {
 // 여기 까지 !!!!!
 
 
+  const handleClick = (key) => {
+    setSelected(key);
+    onChange?.(key); // ← 부모(Auction)에 알림
+  };
 
 
   return (
@@ -111,7 +117,7 @@ function SelectButton() {
           className={styles.selectButton}
           data-variant={opt.variant}
           data-selected={selected === opt.key}
-          onClick={() => setSelected(opt.key)}
+          onClick={() => handleClick(opt.key)}
           aria-pressed={selected === opt.key}
         >
           <div className={styles.leftContainer}>

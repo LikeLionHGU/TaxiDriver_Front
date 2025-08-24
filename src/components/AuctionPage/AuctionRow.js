@@ -12,11 +12,11 @@ const formatKRW = (n) =>
 // 상태 배지
 function StatusBadge({ status }) {
   const map = {
-    IN_PROGRESS: { label: "진행중", bg: "#FFF8B0", color: "#A57113" },
+    PROGRESS: { label: "진행중", bg: "#FFF8B0", color: "#A57113" },
     PENDING:     { label: "대기중", bg: "#C6E7F8", color: "#115C6D" },
     DONE:        { label: "종료",   bg: "#E5E5E5", color: "#757575" },
   };
-  const s = map[status] || map.PENDING;
+  const s = map[status?.toUpperCase()] ?? map.PENDING;
   return (
     <span
       className={styles.badge}
