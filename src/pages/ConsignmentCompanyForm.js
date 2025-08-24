@@ -6,6 +6,10 @@ import { regions } from "../data/regions"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 import axios from 'axios';
 
+// axios 기본 설정
+axios.defaults.withCredentials = true; // 쿠키 자동 포함
+axios.defaults.timeout = 10000; // 10초 타임아웃
+
 export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("")
@@ -32,19 +36,38 @@ export default function LocationSelector() {
       location: selectedLocation,
     };
 
-    console.log("Sending registration data:", data);
+    console.log("=== 회원가입 API 요청 시작 ===");
+    console.log("전송 데이터:", data);
 
     try {
-      const response = await axios.post("https://likelion.info/user/signin/admin", data);
-      console.log("Response:", response.data);
+      const response = await axios.post("https://likelion.info/user/signin/admin", data, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log("=== API 응답 성공 ===");
+      console.log("응답 상태:", response.status);
+      console.log("응답 데이터:", response.data);
+
       if (response.data === true) {
         alert("회원가입에 성공했습니다!");
-        // TODO: Redirect to another page or clear the form
+        // 폼 초기화
+        setName("");
+        setPhoneNumber("");
+        setSelectedProvince("");
+        setSelectedLocation("");
       } else {
         alert("회원가입에 실패했습니다.");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("=== 회원가입 API 요청 실패 ===");
+      console.error("에러 상태:", error.response?.status);
+      console.error("에러 데이터:", error.response?.data);
+      console.error("에러 메시지:", error.message);
+      console.error("전체 에러:", error);
+      
       alert("회원가입 중 오류가 발생했습니다.");
     }
   };
