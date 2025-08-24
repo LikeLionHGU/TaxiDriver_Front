@@ -30,7 +30,7 @@ function SelectButton({ value = "ALL", onChange }) {
       setError(null);
 
       const {data} = await axios.get(
-        `https://likelion.info:443/user/check`
+        `https://likelion.info:443/post/get/auction/list`
         , { withCredentials: true });
       console.log(data);
       if (data) {
