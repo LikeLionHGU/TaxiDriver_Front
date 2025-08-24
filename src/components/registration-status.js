@@ -8,6 +8,11 @@ import styles from './styles/registration-status.module.css';
 import auctionStyles from "./AuctionPage/Auction.module.css";
 import PageHeader from "./SalesSettlementPage/PageHeader"
 import Pagination from "./Pagination";
+import axios from 'axios'; // axios import 추가
+
+// axios 기본 설정
+axios.defaults.withCredentials = true; // 쿠키 자동 포함
+axios.defaults.timeout = 10000; // 10초 타임아웃
 
 const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 };
 
@@ -98,43 +103,36 @@ export default function RegistrationStatus() {
         const url = "https://likelion.info/post/get/list";
         console.log("통계 요청 URL:", url);
 
-        const res = await fetch(url, {
-          method: 'GET',
-          headers: { 
-            'Accept': 'application/json'
-          },
+        const response = await axios.get(url, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
         });
 
-        console.log("통계 응답 상태:", res.status);
-        
-        const text = await res.text();
-        let json;
-        try { 
-          json = JSON.parse(text);
-          console.log("통계 파싱된 JSON:", json);
-        } catch (parseError) { 
-          console.error("통계 JSON 파싱 실패:", parseError);
-          json = null; 
-        }
+        console.log("통계 응답 상태:", response.status);
+        console.log("통계 응답 데이터:", response.data);
 
-        // 400 에러여도 유효한 데이터가 있으면 처리
-        if (!res.ok) {
-          if (res.status === 400 && json && json.totalCount !== undefined) {
-            console.warn("⚠️ 통계 API도 400 에러지만 데이터 처리합니다.");
-          } else {
-            throw new Error(`Stats API error! status: ${res.status}`);
-          }
-        }
-
-        const transformedStats = transformStatsData(json);
+        const transformedStats = transformStatsData(response.data);
         console.log("변환된 통계:", transformedStats);
         
         setStats(transformedStats);
         
-      } catch (e) {
+      } catch (error) {
         console.error("=== 통계 API 요청 실패 ===");
-        console.error("에러:", e);
-        setStats(DEFAULT_STATS);
+        console.error("에러 상태:", error.response?.status);
+        console.error("에러 데이터:", error.response?.data);
+        console.error("에러 메시지:", error.message);
+        console.error("전체 에러:", error);
+        
+        // 400 에러여도 유효한 데이터가 있으면 처리
+        if (error.response?.status === 400 && error.response?.data && error.response.data.totalCount !== undefined) {
+          console.warn("⚠️ 통계 API도 400 에러지만 데이터 처리합니다.");
+          const transformedStats = transformStatsData(error.response.data);
+          setStats(transformedStats);
+        } else {
+          setStats(DEFAULT_STATS);
+        }
       }
     }, []);
 
@@ -152,66 +150,25 @@ export default function RegistrationStatus() {
 
       try {
         console.log("=== 요청 전송 중 ===");
-        const res = await fetch(url, {
-          method: 'GET',
-          headers: { 
-            'Accept': 'application/json'
-          },
+        
+        const response = await axios.get(url, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
         });
 
         console.log("=== 응답 수신 ===");
-        console.log("응답 상태:", res.status);
-        console.log("응답 상태 텍스트:", res.statusText);
-        console.log("응답 헤더:", Object.fromEntries(res.headers));
-
-        const text = await res.text();
-        console.log("응답 본문 (raw):", text);
-        
-        let json;
-        try { 
-          json = JSON.parse(text);
-          console.log("파싱된 JSON:", json);
-        } catch (parseError) { 
-          console.error("JSON 파싱 실패:", parseError);
-          json = null; 
-        }
-
-        if (!res.ok) {
-          console.error('=== HTTP 에러 발생 ===');
-          console.error('상태 코드:', res.status);
-          console.error('에러 본문:', json ?? text);
-          
-          // 400 에러이지만 유효한 데이터가 있는지 확인
-          if (res.status === 400 && json && (json.totalCount !== undefined || Array.isArray(json))) {
-            console.warn("⚠️ 백엔드 문제: 400 에러이지만 유효한 데이터가 있습니다.");
-            console.warn("백엔드에서 HTTP 상태 코드를 200으로 수정해야 합니다.");
-            console.warn("임시로 데이터를 처리합니다.");
-            // 🟢 데이터가 유효하면 에러를 throw하지 않고 계속 진행
-          } else {
-            // 진짜 에러인 경우만 throw
-            if (res.status === 400) {
-              console.error("=== 400 Bad Request 상세 분석 ===");
-              console.error("전송한 value:", value);
-              console.error("URL:", url);
-              console.error("Active Tab:", activeTab);
-              console.error("기대값: 'ALL', 'RECENT_1WEEK', 'RECENT_1MONTH', 'RECENT_3MONTH', 'RECENT_6MONTH' 중 하나");
-              console.error("실제 전송값 검증:", {
-                value: value,
-                type: typeof value,
-                isValid: ["ALL", "RECENT_1WEEK", "RECENT_1MONTH", "RECENT_3MONTH", "RECENT_6MONTH"].includes(value)
-              });
-            }
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-        }
+        console.log("응답 상태:", response.status);
+        console.log("응답 헤더:", response.headers);
+        console.log("응답 데이터:", response.data);
 
         console.log("=== 성공 응답 처리 ===");
-        console.log("응답 데이터 타입:", Array.isArray(json) ? "배열" : typeof json);
-        console.log("응답 데이터 길이:", Array.isArray(json) ? json.length : "N/A");
-        console.log("응답 원본:", json);
+        console.log("응답 데이터 타입:", Array.isArray(response.data) ? "배열" : typeof response.data);
+        console.log("응답 데이터 길이:", Array.isArray(response.data) ? response.data.length : "N/A");
         
         // 모든 탭에서 리스트 데이터로 처리 (전체보기 포함)
-        const transformed = transformApiData(json || []);
+        const transformed = transformApiData(response.data || []);
         console.log("변환된 데이터:", transformed);
         console.log("변환된 데이터 길이:", transformed.length);
         
@@ -230,15 +187,46 @@ export default function RegistrationStatus() {
         }
         // 전체보기일 때는 별도 fetchStatsData()에서 통계 설정
         
-      } catch (e) {
+      } catch (error) {
         console.error("=== API 요청 실패 ===");
-        console.error("에러 타입:", e.constructor.name);
-        console.error("에러 메시지:", e.message);
-        console.error("전체 에러:", e);
+        console.error("에러 상태:", error.response?.status);
+        console.error("에러 데이터:", error.response?.data);
+        console.error("에러 메시지:", error.message);
+        console.error("전체 에러:", error);
         
-        setAllProducts([]);
-        if (activeTab !== "all") {
-          setStats(DEFAULT_STATS);
+        // 400 에러이지만 유효한 데이터가 있는지 확인
+        if (error.response?.status === 400 && error.response?.data && 
+            (error.response.data.totalCount !== undefined || Array.isArray(error.response.data))) {
+          console.warn("⚠️ 백엔드 문제: 400 에러이지만 유효한 데이터가 있습니다.");
+          console.warn("백엔드에서 HTTP 상태 코드를 200으로 수정해야 합니다.");
+          console.warn("임시로 데이터를 처리합니다.");
+          
+          const transformed = transformApiData(error.response.data || []);
+          setAllProducts(transformed);
+          
+          if (activeTab !== "all") {
+            const calculatedStats = calculateStats(transformed);
+            setStats(calculatedStats);
+          }
+        } else {
+          // 진짜 에러인 경우
+          if (error.response?.status === 400) {
+            console.error("=== 400 Bad Request 상세 분석 ===");
+            console.error("전송한 value:", value);
+            console.error("URL:", url);
+            console.error("Active Tab:", activeTab);
+            console.error("기대값: 'ALL', 'RECENT_1WEEK', 'RECENT_1MONTH', 'RECENT_3MONTH', 'RECENT_6MONTH' 중 하나");
+            console.error("실제 전송값 검증:", {
+              value: value,
+              type: typeof value,
+              isValid: ["ALL", "RECENT_1WEEK", "RECENT_1MONTH", "RECENT_3MONTH", "RECENT_6MONTH"].includes(value)
+            });
+          }
+          
+          setAllProducts([]);
+          if (activeTab !== "all") {
+            setStats(DEFAULT_STATS);
+          }
         }
       } finally {
         setLoading(false);
