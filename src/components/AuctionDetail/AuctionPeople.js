@@ -1,20 +1,73 @@
 /* eslint-disable */
 
-import React from "react";
+import React , { useState , useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styles from "./AuctionPeople.module.css";
+import axios from "axios";
+import loadingStyles from "../../styles/Loading.module.css";
 
 import PeopleRow from "../AuctionDetail/PeopleRow"
 
 import people from "../../assets/AuctionTable/people.svg";
 
 function AuctionPeople() {
+  const { id: paramId } = useParams();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const {data} = await axios.get(
+        `https://likelion.info:443/auction/specific/users`
+        , { withCredentials: true, params: { paramId },});
+      console.log(data);
+
+    } catch (error) {
+      // 상세 조회 오류 처리
+      setError("정보를 불러오는데 실패했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const MOCK_PEOPLE = [
-  { id: 1, name: "나",     status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
-  { id: 2, name: "광주도매", status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
-  { id: 3, name: "부산수산", status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
-  { id: 4, name: "서울수산", status: "경매 참여 중", lastBid: 25000, note: "" },
-];
+    { id: 1, name: "나",     status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
+    { id: 2, name: "광주도매", status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
+    { id: 3, name: "부산수산", status: "경매 참여 중", lastBid: 25000, note: "마지막 호가" },
+    { id: 4, name: "서울수산", status: "경매 참여 중", lastBid: 25000, note: "" },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        {/* <div className={loadingStyles.loadingSpinner}></div> */}
+        <div className={loadingStyles.loadingText}>
+          정보를 불러오고 있습니다...
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <button onClick={() => fetchData()} className={loadingStyles.retryBtn}>
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
