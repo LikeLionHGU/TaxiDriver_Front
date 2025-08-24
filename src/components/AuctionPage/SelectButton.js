@@ -31,7 +31,7 @@ function SelectButton({ value = "ALL", onChange }) {
 
       const {data} = await axios.get(
         `https://likelion.info:443/post/get/auction/list`
-      );
+        , { withCredentials: true });
       console.log(data);
       if (data) {
         setStatus({
