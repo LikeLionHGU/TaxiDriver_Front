@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import axios from 'axios';
 // 1. CSS 모듈 import 방식은 그대로 유지합니다.
 import styles from "../styles/Purchasehistory.module.css"
 // SVG 파일 import 방식은 사용자의 환경에 따라 다를 수 있습니다.
@@ -11,53 +12,61 @@ import logo from "../assets/logo.svg";
 const PurchaseHistoryPage = () => {
   const [activeFilter, setActiveFilter] = useState("전체")
   const [checkedItems, setCheckedItems] = useState({}) // 체크박스 상태 관리
+  const [purchaseHistory, setPurchaseHistory] = useState([]); // 구매 내역 상태 추가
 
-  // Sample purchase data
-  const purchaseData = [
-    {
-      id: 1,
-      productName: "대게",
-      description: "포항",
-      quantity: "30마리",
-      price: 250000,
-      date: "2025. 8. 9.",
-    },
-    {
-      id: 2,
-      productName: "대게",
-      description: "포항",
-      quantity: "100마리",
-      price: 85000,
-      date: "2025. 8. 10.",
-    },
-    {
-      id: 3,
-      productName: "대게",
-      description: "포항",
-      quantity: "200마리",
-      price: 120000,
-      date: "2025. 8. 11.",
-    },
-    {
-      id: 4,
-      productName: "대게",
-      description: "포항",
-      quantity: "80마리",
-      price: 95000,
-      date: "2025. 8. 12.",
-    },
-  ]
+  const fetchPurchaseHistory = async (value) => {
+    try {
+      const response = await axios.get(`https://likelion.info/post/get/buy/list/${value}`, {
+        withCredentials: true, // credentials: 'include'
+      });
+      // Assuming the backend returns a list of objects with name, count, price, date
+      // Map the response data to match the existing structure if necessary
+      const formattedData = response.data.map(item => ({
+        id: item.id || Math.random(), // Use existing ID or generate one
+        productName: item.name,
+        description: "", // Backend doesn't provide description, so leave empty or derive if possible
+        quantity: item.count,
+        price: item.price,
+        date: new Date(item.date).toLocaleDateString('ko-KR'), // Format date
+      }));
+      setPurchaseHistory(formattedData);
+        console.log('API call successful:', response.data);
+      } catch (error) {
+      console.error("Error fetching purchase history:", error);
+      setPurchaseHistory([]); // Clear data on error
+    }
+  };
+
+  useEffect(() => {
+    fetchPurchaseHistory("ALL"); // Fetch all data on component mount
+  }, []);
 
   const filters = ["전체", "최근 1주", "최근 1개월", "최근 3개월"]
 
-
   // Filter data based on active filter
-  const filteredData =
-    activeFilter === "전체" ? purchaseData : purchaseData;
+  const filteredData = purchaseHistory; // Now filteredData will be based on fetched data
 
   const handleFilterClick = (filter) => {
-    setActiveFilter(filter)
-  }
+    setActiveFilter(filter);
+    let apiValue = "ALL";
+    switch (filter) {
+      case "전체":
+        apiValue = "ALL";
+        break;
+      case "최근 1주":
+        apiValue = "RECENT_1WEEK";
+        break;
+      case "최근 1개월":
+        apiValue = "RECENT_1MONTH";
+        break;
+      case "최근 3개월":
+        apiValue = "RECENT_3MONTH";
+        break;
+      default:
+        apiValue = "ALL";
+    }
+    fetchPurchaseHistory(apiValue);
+  };
 
   // 체크박스 상태 변경 핸들러
   const handleCheckboxChange = (itemId) => {
