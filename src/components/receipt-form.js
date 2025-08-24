@@ -1126,10 +1126,10 @@ export default function ReceiptForm() {
               <div style={styles.toggleGroup}>
                 <button
                   type="button"
-                  onClick={() => setStatusType("live")}
+                  onClick={() => setStatusType("활어")}
                   style={{
                     ...styles.toggleCardSmall,
-                    ...(statusType === "live" ? styles.toggleActive : {}),
+                    ...(statusType === "활어" ? styles.toggleActive : {}),
                   }}
                 >
                   <span style={styles.toggleTitle}>활어</span>
@@ -1137,10 +1137,10 @@ export default function ReceiptForm() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStatusType("fresh")}
+                  onClick={() => setStatusType("선어")}
                   style={{
                     ...styles.toggleCardSmall,
-                    ...(statusType === "fresh" ? styles.toggleActive : {}),
+                    ...(statusType === "선어" ? styles.toggleActive : {}),
                   }}
                 >
                   <span style={styles.toggleTitle}>선어</span>
@@ -1148,10 +1148,10 @@ export default function ReceiptForm() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStatusType("frozen")}
+                  onClick={() => setStatusType("냉동")}
                   style={{
                     ...styles.toggleCardSmall,
-                    ...(statusType === "frozen" ? styles.toggleActive : {}),
+                    ...(statusType === "냉동" ? styles.toggleActive : {}),
                   }}
                 >
                   <span style={styles.toggleTitle}>냉동</span>
