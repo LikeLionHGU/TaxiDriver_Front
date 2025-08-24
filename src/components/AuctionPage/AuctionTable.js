@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import styles from "./AuctionTable.module.css";
 
 import AuctionTableBox from "./AuctionTableBox";
 
-function AuctionTable({ activeStatus = "ALL", searchTerm = "", setSearchTerm }) {
+function AuctionTable({ activeStatus = "ALL",
+  searchTerm = "",
+  setSearchTerm,
+  page = 1,
+  pageSize = 10,
+  onTotalChange, }) {
 
   const mk = (id, name, unit, qty, price, status, time, addSec = 870) => ({
     id,
@@ -78,22 +83,31 @@ function AuctionTable({ activeStatus = "ALL", searchTerm = "", setSearchTerm }) 
   //   );
   // }
 
-    const norm = (s) => (s ?? "").toString().trim().toLowerCase();
+  const norm = (s) => (s ?? "").toString().trim().toLowerCase();
 
-    let filtered = data.items.slice();
+  // 1) 상태 필터 (대문자 비교)
+  const wanted = (activeStatus ?? "ALL").toString().toUpperCase();
+  let filtered = data.items.slice();
+  if (wanted !== "ALL") {
+    filtered = filtered.filter(it => (it.status ?? "").toUpperCase() === wanted);
+  }
 
-    // ✅ 상태 필터: 대문자 통일해서 비교
-    const wanted = (activeStatus ?? "ALL").toString().toUpperCase();
-    if (wanted !== "ALL") {
-      filtered = filtered.filter(
-        (it) => (it.status ?? "").toString().toUpperCase() === wanted
-      );
-    }
+  // 2) 검색어 필터
+  if (norm(searchTerm)) {
+    filtered = filtered.filter(it => norm(it.productName).includes(norm(searchTerm)));
+  }
 
-    // 검색어 필터
-    if (norm(searchTerm)) {
-      filtered = filtered.filter((it) => norm(it.productName).includes(norm(searchTerm)));
-    }
+  // 총 페이지 계산 + 슬라이스
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * pageSize;
+  const paginated = filtered.slice(start, start + pageSize);
+
+  // 부모에게 총 페이지 수 알림
+  useEffect(() => {
+    onTotalChange?.(totalPages);
+  }, [totalPages, onTotalChange]);
 
   return (
     <>
@@ -110,7 +124,7 @@ function AuctionTable({ activeStatus = "ALL", searchTerm = "", setSearchTerm }) 
             />
           </div>
         </div>
-        <AuctionTableBox items={filtered} />
+        <AuctionTableBox items={paginated} />
       </div>
     </>
   );

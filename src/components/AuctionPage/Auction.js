@@ -5,11 +5,17 @@ import styles from "./Auction.module.css";
 import PageHeader from "../SalesSettlementPage/PageHeader";
 import SelcetButton from "./SelectButton";
 import AuctionTable from "./AuctionTable";
+import Pagination from "../Pagination";
 
 function Auction() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeStatus, setActiveStatus] = useState("ALL");
+
+  // 페이지네이션
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 4;
 
   return (
     <>
@@ -22,9 +28,20 @@ function Auction() {
             content="내가 등록한 상품의 경매 상태를 확인하세요."/>
           <div onClick={() => navigate(`/auction/detail`)}>상세 확인</div>
           <SelcetButton value={activeStatus} onChange={setActiveStatus}/>
-          <AuctionTable activeStatus={activeStatus}
+          <AuctionTable
+            activeStatus={activeStatus}
             searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}/> 
+            setSearchTerm={(v) => { setSearchTerm(v); setPage(1); }} // 검색이 바뀌면 1페이지
+            page={page}
+            pageSize={pageSize}
+            onTotalChange={setTotalPages}
+          />
+
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onChange={setPage}
+          />
         </div>
       </div>
     </>
