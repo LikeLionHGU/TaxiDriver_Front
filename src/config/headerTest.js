@@ -12,7 +12,7 @@ export const NAV_BY_ROLE = {
     { key: "settlement",       label: "판매 정산",   href: "/sales-settlement" },
   ],
   [ROLES.GUARDIAN]: [
-    { key: "review-requests",  label: "검토요청 처리", href: "/review-requests" },
+    { key: "review-requests",  label: "검토요청 처리", href: "/review" },
     { key: "auction-live",     label: "실시간 경매",   href: "/auction" },
     { key: "confirm-receipt",  label: "수령 확인",     href: "/confirm-receipt" },
   ],
