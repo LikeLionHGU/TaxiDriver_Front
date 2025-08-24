@@ -21,7 +21,15 @@ function Header() {
 
          <nav className={styles.nav} aria-label="main">
             {items.map((it) => (
-              <NavLink key={it.key} to={it.href} className={`${location.pathname === it.href ? styles.currentPage : ""} ${styles.buttonContainer}`}>
+
+              <NavLink
+                key={it.key}
+                to={it.href}
+                // isActive 가 true면 currentPage 스타일을 추가
+                className={({ isActive }) =>
+                  `${styles.buttonContainer} ${isActive ? styles.currentPage : ""}`
+                }
+              >
                 <span className={styles.button}>{it.label}</span>
               </NavLink>
             ))}

@@ -30,7 +30,7 @@ function App() {
           <Route path="/producermain" element={<Producermain />} />
           <Route path="/register" element={<Produceregistar />} />
           <Route path="/auction" element={<Auction />} />
-          <Route path="/auction/detail" element={<AuctionDetail />} />
+          <Route path="/auction/detail/:id" element={<AuctionDetail />} />
           <Route path="/confirm-receipt" element={<Confirm />} />
 
           <Route path="/review" element={<Review />} />

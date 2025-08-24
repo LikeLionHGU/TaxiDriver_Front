@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./AuctionRow.module.css";
+import { useNavigate } from "react-router-dom";
 
 // 통화 포맷
 const formatKRW = (n) =>
@@ -28,6 +29,8 @@ function StatusBadge({ status }) {
 }
 
 function AuctionRow({ item }) {
+  const navigate = useNavigate();
+  
   const displayTime =
     item.time ??
     (item.endAt
@@ -52,7 +55,7 @@ function AuctionRow({ item }) {
       <div className={styles.status}><StatusBadge status={item.status} /></div>
       <div className={styles.time}>{displayTime}</div>
 
-      <div className={styles.action}>
+      <div className={styles.action} onClick={() => navigate(`/auction/detail/${item.id}`)}>
         <button className={styles.detailBtn}>상세보기</button>
       </div>
     </div>
