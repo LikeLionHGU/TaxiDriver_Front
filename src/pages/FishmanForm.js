@@ -3,12 +3,16 @@
 import { useState } from "react"
 import styles from "../styles/consignment-company-form.module.css"
 import { regions } from "../data/regions"
+import axios from 'axios';
 
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 
 export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("") // 빈 문자열로 초기화
   const [selectedLocation, setSelectedLocation] = useState("") // 빈 문자열로 초기화
+  const [companyName, setCompanyName] = useState('');
+  const [personName, setPersonName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const provinces = Object.keys(regions);
 
@@ -19,6 +23,27 @@ export default function LocationSelector() {
     setSelectedProvince(province)
     setSelectedLocation("") // 도가 바뀌면 선택된 위판장 초기화
   }
+
+  const handleSubmit = async () => {
+    const requestBody = {
+      personName,
+      companyName,
+      phoneNumber,
+      location: selectedLocation,
+    };
+
+    console.log('Request Body:', requestBody);
+
+    try {
+      const response = await axios.post('https://likelion.info/user/signin/seller', requestBody);
+      console.log('Success:', response.data);
+      alert('회원가입이 완료되었습니다.');
+      // 성공 시 다음 페이지로 이동하거나 상태 업데이트
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('회원가입에 실패했습니다.');
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -130,11 +155,11 @@ export default function LocationSelector() {
 
           <div className={styles.inputSection}>
             <label className={styles.inputLabel}>선박명/업체명</label>
-            <input type="text" placeholder="예: 대게잡이 1호" className={styles.input} />
+            <input type="text" placeholder="예: 대게잡이 1호" className={styles.input} value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
             <label className={styles.inputLabel}>선주명/대표자명</label>
-            <input type="text" placeholder="예: 홍길동" className={styles.input} />
+            <input type="text" placeholder="예: 홍길동" className={styles.input} value={personName} onChange={(e) => setPersonName(e.target.value)} />
             <label className={styles.inputLabel}>전화번호</label>
-            <input type="text" placeholder="010-0000-0000" className={styles.input} />
+            <input type="text" placeholder="010-0000-0000" className={styles.input} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
           </div>
 
           <div className={styles.buttonContainer}>
@@ -142,6 +167,7 @@ export default function LocationSelector() {
             <button 
               className={`${styles.primaryButton} ${!selectedLocation ? styles.primaryButtonDisabled : ""}`}
               disabled={!selectedLocation}
+              onClick={handleSubmit}
             >
               ✓ 회원가입 완료
             </button>
