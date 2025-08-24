@@ -6,6 +6,7 @@ import ProductDetailModal from "./ProductDetailModal";
 import PendingReviewModal from "./PendingReviewModal";
 import RejectedModal from "./RejectedModal";
 import styles from "./styles/product-table.module.css";
+import searchIcon from "../assets/search.svg";
 
 export default function ProducerMainTable({
   products,
@@ -64,25 +65,15 @@ export default function ProducerMainTable({
     <div className={styles.container}>
       <div className={styles.tableHeader} style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div className="relative">
+          <div className={`relative ${styles.searchContainer}`}>
             {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
+            <img src={searchIcon} alt="Search" className="" />
             <input
               type="text"
               placeholder="수산물을 입력하세요"
               value={searchTerm}
+              className={styles.searchInput}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                display: 'flex',
-                width: '300.5px',
-                height: '20.208px',
-                padding: '12px 17px',
-                alignItems: 'center',
-                gap: '12px',
-                flexShrink: 0,
-                borderRadius: '10px',
-                border: '1px solid #D9D9D9',
-                paddingLeft: '40px'
-              }}
             />
           </div>
           <select
