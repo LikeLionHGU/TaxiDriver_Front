@@ -111,7 +111,7 @@ function AuctionPeople() {
         </div>
       ) : ( 
         <div className={styles.beforeStart}>
-          <div className={styles.beforeStartContainer}>
+          <div className={styles.beforeStartContainer}> 
             <img src={peopleIcon} alt="people" />
             <span className={styles.beforeStartText}>참여 중도매인이 없습니다</span>
           </div>
