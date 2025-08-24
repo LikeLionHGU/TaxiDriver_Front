@@ -50,7 +50,7 @@ function AuctionPeople() {
       const list = extractList(data).map(mapParticipant);
       setPeopleList(list);
     } catch (e) {
-      setError("정보를 불러오는데 실패했습니다.");
+      setError("정보를 불러오는데 실패했습니다. ");
     } finally {
       setIsLoading(false);
     }
