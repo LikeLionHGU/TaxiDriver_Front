@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import styles from "./AuctionTable.module.css";
 
 import AuctionTableBox from "./AuctionTableBox";
