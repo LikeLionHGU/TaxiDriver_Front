@@ -5,7 +5,7 @@ import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
 function Header() {
-  const [role] = useState(ROLES.AMIN);
+  const [role] = useState(ROLES.AMIN); // 임시로 AMIN 고정ㅁ
   const items = NAV_BY_ROLE[role];
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
