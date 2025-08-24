@@ -110,6 +110,8 @@ export default function RegistrationStatus() {
           }
         });
 
+        console.log("통계 응답 확인합니다:", response);
+
         console.log("통계 응답 상태:", response.status);
         console.log("통계 응답 데이터:", response.data);
 
@@ -157,6 +159,9 @@ export default function RegistrationStatus() {
             'Content-Type': 'application/json'
           }
         });
+
+        console.log("메인 데이터 통계 응답 확인합니다:", response);
+
 
         console.log("=== 응답 수신 ===");
         console.log("응답 상태:", response.status);
