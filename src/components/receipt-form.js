@@ -113,18 +113,18 @@ export default function ReceiptForm() {
 
   const unitLabel = packUnit === "sp" ? "S/P" : packUnit === "box" ? "Box" : "그물망"
   const inc = () => {
-    if (packUnit === "sp" || packUnit === "box") {
-      setQuantity((v) => v + 1)
-    } else {
+    if (saleType === "weight" || (saleType === "package" && packUnit === "net")) {
       setTotalCount((v) => v + 1)
+    } else if (saleType === "package" && (packUnit === "sp" || packUnit === "box")) {
+      setQuantity((v) => v + 1)
     }
   }
 
   const dec = () => {
-    if (packUnit === "sp" || packUnit === "box") {
-      setQuantity((v) => Math.max(0, v - 1))
-    } else {
+    if (saleType === "weight" || (saleType === "package" && packUnit === "net")) {
       setTotalCount((v) => Math.max(0, v - 1))
+    } else if (saleType === "package" && (packUnit === "sp" || packUnit === "box")) {
+      setQuantity((v) => Math.max(0, v - 1))
     }
   }
 
