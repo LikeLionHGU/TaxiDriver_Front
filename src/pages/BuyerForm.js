@@ -6,6 +6,10 @@ import { regions } from "../data/regions"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 import axios from 'axios';
 
+// axios 기본 설정
+axios.defaults.withCredentials = true; // 쿠키 자동 포함
+axios.defaults.timeout = 10000; // 10초 타임아웃
+
 export default function LocationSelector() {
   const [selectedProvince, setSelectedProvince] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("")
@@ -22,6 +26,11 @@ export default function LocationSelector() {
   };
 
   const handleSubmit = async () => {
+    if (!personName || !companyName || !phoneNumber || !selectedLocation) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+
     const requestBody = {
       personName,
       companyName,
@@ -29,15 +38,40 @@ export default function LocationSelector() {
       location: selectedLocation,
     };
 
-    console.log('Request Body:', requestBody);
+    console.log("=== 어민 생산자 회원가입 API 요청 시작 ===");
+    console.log('전송 데이터:', requestBody);
 
     try {
-      const response = await axios.post('https://likelion.info/user/signin/buyer', requestBody);
-      console.log('Response:', response.data);
-      // Handle success (e.g., show a success message, redirect)
+      const response = await axios.post('https://likelion.info/user/signin/buyer', requestBody, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log("=== API 응답 성공 ===");
+      console.log("응답 상태:", response.status);
+      console.log("응답 데이터:", response.data);
+
+      if (response.data === true || response.status === 200) {
+        alert("회원가입에 성공했습니다!");
+        // 폼 초기화
+        setPersonName('');
+        setCompanyName('');
+        setPhoneNumber('');
+        setSelectedProvince('');
+        setSelectedLocation('');
+      } else {
+        alert("회원가입에 실패했습니다.");
+      }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      // Handle error (e.g., show an error message)
+      console.error("=== 어민 생산자 회원가입 API 요청 실패 ===");
+      console.error("에러 상태:", error.response?.status);
+      console.error("에러 데이터:", error.response?.data);
+      console.error("에러 메시지:", error.message);
+      console.error("전체 에러:", error);
+      
+      alert("회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -99,10 +133,7 @@ export default function LocationSelector() {
 </defs>
 </svg>
 
-
-
-
-          <h1 className={styles.title}>어민 생산자 정보 입력</h1>
+          <h1 className={styles.title}>구매업체 정보 입력</h1>
         </div>
 
     <div className={styles.whiteContainer}>
