@@ -121,7 +121,6 @@ const parseAiScore = (aiEvaluation) => {
 export default function Dashboard() {
   const [requestData, setRequestData] = useState(defaultRequestData)
   const [activeCard, setActiveCard] = useState("all")
-  const [timePeriod] = useState(0) // 기본값 0 (전체 기간)
   const [selectedItem, setSelectedItem] = useState(null)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false)
@@ -129,36 +128,36 @@ export default function Dashboard() {
   const [isApprovalConfirmationModalOpen, setIsApprovalConfirmationModalOpen] = useState(false)
 
   // API 호출 함수 - axios로 변경
-  const fetchData = useCallback(async (cardType, value = 0) => {
+  const fetchData = useCallback(async (cardType) => {
     try {
       let url = ""
       switch (cardType) {
         case "all":
-          url = `https://likelion.info/post/check/all/${value}`
+          url = `https://likelion.info/post/check/all`
           break
         case "pending":
-          url = `https://likelion.info/post/check/ready/${value}`
+          url = `https://likelion.info/post/check/ready`
           break
         case "approved":
-          url = `https://likelion.info/post/check/success/${value}`
+          url = `https://likelion.info/post/check/success`
           break
         case "rejected":
-          url = `https://likelion.info/post/check/failed/${value}`
+          url = `https://likelion.info/post/check/failed`
           break
         default:
-          url = `https://likelion.info/post/check/all/${value}`
+          url = `https://likelion.info/post/check/all`
       }
 
       console.log("=== API 요청 시작 ===")
       console.log("요청 URL:", url)
       console.log("카드 타입:", cardType)
-      console.log("시간 구간:", value)
 
       const response = await axios.get(url, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
+        withCredentials: true,
       })
 
       console.log("=== API 응답 성공 ===")
@@ -200,8 +199,8 @@ export default function Dashboard() {
 
   // 컴포넌트 마운트 시 초기 데이터 로드
   useEffect(() => {
-    fetchData("all", timePeriod)
-  }, [timePeriod, fetchData])
+    fetchData("all")
+  }, [fetchData])
 
   const stats = {
     pending: requestData.filter((item) => item.status === "검토요청").length,
@@ -212,7 +211,7 @@ export default function Dashboard() {
   const handleCardSelect = (key) => {
     setActiveCard(key)
     // 카드 선택 시 해당 API 호출
-    fetchData(key, timePeriod)
+    fetchData(key)
   }
 
   const handleDetailClick = (item) => {
@@ -237,7 +236,7 @@ export default function Dashboard() {
     setIsPendingModalOpen(false);
     setIsApprovalConfirmationModalOpen(true);
     // 승인 처리 후 데이터 새로고침
-    fetchData(activeCard, timePeriod)
+    fetchData(activeCard)
   };
 
   const closeModal = () => {
