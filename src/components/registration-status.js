@@ -240,10 +240,8 @@ export default function RegistrationStatus() {
         console.log("Active Tab:", activeTab);
         console.log("Selected Period:", selectedPeriod);
 
-        // 전체보기일 때만 통계 API 호출
-        if (activeTab === "all") {
-          fetchStatsData();
-        }
+        // Always call fetchStatsData to ensure global counts are updated
+        fetchStatsData();
 
         // 데이터 가져오기
         const periodMap = {
