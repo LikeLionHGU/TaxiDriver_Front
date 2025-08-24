@@ -9,6 +9,8 @@ import ConfirmDetailModal from "../Modal/ConfirmDetailModal";
 
 
 function ConfirmReceipt() {
+  const [activeFilter, setActiveFilter] = useState("today");
+
 
 // 1) test용 모달 생성
   const [confirmDetailModalOpen, setConfirmDetailModalOpen] = useState(false);
@@ -33,8 +35,8 @@ function ConfirmReceipt() {
           <button className={styles.excelButton} onClick={openConfirmDetailModal}>
             <span>모달 확인용</span>
           </button>
-          <ConfirmButton />
-          <ConfirmTable />
+          <ConfirmButton value={activeFilter} onChange={setActiveFilter} />
+          <ConfirmTable activeFilter={activeFilter} />
         </div>
 
       <ConfirmDetailModal

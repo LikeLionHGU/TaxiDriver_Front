@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useMemo} from "react";
 import styles from "./ConfirmTable.module.css";
 
 import ConfirmTableBox from "./ConfirmTableBox";
 
-function ConfirmTable() {
+function ConfirmTable({ activeFilter = "today" }) {
 
   const items = [
     {
@@ -54,17 +54,31 @@ function ConfirmTable() {
       buyerName: "인천수산",
       sellerName: "정수진",
       pickupPlace: "포항수협 죽도위판장 2층",
-      dueDate: "2024-11-19",
+      dueDate: "2025-08-25",
       dueTime: "15:30",
       receiveStatus: "DONE",
     },
   ];
   
+  const todayYmd = new Date().toISOString().slice(0, 10);
+
+  const filtered = useMemo(() => {
+    const key = (activeFilter || "").toLowerCase();
+    switch (key) {
+      case "waiting":
+        return items.filter((it) => (it.receiveStatus || "").toUpperCase() === "WAITING");
+      case "complete":
+        return items.filter((it) => (it.receiveStatus || "").toUpperCase() === "DONE");
+      case "today":
+      default:
+        return items.filter((it) => it.dueDate === todayYmd);
+    }
+  }, [activeFilter, items, todayYmd]);
 
   return (
     <>
       <div className={styles.main}>
-        <ConfirmTableBox items={items} />
+        <ConfirmTableBox items={filtered} />
       </div>
     </>
   );

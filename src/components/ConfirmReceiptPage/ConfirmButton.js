@@ -10,8 +10,14 @@ const OPTIONS = [
   { key: "complete",label: "수령 완료",  count: 1,   icon: GreenButton, variant: "green"  },
 ];
 
-function ConfirmButton() {
-  const [selected, setSelected] = useState("all");
+function ConfirmButton({ value = "today", onChange }) {
+  const [selected, setSelected] = useState(value);
+
+  const handleClick = (key) => {
+    setSelected(key);
+    onChange?.(key); 
+  };
+
 
   return (
     <div className={styles.selectButtonContainer} role="tablist" aria-label="상태 필터">
@@ -22,7 +28,7 @@ function ConfirmButton() {
           className={styles.selectButton}
           data-variant={opt.variant}
           data-selected={selected === opt.key}
-          onClick={() => setSelected(opt.key)}
+          onClick={() => handleClick(opt.key)}
           aria-pressed={selected === opt.key}
         >
           <div className={styles.leftContainer}>

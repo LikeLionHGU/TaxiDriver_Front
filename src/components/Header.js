@@ -1,15 +1,15 @@
 import React, {useState} from "react";
-import { NavLink, useLocation /*, Link, useNavigate */ } from "react-router-dom";
+import { NavLink/*, useLocation , Link, useNavigate */ } from "react-router-dom";
 
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
 function Header() {
-  const [role] = useState(ROLES.AMIN);
+  const [role] = useState(ROLES.JUNGDOMAEIN);
   const items = NAV_BY_ROLE[role];
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
-  const location = useLocation();
+  // const location = useLocation();
 
 
 
