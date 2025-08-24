@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import styles from "./Auction.module.css";
 
 import PageHeader from "../SalesSettlementPage/PageHeader";
@@ -8,7 +7,6 @@ import AuctionTable from "./AuctionTable";
 import Pagination from "../Pagination";
 
 function Auction() {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeStatus, setActiveStatus] = useState("ALL");
 

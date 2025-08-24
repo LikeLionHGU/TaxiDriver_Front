@@ -9,9 +9,8 @@ function Header() {
   const items = NAV_BY_ROLE[role];
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
+// eslint-disable-next-line
   const location = useLocation();
-
-
 
   return (
     <>
