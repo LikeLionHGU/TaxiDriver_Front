@@ -78,7 +78,7 @@ function AuctionTable({ activeStatus = "ALL",
           id: a.id,
           // (fishStatus) name
           productName: `(${a.fishStatus ?? ""})${a.name ?? ""}`.trim(),
-          // "2kg/마리" 같은 단위
+          // "2kg/마리" 같은 단위 
           unit: joinUnit(a.fishWeight, a.salesMethod),
           // "10"
           quantity: a.fishCount,
