@@ -26,7 +26,6 @@ function Auction() {
             image="cart"
             title="경매 상태"
             content="내가 등록한 상품의 경매 상태를 확인하세요."/>
-          <div onClick={() => navigate(`/auction/detail`)}>상세 확인</div>
           <SelcetButton value={activeStatus} onChange={setActiveStatus}/>
           <AuctionTable
             activeStatus={activeStatus}

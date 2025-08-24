@@ -1,0 +1,113 @@
+.panel{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.statBox{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.statLabel{
+  color: #8B8B8B;
+  font-size: 14px;
+}
+
+.statValue{
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.blue{
+  color: #2F6BFF;
+}
+
+.sectionTitle{
+  margin-top: 4px;
+  font-size: 14px;
+  color: #4B5563;
+}
+
+.quickRow{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.quickBtn{
+  height: 44px;
+  border-radius: 10px;
+  border: 2px solid #2F6BFF;
+  background: #fff;
+  color: #2F6BFF;
+  font-weight: 600;
+}
+
+.quickBtn:disabled{
+  opacity: .5;
+}
+
+.plus{
+  margin-right: 8px;
+}
+
+.inputRow{
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+.priceInput{
+  height: 46px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 0 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.priceInput:focus{
+  border-color: #2F6BFF;
+  box-shadow: 0 0 0 3px rgba(47,107,255,.15);
+}
+
+.submitBtn{
+  height: 46px;
+  border-radius: 10px;
+  background: #2F6BFF;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+}
+
+.submitBtn:disabled{
+  background: #93B0FF;
+  cursor: not-allowed;
+}
+
+.totalRow{
+  margin-top: 2px;
+}
+
+.totalInput{
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
+  padding: 0 14px;
+  color: #E11D48; /* 빨강 */
+  font-weight: 700;
+  background: #F9FAFB;
+}

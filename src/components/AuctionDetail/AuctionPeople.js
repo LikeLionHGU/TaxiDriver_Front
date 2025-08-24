@@ -22,9 +22,9 @@ function AuctionPeople() {
       setError(null);
 
       const {data} = await axios.get(
-        `https://likelion.info:443/auction/specific/users`
-        , { withCredentials: true, params: { paramId },});
-      console.log(data);
+        `https://likelion.info:443/auction/specific/users/${paramId}`
+        , { withCredentials: true});
+      console.log("경매 참여 확인",data);
 
     } catch (error) {
       // 상세 조회 오류 처리

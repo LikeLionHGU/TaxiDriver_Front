@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import loadingStyles from "../../styles/Loading.module.css";
 import styles from "./AuctionItem.module.css";
 
+import BigPanel from "../AuctionDetail/BigPanel";
+
 /** ===== 유틸 & 매퍼 ===== */
 const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
 
@@ -32,17 +34,25 @@ const parseKg = (fishWeight) => {
   return m ? parseFloat(m[1]) : null;
 };
 
-// DTO → 상세 카드(AuctionItem)가 기대하는 형태로 변환
+// ===== 유틸 & 매퍼 중 일부만 수정 =====
 function mapDtoToDetailItem(a) {
-  // 시작 기준: startedAt 있으면 그것, 없으면 triggerAt + 10분
-  const startBase = a.startedAt ? new Date(a.startedAt) : addMinutes(a.triggerAt, 10);
+  // 시작 기준: startedAt || (triggerAt + 10분)
+  const startBase = a.startedAt
+    ? new Date(a.startedAt)
+    : a.triggerAt
+    ? addMinutes(a.triggerAt, 10)
+    : null;
 
   const status = mapStatus(a.auctionStatus);
-  // 진행중이면 시작 기준 + 15분 → 종료 예정(endAt)
-  const endAt = status === "PROGRESS" && startBase ? addMinutes(startBase, 15).toISOString() : null;
+  const endAt =
+    status === "PROGRESS" && startBase
+      ? addMinutes(startBase, 15).toISOString()
+      : null;
 
   const unitWeightText = joinUnit(a.fishWeight, a.salesMethod);
-  const unitWeightKg = parseKg(a.fishWeight);
+  // "5" 같은 값도 숫자로 받아줌
+  const unitWeightKg =
+    parseKg(a.fishWeight) ?? (isFinite(Number(a.fishWeight)) ? Number(a.fishWeight) : null);
 
   return {
     name: a.name,
@@ -52,13 +62,14 @@ function mapDtoToDetailItem(a) {
     unitWeightText,
     unitWeightKg,
     quantity: a.fishCount,
-    images: a.images || [null, null, null, null], // 백에서 이미지 주면 사용
+    images: a.urls || a.images || [null, null, null, null], // ✅ urls 대응
     startPrice: a.reservePrice,
-    currentPrice: a.currentPrice ?? a.reservePrice, // 없으면 시작가로 대체
+    currentPrice: a.topPrice ?? a.currentPrice ?? a.reservePrice, // ✅ topPrice 대응
     endAt,
-    status, // 배너 등에 사용 가능
+    status,
   };
 }
+
 
 /** ===== 통화 포맷 ===== */
 const formatKRW = (n) =>
@@ -115,14 +126,26 @@ function AuctionItem({ item: initialItem }) {
       setIsLoading(true);
       setError(null);
 
-      // 단건 API가 있으면 아래 URL을 /post/get/auction/{id} 같은 형태로 바꿔 사용
-      const { data } = await axios.get("https://likelion.info:443/post/get/auction/all", {
-        withCredentials: true, // 쿠키 인증이면 유지, JWT면 Authorization 헤더 사용
+      const { data } = await axios.get(`https://likelion.info:443/post/get/${id}`, {
+        withCredentials: true,
       });
+      console.log(data);
 
-      const list = Array.isArray(data) ? data : data?.items || [];
-      const dto = id ? list.find((x) => String(x.id) === String(id)) : list?.[0];
-      if (!dto) throw new Error("해당 경매를 찾을 수 없습니다.");
+      // ✅ 단건/배열/ items 세 가지 형태 모두 안전 처리
+      let dto = null;
+      if (data && typeof data === "object" && !Array.isArray(data) && data.id != null) {
+        // 단건 객체
+        dto = data;
+      } else if (Array.isArray(data)) {
+        dto = id ? data.find((x) => String(x.id) === String(id)) : data[0];
+      } else if (Array.isArray(data?.items)) {
+        const list = data.items;
+        dto = id ? list.find((x) => String(x.id) === String(id)) : list[0];
+      }
+
+      if (!dto) {
+        throw new Error("해당 경매를 찾을 수 없습니다.");
+      }
 
       setItem(mapDtoToDetailItem(dto));
     } catch (e) {
@@ -131,6 +154,7 @@ function AuctionItem({ item: initialItem }) {
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchDetail();
@@ -241,12 +265,14 @@ function AuctionItem({ item: initialItem }) {
       </div>
 
       {/* 상태 안내 배너 */}
-      {banner && (
+      {/* {banner && (
         <div className={styles.banner}>
           <div className={styles.bannerTitle}>{banner.title}</div>
           <div className={styles.bannerDesc}>{banner.desc}</div>
         </div>
-      )}
+      )} */}
+
+      <BigPanel item={item} totalWeight={totalWeight} remainText={remainText} />
     </div>
   );
 }
