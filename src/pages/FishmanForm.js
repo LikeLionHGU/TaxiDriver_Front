@@ -83,7 +83,7 @@ export default function LocationSelector() {
 
         <div className={styles.whiteContainer}>
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>위판장 지역 선택</h2>
+            <h2 className={styles.sectionTitle}>거래 위판장 지역</h2>
 
             <div className={styles.provinceTabsContainer}>
               {provinces.map((province) => (
