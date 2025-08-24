@@ -7,7 +7,7 @@ import searchImg from "../../assets/search.svg";
 // 숫자 → 프론트 상태 키로 통일
   const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
 
-// "2kg/마리 | 10" 형태를 위한 유틸
+// eslint-disable-next-line
   const join = (...xs) => xs.filter(Boolean).join(" | ");
   const joinUnit = (w, m) => [w, m].filter(Boolean).join("/");
 
@@ -36,7 +36,7 @@ function AuctionTable({ activeStatus = "ALL",
       const { data } = await axios.get(`https://likelion.info:443/post/get/auction/all`, {
         withCredentials: true, 
       });
-
+      console.log(data);
       const list = Array.isArray(data) ? data : data?.items || [];
 
       const mapped = list.map((a) => {
