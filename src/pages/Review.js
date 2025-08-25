@@ -161,6 +161,8 @@ export default function Dashboard() {
 
         const aiScore = parseAiScore(detailData.aiEvaluation || item.aiEvaluation);
         const aiAnalysisText = detailData.aiEvaluation || item.aiEvaluation || "AI 분석 결과가 없습니다.";
+
+        console.log(`AI Evaluation for item ${item.id}:`, detailData.aiEvaluation || item.aiEvaluation);
         const rejectReason = detailData.rejectReason || ""; // Assuming rejectReason might come from detail
 
         return {
