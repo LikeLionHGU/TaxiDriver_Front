@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { NavLink/*, useLocation , Link, useNavigate */ } from "react-router-dom";
 
+
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
@@ -15,9 +16,8 @@ function Header() {
 
   return (
     <>
-      <div className={styles.headerContainer}>
-        <div className={styles.logo}>
-        </div>
+      <header className={styles.headerContainer}>
+        <img src={headerlogo} alt="Header Logo" className={styles.headerLogo} />
 
          <nav className={styles.nav} aria-label="main">
             {items.map((it) => (
@@ -34,9 +34,8 @@ function Header() {
               </NavLink>
             ))}
           </nav>
-
-      </div>
-    </>
+        </header>
+      </>
   );
 }
 
