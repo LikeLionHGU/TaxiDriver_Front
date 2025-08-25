@@ -4,13 +4,17 @@ import axios from "axios";
 import Modal from "./Modal";
 import styles from "./styles/modal.module.css";
 
-export default function ProductDetailModal({ open, onClose, product, isApproved, apiUrl }) {
+function ProductDetailModal({ isOpen, onClose, product, apiUrl }) {
+  console.log("ProductDetailModal - All Props:", { isOpen, onClose, product, apiUrl });
+  console.log("ProductDetailModal - Product Data:", product);
+  console.log("ProductDetailModal - AI Analysis Result (if available):", product?.aiAnalysisResult);
+  console.log("ProductDetailModal - Product Images (if available):", product?.imageUrls);
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (open && product && product.id) {
+    if (isOpen && product && product.id) {
       const fetchProductDetails = async () => {
         try {
           setLoading(true);
@@ -29,15 +33,15 @@ export default function ProductDetailModal({ open, onClose, product, isApproved,
       };
 
       fetchProductDetails();
-    } else if (!open) {
+    } else if (!isOpen) {
       // Reset state when modal closes
       setProductDetails(null);
       setLoading(true);
       setError(null);
     }
-  }, [open, product, apiUrl]);
+  }, [isOpen, product, apiUrl]);
 
-  if (!open) return null;
+  if (!isOpen) return null;
 
   const h = React.createElement;
   const kvItem = (k, v) => h("li", null, h("span", null, k), h("strong", null, v));
@@ -51,15 +55,15 @@ export default function ProductDetailModal({ open, onClose, product, isApproved,
     );
 
   if (loading) {
-    return h(Modal, { open, onClose, title: "상품 상세 검토" }, h("p", null, "로딩 중..."));
+    return h(Modal, { isOpen, onClose, title: "상품 상세 검토" }, h("p", null, "로딩 중..."));
   }
 
   if (error) {
-    return h(Modal, { open, onClose, title: "상품 상세 검토" }, h("p", { className: styles["error-message"] }, error));
+    return h(Modal, { isOpen, onClose, title: "상품 상세 검토" }, h("p", { className: styles["error-message"] }, error));
   }
 
   if (!productDetails) {
-    return h(Modal, { open, onClose, title: "상품 상세 검토" }, h("p", null, "데이터를 불러올 수 없습니다."));
+    return h(Modal, { isOpen, onClose, title: "상품 상세 검토" }, h("p", null, "데이터를 불러올 수 없습니다."));
   }
 
   const grid = h(
@@ -121,7 +125,9 @@ export default function ProductDetailModal({ open, onClose, product, isApproved,
 
   return h(
     Modal,
-    { open, onClose, title: "상품 상세 검토" },
+    { isOpen, onClose, title: "상품 상세 검토" },
     h(React.Fragment, null, grid, rejectReasonBlock, bottom)
   );
 }
+
+export default ProductDetailModal;

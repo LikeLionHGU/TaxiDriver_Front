@@ -145,27 +145,54 @@ export default function Dashboard() {
       console.log("응답 상태:", response.status);
       console.log("응답 데이터:", response.data);
 
-      const data = response.data;
-      
-      const transformedData = data.map((item, index) => ({
-        id: item.id || index + 1,
-        applicant: item.name || "대게",
-        applicationDate: `${item.fishWeight || "25.5kg"}`,
-        reviewer: item.sellerName || "검토자",
-        approvalDate: getApprovalDate(item.registerStatus),
-        status: transformStatus(item.registerStatus),
-        progress: getProgress(item.registerStatus),
-        price: item.reservePrice || 0,
-        aiScore: parseAiScore(item.aiEvaluation),
-        aiAnalysisText: item.aiEvaluation || "AI 분석 결과가 없습니다.",
-        fishCount: item.fishCount || 1,
-      }));
+      const productsFromList = response.data;
+      const transformedDataPromises = productsFromList.map(async (item, index) => {
+        let detailData = {};
+        try {
+          const detailUrl = `https://likelion.info/post/get/detail/${item.id}`;
+          console.log(`=== API 요청 시작 (상세): ${detailUrl} ===`);
+          const detailResponse = await axios.get(detailUrl, { withCredentials: true });
+          console.log(`=== API 응답 성공 (상세): ${detailUrl} ===`);
+          detailData = detailResponse.data;
+        } catch (detailError) {
+          console.error(`=== 상세 API 호출 에러 (${item.id}): ${detailError.message} ===`);
+          // Continue without detail data if fetching fails
+        }
+
+        const aiScore = parseAiScore(detailData.aiEvaluation || item.aiEvaluation);
+        const aiAnalysisText = detailData.aiEvaluation || item.aiEvaluation || "AI 분석 결과가 없습니다.";
+        const rejectReason = detailData.rejectReason || ""; // Assuming rejectReason might come from detail
+
+        return {
+          id: item.id || index + 1,
+          applicant: item.name || "대게",
+          applicationDate: `${item.fishWeight || "25.5kg"}`,
+          reviewer: item.sellerName || "검토자",
+          approvalDate: getApprovalDate(item.registerStatus),
+          status: transformStatus(item.registerStatus),
+          progress: getProgress(item.registerStatus),
+          price: item.reservePrice || 0,
+          // Use detailData for AI analysis and images if available
+          aiScore: aiScore,
+          aiAnalysisText: aiAnalysisText,
+          aiAnalysisResult: { // Structure for PendingReviewModal
+            diseasePercentage: aiScore,
+            diseaseDescription: aiAnalysisText,
+          },
+          imageUrl: detailData.images && detailData.images.length > 0 ? detailData.images[0] : null, // First image
+          images: detailData.images || [], // All images for ProductDetailModal
+          fishCount: item.fishCount || 1,
+          rejectReason: rejectReason, // Pass rejectReason to product object
+        };
+      });
+
+      const transformedData = await Promise.all(transformedDataPromises);
 
       console.log("변환된 데이터:", transformedData);
       setAllData(transformedData);
 
     } catch (error) {
-      console.error("=== API 호출 에러 ===");
+      console.error("=== API 호출 에러 (목록) ===");
       console.error("에러 상태:", error.response?.status);
       console.error("에러 데이터:", error.response?.data);
       console.error("에러 메시지:", error.message);

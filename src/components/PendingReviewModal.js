@@ -77,14 +77,14 @@ export default function PendingReviewModal({ open, onClose, product, onApprove, 
   );
 
   // 하단: 상품 사진(없으면 비워둠)
-  const hasPhotos = Array.isArray(product.photos) && product.photos.length > 0;
-  const photos = hasPhotos
-    ? product.photos.map((src, i) => h("img", { key: i, src, alt: `${product.name} 사진 ${i + 1}` }))
-    : null;
+  const hasImage = product.imageUrl; // Check for imageUrl
+  const imageElement = hasImage
+    ? h("img", { src: product.imageUrl, alt: `${product.applicant} 사진`, className: styles.productImage })
+    : h("p", null, "등록된 상품 사진이 없습니다."); // Message if no image
 
   const bottom = cardBlock(
     "상품 사진",
-    h("div", { className: styles.photoArea }, photos),
+    h("div", { className: styles.photoArea }, imageElement),
     { full: true }
   );
 
