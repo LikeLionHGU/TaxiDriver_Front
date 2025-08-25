@@ -104,6 +104,7 @@ export default function BidPanel({
     } finally {
       setSubmitting(false);
     }
+    location.reload(true);
   };
 
   return (

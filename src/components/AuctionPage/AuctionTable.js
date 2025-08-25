@@ -3,9 +3,10 @@ import styles from "./AuctionTable.module.css";
 import axios from "axios";
 import AuctionTableBox from "./AuctionTableBox";
 import searchImg from "../../assets/search.svg";
+import { useAuth, ROLES } from "../../auth/AuthContext";
 
 // 숫자 → 프론트 상태 키로 통일
-  const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
+  const mapStatus = (n) => ({ "AUCTION_READY": "PROGRESS", "AUCTION_CURRENT": "PENDING", "AUCTION_FINISH": "DONE" }[n] || "PENDING");
 
 // eslint-disable-next-line
   const join = (...xs) => xs.filter(Boolean).join(" | ");
@@ -51,6 +52,14 @@ function AuctionTable({ activeStatus = "ALL",
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { role, loading: authLoading } = useAuth();     
+
+  const ENDPOINT_BY_ROLE = {
+    [ROLES.ADMIN]:       "https://likelion.info:443/post/get/auction/all",   // 어민 : 내가 등록한 것
+    [ROLES.GUARDIAN]:    "https://likelion.info:443/post/get/auction/all/admin",  // 관리자 : 전체
+    [ROLES.JUNGDOMAEIN]: "https://likelion.info:443/post/get/auction/all/admin",   // 중도매인: 참여 가능한 전체
+    [ROLES.GUEST]:       "https://likelion.info:443/post/get/auction/all/admin",   // 비로그인: 전체
+  };
 
   // 1) API 호출
   const fetchData = async () => {
@@ -58,8 +67,10 @@ function AuctionTable({ activeStatus = "ALL",
       setIsLoading(true);
       setError(null);
 
-      const { data } = await axios.get(`https://likelion.info:443/post/get/auction/all`, {
-        withCredentials: true, 
+      const url = ENDPOINT_BY_ROLE[role] || ENDPOINT_BY_ROLE[ROLES.GUEST];
+
+      const { data } = await axios.get(url, {
+        withCredentials: true,
       });
       console.log(data);
       const list = Array.isArray(data) ? data : data?.items || [];
@@ -104,8 +115,10 @@ function AuctionTable({ activeStatus = "ALL",
   };
 
   useEffect(() => {
+    if (authLoading) return; 
     fetchData();
-  }, []);
+    // eslint-disable-next-line
+  }, [authLoading, role]);
 
   // 2) 필터/검색/페이지네이션
   const norm = (s) => (s ?? "").toString().trim().toLowerCase();
@@ -172,81 +185,6 @@ function AuctionTable({ activeStatus = "ALL",
       </div>
     );
   }
-
-  // const mk = (id, name, unit, qty, price, status, time, addSec = 870) => ({
-  //   id,
-  //   productName: name,
-  //   unit,
-  //   quantity: qty,
-  //   startPrice: price,
-  //   sellerName: "김철수",
-  //   status,           
-  //   time,         
-  //   endAt: new Date(Date.now() + addSec * 1000).toISOString(), // 카운트다운 쓸 때 사용
-  // });
-
-  // const data = {
-  //   items: [
-  //     // === 진행중 (PROGRESS) ===
-  //     mk(201, "(활)광어",      "2kg/마리",     10, 35000, "PROGRESS", "12:03"),
-  //     mk(202, "(선)갈치",      "0.5kg/마리",   30, 15000, "PROGRESS", "12:05"),
-  //     mk(203, "(활)우럭",      "1.5kg/마리",   12, 28000, "PROGRESS", "12:15"),
-  //     mk(204, "(활)농어",      "2kg/마리",      8, 45000, "PROGRESS", "12:20"),
-  //     mk(205, "(선)전어",      "박스",         25, 12000, "PROGRESS", "12:30"),
-  //     mk(206, "(선)전복",      "1kg/망",        6, 70000, "PROGRESS", "12:45"),
-
-  //     // === 대기중 (PENDING) ===
-  //     mk(301, "(선)갈치",      "0.5kg/마리",    4, 25000, "PENDING",  "14:30"),
-  //     mk(302, "(활)광어(대)",  "3kg/마리",      6, 55000, "PENDING",  "14:30"),
-  //     mk(303, "(활)우럭(소)",  "1kg/마리",     20, 18000, "PENDING",  "15:00"),
-  //     mk(304, "(선)도다리",    "1kg/망",       15, 22000, "PENDING",  "15:00"),
-  //     mk(305, "(활)도미",      "2kg/마리",      9, 42000, "PENDING",  "15:30"),
-  //     mk(306, "(선)오징어",    "10마리/묶음",   5, 30000, "PENDING",  "15:30"),
-
-  //     // === 종료 (DONE) ===
-  //     mk(401, "(선)전어",      "박스",         25, 12000, "DONE",     "09:45"),
-  //     mk(402, "(활)광어",      "2kg/마리",     10, 35000, "DONE",     "09:45"),
-  //     mk(403, "(선)갈치",      "0.5kg/마리",   30, 15000, "DONE",     "10:05"),
-  //     mk(404, "(선)갈치(대)",  "1kg/마리",     10, 32000, "DONE",     "10:05"),
-  //     mk(405, "(활)우럭",      "1.5kg/마리",    7, 27000, "DONE",     "10:20"),
-  //     mk(406, "(선)문어",      "2kg/마리",      3, 95000, "DONE",     "10:20"),
-
-  //     // === 혼합 (상태 섞임 화면 테스트) ===
-  //     mk(501, "(선)갈치",      "0.5kg/마리",   18, 19000, "PROGRESS", "12:05"),
-  //     mk(502, "(활)도미",      "2kg/마리",      5, 48000, "PENDING",  "14:30"),
-  //     mk(503, "(선)전어",      "박스",         12, 11000, "DONE",     "09:45"),
-  //     mk(504, "(활)광어(특)",  "3.5kg/마리",    4, 68000, "PROGRESS", "12:03"),
-  //     mk(505, "(선)멸치",      "5kg/망",       20,  8000, "PENDING",  "15:00"),
-  //     mk(506, "(선)전복(특)",  "1.5kg/망",      4,105000, "DONE",     "10:05"),
-  //   ],
-  // };
-
-  // const norm = (s) => (s ?? "").toString().trim().toLowerCase();
-
-  // // 1) 상태 필터 (대문자 비교)
-  // const wanted = (activeStatus ?? "ALL").toString().toUpperCase();
-  // let filtered = data.items.slice();
-  // if (wanted !== "ALL") {
-  //   filtered = filtered.filter(it => (it.status ?? "").toUpperCase() === wanted);
-  // }
-
-  // // 2) 검색어 필터
-  // if (norm(searchTerm)) {
-  //   filtered = filtered.filter(it => norm(it.productName).includes(norm(searchTerm)));
-  // }
-
-  // // 총 페이지 계산 + 슬라이스
-  // const total = filtered.length;
-  // const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  // const currentPage = Math.min(page, totalPages);
-  // const start = (currentPage - 1) * pageSize;
-  // const paginated = filtered.slice(start, start + pageSize);
-
-  // // 부모에게 총 페이지 수 알림
-  // useEffect(() => {
-  //   onTotalChange?.(totalPages);
-  // }, [totalPages, onTotalChange]);
-  
   
   return (
     <>
