@@ -74,22 +74,7 @@ const ConfirmDetailModal = ({ open, close, item, onConfirm = () => {} }) => {
                   </div>
                 </div>
 
-                {/* 구매자 정보 */}
-                <div className={styles.secondContainer}>
-                  <span className={styles.containerTitle}>구매자 정보</span>
-                  <input
-                    className={styles.confirmInput}
-                    value={buyer}
-                    readOnly
-                    aria-label="구매자 이름"
-                  />
-                  <input
-                    className={styles.confirmInput}
-                    placeholder="구매자 연락처"
-                    readOnly
-                    aria-label="구매자 연락처"
-                  />
-                </div>
+
               </div>
 
               <div className={styles.bottomContainer}>
