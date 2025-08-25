@@ -74,11 +74,11 @@ const getApiEndpoint = (activeTab, value) => {
     case "all":
       return `${baseUrl}/all/${value}`;
     case "pending":
-      return `${baseUrl}/READY/${value}`;
+      return `${baseUrl}/ready/${value}`;
     case "approved":
-      return `${baseUrl}/APPROVED/${value}`;
+      return `${baseUrl}/success/${value}`;
     case "rejected":
-      return `${baseUrl}/REJECTED/${value}`;
+      return `${baseUrl}/failed/${value}`;
     default:
       return `${baseUrl}/all/${value}`;
   }
