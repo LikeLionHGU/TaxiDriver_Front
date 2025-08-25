@@ -30,10 +30,8 @@ export default function PendingReviewModal({ open, onClose, product, onApprove, 
     cardBlock(
       "기본 정보",
       h("ul", { className: styles.kv },
-        kvItem("어종", product.name),
-        kvItem("포장단위", product.origin),
-        kvItem("어획일", product.caughtAt || "2025.05.14"),
-        kvItem("어획지역", product.area || "동해 북부 일대")
+        kvItem("어종", product.applicant),
+        kvItem("포장단위", product.applicationDate),
       )
     ),
 
@@ -41,8 +39,6 @@ export default function PendingReviewModal({ open, onClose, product, onApprove, 
       "가격정보",
       h("ul", { className: styles.kv },
         kvItem("최저 수락가", `₩${product.price?.toLocaleString?.() ?? "-"}`),
-        kvItem("어제 시세", `₩${(product.yesterday || 33000).toLocaleString()}`),
-        kvItem("7일 평균", `₩${(product.avg7d || 31500).toLocaleString()}`)
       )
     ),
 
