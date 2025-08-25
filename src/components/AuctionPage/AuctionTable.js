@@ -17,7 +17,7 @@ import searchImg from "../../assets/search.svg";
 
   const parseLocalDateTime = (s) => {
   if (!s) return null;
-  try {
+  try { 
     // 날짜/시간 분리
     const [datePart, timePartRaw] = s.split("T");
     if (!datePart || !timePartRaw) return new Date(s); // 혹시 다른 포맷이면 브라우저 파서에 위임
