@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useCallback} from "react";
 import styles from "./ConfirmRow.module.css";
 
 const formatKRW = (n) =>
@@ -23,7 +23,11 @@ function ReceivePill({ state }) {
   );
 }
 
-function ConfirmRow({ item }) {
+function ConfirmRow({ item , onOpenDetail }) {
+    const open = useCallback(() => {
+    onOpenDetail?.(item);
+  }, [onOpenDetail, item]);
+
   return (
     <div className={styles.row} role="row">
       {/* 수산물 정보 */}
@@ -50,7 +54,7 @@ function ConfirmRow({ item }) {
 
       {/* 수령 상태 */}
       <div className={styles.statusCell}>
-        <ReceivePill state={item.receiveStatus} />
+        <ReceivePill state={item.receiveStatus} onClick={open} />
       </div>
     </div>
   );

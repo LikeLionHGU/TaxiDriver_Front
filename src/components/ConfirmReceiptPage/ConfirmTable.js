@@ -30,46 +30,43 @@ const fmtYmd = (dt) => {
 const fmtHHmm = (dt) =>
   dt ? dt.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
 
-// WAITING / DONE으로 정규화 (숫자/문자 혼용 대비)
-const normalizeReceiveStatus = (v) => {
-  if (typeof v === "number") return v === 0 ? "WAITING" : "DONE";
-  const s = String(v ?? "").toUpperCase();
-  if (s.includes("WAIT")) return "WAITING";
-  if (s.includes("DONE") || s.includes("COMPLETE")) return "DONE";
-  // 기본값
-  return "WAITING";
-};
-
 /** ================== DTO → UI 매핑 ==================
- * 백엔드 필드명이 다를 수 있어 여러 후보 키를 안전하게 처리
+ * 백엔드 스키마
+ * - id, name, totalPrice
+ * - origin
+ * - fishCount, fishWeight, fishStatus, salesMethod
+ * - isReceived(Boolean), receivedTime(LocalDateTime)
+ * - buyerName, sellerName, receiveLocation
  */
 const mapDtoToRow = (a) => {
-  // 마감/수령기한 후보 키(하나만 있어도 동작)
-  const dueRaw = a?.dueAt || a?.deadline || a?.pickupDueAt || a?.dueDateTime || a?.dueDate;
-  const due = typeof dueRaw === "string" ? parseLocalDateTime(dueRaw) : (dueRaw instanceof Date ? dueRaw : null);
+  const receivedDt = a?.receivedTime ? parseLocalDateTime(a.receivedTime) : null;
 
   return {
     id: a?.id,
-    productName: a?.productName ?? a?.name ?? "-",
-    origin: a?.origin ?? a?.region ?? "-",
-    weight: a?.weight ?? a?.totalWeight ?? a?.weightText ?? "-", // "25.5kg" 형태
-    bidPrice: a?.bidPrice ?? a?.winningPrice ?? 0,               // 낙찰 금액(단가/총액 중 백엔드 기준에 맞춰 조정)
-    buyerName: a?.buyer?.name ?? a?.buyerName ?? "-",
-    sellerName: a?.seller?.name ?? a?.sellerName ?? "-",
-    pickupPlace: a?.pickupPlace ?? a?.place ?? "-",
-    dueDate: fmtYmd(due),        // "YYYY-MM-DD"
-    dueTime: fmtHHmm(due),       // "HH:mm"
-    receiveStatus: normalizeReceiveStatus(a?.receiveStatus ?? a?.status),
+    // 품목명: "(상태)이름" 형태
+    productName: `(${a?.fishStatus ?? ""})${a?.name ?? "-"}`.trim(),
+    origin: a?.origin ?? "-",
+    // "무게/판매방식" (예: "25.5kg/마리")
+    weight: [a?.fishWeight, a?.salesMethod].filter(Boolean).join("/"),
+    // 낙찰 금액
+    bidPrice: a?.totalPrice ?? 0,
+    buyerName: a?.buyerName ?? "-",
+    sellerName: a?.sellerName ?? "-",
+    pickupPlace: a?.receiveLocation ?? "-",
+    // 수령 시간 (완료건만 노출될 가능성)
+    dueDate: fmtYmd(receivedDt),
+    dueTime: fmtHHmm(receivedDt),
+    // 상태: Boolean -> DONE/WAITING
+    receiveStatus: a?.isReceived ? "DONE" : "WAITING",
   };
 };
 
-/** ================== 메인 ================== */
-function ConfirmTable({ activeFilter = "today" }) {
+function ConfirmTable({ activeFilter = "today", onOpenDetail  }) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const ENDPOINT = "https://likelion.info:443/post/get/receive/admin"; 
+  const ENDPOINT = "https://likelion.info:443/post/get/receive/admin";
 
   const fetchData = async () => {
     try {
@@ -77,7 +74,6 @@ function ConfirmTable({ activeFilter = "today" }) {
       setError(null);
 
       const { data } = await axios.get(ENDPOINT, { withCredentials: true });
-      console.log(data);
       // 배열 또는 {items: []} 모두 허용
       const list = Array.isArray(data) ? data : data?.items || [];
       const mapped = list.map(mapDtoToRow);
@@ -87,20 +83,13 @@ function ConfirmTable({ activeFilter = "today" }) {
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // 로컬 타임존 기준 오늘 YYYY-MM-DD
-  const todayYmd = (() => {
-    const d = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  })();
-
+  // 필터: "today"는 '전체' 의미로 사용
   const filtered = useMemo(() => {
     const key = (activeFilter || "").toLowerCase();
     switch (key) {
@@ -110,9 +99,10 @@ function ConfirmTable({ activeFilter = "today" }) {
         return items.filter((it) => (it.receiveStatus || "").toUpperCase() === "DONE");
       case "today":
       default:
-        return items.filter((it) => it.dueDate === todayYmd);
+        // 전체
+        return items;
     }
-  }, [activeFilter, items, todayYmd]);
+  }, [activeFilter, items]);
 
   if (isLoading) {
     return (
