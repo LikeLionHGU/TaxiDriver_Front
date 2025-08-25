@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 import LandingHeader from '../components/LandingHeader';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth, ROLES } from "../auth/AuthContext";
+import { HOME_BY_ROLE } from "../config/roleHome";
 
 const Modal = ({ isOpen, onClose, message }) => {
   if (!isOpen) return null;
@@ -61,6 +64,17 @@ const Modal = ({ isOpen, onClose, message }) => {
 };
 
 const Landing = () => {
+  const { role, loading } = useAuth();
+
+  // 권한 확인 중이면 깜빡임 방지용으로 아무 것도 렌더 안 함(또는 스켈레톤)
+  if (loading) return null;
+
+  // 권한이 있으면 역할별 홈으로 즉시 이동, 게스트면 랜딩 보여줌
+  if (role !== ROLES.GUEST) {
+    const to = HOME_BY_ROLE[role] || "/";
+    return <Navigate to={to} replace />;
+  }
+
   const [showModal, setShowModal] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(
     () => sessionStorage.getItem('registrationComplete') === 'true'
