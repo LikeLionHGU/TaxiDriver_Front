@@ -4,6 +4,8 @@ import { NavLink/*, useLocation , Link, useNavigate */ } from "react-router-dom"
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
+import logo from "../assets/mainLogo.svg";
+
 function Header() {
   const [role] = useState(ROLES.JUNGDOMAEIN);
   const items = NAV_BY_ROLE[role];
@@ -17,6 +19,7 @@ function Header() {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.logo}>
+          <img src={logo} alt="logo" />
         </div>
 
          <nav className={styles.nav} aria-label="main">
