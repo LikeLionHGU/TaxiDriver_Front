@@ -14,14 +14,12 @@ import axios from 'axios'; // axios import 추가
 axios.defaults.withCredentials = true; // 쿠키 자동 포함
 axios.defaults.timeout = 10000; // 10초 타임아웃
 
-const DEFAULT_STATS = { pending: 0, approved: 0, rejected: 0 };
-
 const mapStatus = (s) => {
   const S = String(s || '').toUpperCase();
   // 백엔드 값 → 프론트 탭 키
   if (S === 'PENDING' || S === 'READY') return 'pending';
-  if (S === 'APPROVED') return 'approved';
-  if (S === 'REJECTED') return 'rejected';
+  if (S === 'APPROVED' || S === 'SUCCESS') return 'approved';
+  if (S === 'REJECTED' || S === 'FAILED') return 'rejected';
   return 'pending'; // 기본값
 };
 
@@ -44,50 +42,24 @@ const transformApiData = (apiData = []) => {
   });
 };
 
-// 제품 목록에서 통계를 계산하는 함수 (전체보기일 때만 사용)
-const calculateStats = (products) => {
-    return products.reduce((acc, product) => {
-        if (product.status === 'pending') acc.pending += 1;
-        else if (product.status === 'approved') acc.approved += 1;
-        else if (product.status === 'rejected') acc.rejected += 1;
-        return acc;
-    }, { pending: 0, approved: 0, rejected: 0 });
-};
 
-// 통계 API 응답을 프론트 형식으로 변환
-const transformStatsData = (statsData) => {
-  if (!statsData) return DEFAULT_STATS;
-  
-  return {
-    pending: Number(statsData.readyCount) || 0,
-    approved: Number(statsData.approvedCount) || 0,
-    rejected: Number(statsData.rejectedCount) || 0,
-    total: Number(statsData.totalCount) || 0 // totalCount 추가
-  };
-};
+
+
 
 // 탭별 API 엔드포인트 매핑
 const getApiEndpoint = (activeTab, value) => {
   const baseUrl = "https://likelion.info/post/get";
   
-  switch (activeTab) {
-    case "all":
-      return `${baseUrl}/all/${value}`;
-    case "pending":
-      return `${baseUrl}/ready/${value}`;
-    case "approved":
-      return `${baseUrl}/success/${value}`;
-    case "rejected":
-      return `${baseUrl}/failed/${value}`;
-    default:
-      return `${baseUrl}/all/${value}`;
-  }
+  // 항상 'all' 엔드포인트를 사용하여 모든 데이터를 가져온 후 클라이언트 측에서 필터링합니다.
+  // 이 방식은 탭별 API(/ready, /success, /failed)가 반환하는 데이터와
+  // 통계 API(/list)가 반환하는 데이터 간의 불일치 문제를 해결합니다.
+  return `${baseUrl}/all/${value}`;
 };
 
 export default function RegistrationStatus() {
     const [allProducts, setAllProducts] = useState([]); // 모든 기간의 데이터를 저장
     const [filteredProducts, setFilteredProducts] = useState([]); // 필터링된 데이터
-    const [stats, setStats] = useState(DEFAULT_STATS);
+    
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
@@ -96,46 +68,7 @@ export default function RegistrationStatus() {
     const [totalPages, setTotalPages] = useState(1);
     const pageSize = 4;
 
-    // 통계 데이터 가져오기 (전체보기일 때만)
-    const fetchStatsData = useCallback(async () => {
-      console.log("=== 통계 API 요청 시작 ===");
-      
-      try {
-        const url = "https://likelion.info/post/get/list";
-        console.log("통계 요청 URL:", url);
-
-        const response = await axios.get(url, {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
-
-        console.log("통계 응답 상태:", response.status);
-        console.log("통계 응답 데이터:", response.data);
-
-        const transformedStats = transformStatsData(response.data);
-        console.log("변환된 통계:", transformedStats);
-        
-        setStats(transformedStats);
-        
-      } catch (error) {
-        console.error("=== 통계 API 요청 실패 ===");
-        console.error("에러 상태:", error.response?.status);
-        console.error("에러 데이터:", error.response?.data);
-        console.error("에러 메시지:", error.message);
-        console.error("전체 에러:", error);
-        
-        // 400 에러여도 유효한 데이터가 있으면 처리
-        if (error.response?.status === 400 && error.response?.data && error.response.data.totalCount !== undefined) {
-          console.warn("⚠️ 통계 API도 400 에러지만 데이터 처리합니다.");
-          const transformedStats = transformStatsData(error.response.data);
-          setStats(transformedStats);
-        } else {
-          setStats(DEFAULT_STATS);
-        }
-      }
-    }, []);
+    
 
     // 메인 데이터 가져오기
     const fetchRegistrationData = useCallback(async (value) => {
@@ -181,11 +114,7 @@ export default function RegistrationStatus() {
         setAllProducts(transformed);
         
         // 전체보기가 아닐 때만 리스트 데이터로 통계 계산
-        if (activeTab !== "all") {
-          const calculatedStats = calculateStats(transformed);
-          console.log("계산된 통계:", calculatedStats);
-          setStats(calculatedStats);
-        }
+        
         // 전체보기일 때는 별도 fetchStatsData()에서 통계 설정
         
       } catch (error) {
@@ -205,10 +134,7 @@ export default function RegistrationStatus() {
           const transformed = transformApiData(error.response.data || []);
           setAllProducts(transformed);
           
-          if (activeTab !== "all") {
-            const calculatedStats = calculateStats(transformed);
-            setStats(calculatedStats);
-          }
+          
         } else {
           // 진짜 에러인 경우
           if (error.response?.status === 400) {
@@ -225,9 +151,6 @@ export default function RegistrationStatus() {
           }
           
           setAllProducts([]);
-          if (activeTab !== "all") {
-            setStats(DEFAULT_STATS);
-          }
         }
       } finally {
         setLoading(false);
@@ -240,9 +163,6 @@ export default function RegistrationStatus() {
         console.log("=== 탭 변경 감지 ===");
         console.log("Active Tab:", activeTab);
         console.log("Selected Period:", selectedPeriod);
-
-        // Always call fetchStatsData to ensure global counts are updated
-        fetchStatsData();
 
         // 데이터 가져오기
         const periodMap = {
@@ -257,11 +177,16 @@ export default function RegistrationStatus() {
         console.log("mapped value:", value);
         
         fetchRegistrationData(value);
-    }, [activeTab, selectedPeriod, fetchRegistrationData, fetchStatsData]);
+    }, [activeTab, selectedPeriod, fetchRegistrationData]);
 
     // 필터링 및 페이지네이션 로직
     useEffect(() => {
         let products = [...allProducts];
+
+        // 탭 필터링
+        if (activeTab !== "all") {
+            products = products.filter(item => item.status === activeTab);
+        }
 
         // 검색어 필터링 (수산물 이름)
         if (searchTerm.trim()) {
@@ -274,7 +199,7 @@ export default function RegistrationStatus() {
         setTotalPages(Math.ceil(products.length / pageSize));
         setPage(1); // 필터 변경 시 첫 페이지로
 
-    }, [allProducts, searchTerm, pageSize]);
+    }, [allProducts, searchTerm, pageSize, activeTab]);
 
     // 탭 변경 핸들러
     const handleTabChange = (key) => {
@@ -295,6 +220,13 @@ export default function RegistrationStatus() {
 
     // 현재 페이지에 표시할 데이터 계산
     const paginated = filteredProducts.slice((page - 1) * pageSize, page * pageSize);
+
+    const stats = {
+        pending: allProducts.filter(p => p.status === 'pending').length,
+        approved: allProducts.filter(p => p.status === 'approved').length,
+        rejected: allProducts.filter(p => p.status === 'rejected').length,
+        total: allProducts.length
+    };
 
     return (
         <div className={auctionStyles.main}>
