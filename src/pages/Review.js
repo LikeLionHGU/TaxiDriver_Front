@@ -1,17 +1,17 @@
-import { useState, useEffect, useCallback } from "react"
-import styles from "../styles/Review.module.css"
-import tableStyles from "../components/styles/product-table.module.css"
-import ReviewIcon from "../assets/review.svg"
-import StatsCards from "../components/stats-cards2"
-import ProductDetailModal from "../components/ProductDetailModal"
-import RejectedModal from "../components/RejectedModal"
-import PendingReviewModal from "../components/PendingReviewModal"
-import ApprovalConfirmationModal from "../components/ApprovalConfirmationModal"
-import axios from 'axios' // axios import 추가
+import { useState, useEffect, useCallback } from "react";
+import styles from "../styles/Review.module.css";
+import tableStyles from "../components/styles/product-table.module.css";
+import ReviewIcon from "../assets/review.svg";
+import StatsCards from "../components/stats-cards2";
+import ProductDetailModal from "../components/ProductDetailModal";
+import RejectedModal from "../components/RejectedModal";
+import PendingReviewModal from "../components/PendingReviewModal";
+import ApprovalConfirmationModal from "../components/ApprovalConfirmationModal";
+import axios from 'axios';
 
 // axios 기본 설정
-axios.defaults.withCredentials = true // 쿠키 자동 포함
-axios.defaults.timeout = 10000 // 10초 타임아웃
+axios.defaults.withCredentials = true;
+axios.defaults.timeout = 10000;
 
 const defaultRequestData = [
   {
@@ -62,95 +62,76 @@ const defaultRequestData = [
     aiScore: 13.0,
     aiAnalysisText: "학습된 질병 데이터의 평균 특징과 13.0만큼 떨어져 있습니다. 질병 패턴과 유사하여 승인 거부될 가능성이 높습니다.",
   },
-]
+];
 
 // RegisterStatus를 우리 status 형식으로 변환
 const transformStatus = (registerStatus) => {
   switch (registerStatus) {
     case "PENDING":
-      return "검토요청"
+      return "검토요청";
     case "APPROVED":
-      return "승인"
+      return "승인";
     case "REJECTED":
-      return "승인거부"
+      return "승인거부";
     default:
-      return "검토요청"
+      return "검토요청";
   }
-}
+};
 
 // status에 따른 progress 값 설정
 const getProgress = (registerStatus) => {
   switch (registerStatus) {
     case "PENDING":
-      return 60
+      return 60;
     case "APPROVED":
-      return 100
+      return 100;
     case "REJECTED":
-      return 30
+      return 30;
     default:
-      return 60
+      return 60;
   }
-}
+};
 
 // status에 따른 승인 날짜 설정
 const getApprovalDate = (registerStatus) => {
   if (registerStatus === "APPROVED") {
-    return new Date().toISOString().split('T')[0].replace(/-/g, '/').replace(/(\d{4})\/(\d{2})\/(\d{2})/, '$1/$2/$3')
+    return new Date().toISOString().split('T')[0].replace(/-/g, '/').replace(/(\d{4})\/(\d{2})\/(\d{2})/, '$1/$2/$3');
   }
-  return "-"
-}
+  return "-";
+};
 
 // AI 평가에서 점수 추출
 const parseAiScore = (aiEvaluation) => {
-  if (!aiEvaluation) return 50.0
+  if (!aiEvaluation) return 50.0;
   
-  const scoreMatch = aiEvaluation.match(/(\d+\.?\d*)/)
+  const scoreMatch = aiEvaluation.match(/(\d+\.?\d*)/);
   if (scoreMatch) {
-    return parseFloat(scoreMatch[1])
+    return parseFloat(scoreMatch[1]);
   }
   
   if (aiEvaluation.includes("정상") || aiEvaluation.includes("양호")) {
-    return 85.0 + Math.random() * 10
+    return 85.0 + Math.random() * 10;
   } else if (aiEvaluation.includes("위험") || aiEvaluation.includes("불량")) {
-    return 10.0 + Math.random() * 20
+    return 10.0 + Math.random() * 20;
   }
   
-  return 50.0
-}
+  return 50.0;
+};
 
 export default function Dashboard() {
-  const [requestData, setRequestData] = useState(defaultRequestData)
-  const [activeCard, setActiveCard] = useState("all")
-  const [selectedItem, setSelectedItem] = useState(null)
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
-  const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false)
-  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false)
-  const [isApprovalConfirmationModalOpen, setIsApprovalConfirmationModalOpen] = useState(false)
+  const [allData, setAllData] = useState(defaultRequestData);
+  const [activeCard, setActiveCard] = useState("all");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+  const [isApprovalConfirmationModalOpen, setIsApprovalConfirmationModalOpen] = useState(false);
 
-  // API 호출 함수 - axios로 변경
-  const fetchData = useCallback(async (cardType) => {
+  const fetchData = useCallback(async () => {
     try {
-      let url = ""
-      switch (cardType) {
-        case "all":
-          url = `https://likelion.info/post/check/all`
-          break
-        case "pending":
-          url = `https://likelion.info/post/check/ready`
-          break
-        case "approved":
-          url = `https://likelion.info/post/check/success`
-          break
-        case "rejected":
-          url = `https://likelion.info/post/check/failed`
-          break
-        default:
-          url = `https://likelion.info/post/check/all`
-      }
-
-      console.log("=== API 요청 시작 ===")
-      console.log("요청 URL:", url)
-      console.log("카드 타입:", cardType)
+      const url = "https://likelion.info/post/check/all";
+      console.log("=== API 요청 시작 ===");
+      console.log("요청 URL:", url);
 
       const response = await axios.get(url, {
         headers: {
@@ -158,15 +139,14 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         withCredentials: true,
-      })
+      });
 
-      console.log("=== API 응답 성공 ===")
-      console.log("응답 상태:", response.status)
-      console.log("응답 데이터:", response.data)
+      console.log("=== API 응답 성공 ===");
+      console.log("응답 상태:", response.status);
+      console.log("응답 데이터:", response.data);
 
-      const data = response.data
+      const data = response.data;
       
-      // API 응답 데이터를 기존 형식에 맞게 변환
       const transformedData = data.map((item, index) => ({
         id: item.id || index + 1,
         applicant: item.name || "대게",
@@ -179,40 +159,36 @@ export default function Dashboard() {
         aiScore: parseAiScore(item.aiEvaluation),
         aiAnalysisText: item.aiEvaluation || "AI 분석 결과가 없습니다.",
         fishCount: item.fishCount || 1,
-      }))
+      }));
 
-      console.log("변환된 데이터:", transformedData)
-      setRequestData(transformedData)
+      console.log("변환된 데이터:", transformedData);
+      setAllData(transformedData);
 
     } catch (error) {
-      console.error("=== API 호출 에러 ===")
-      console.error("에러 상태:", error.response?.status)
-      console.error("에러 데이터:", error.response?.data)
-      console.error("에러 메시지:", error.message)
-      console.error("전체 에러:", error)
+      console.error("=== API 호출 에러 ===");
+      console.error("에러 상태:", error.response?.status);
+      console.error("에러 데이터:", error.response?.data);
+      console.error("에러 메시지:", error.message);
+      console.error("전체 에러:", error);
 
-      // API 에러 시 기본 데이터 유지
-      console.log("기본 데이터로 폴백")
-      setRequestData(defaultRequestData)
+      console.log("기본 데이터로 폴백");
+      setAllData(defaultRequestData);
     }
-  }, [])
+  }, []);
 
-  // 컴포넌트 마운트 시 초기 데이터 로드
   useEffect(() => {
-    fetchData("all")
-  }, [fetchData])
+    fetchData();
+  }, [fetchData]);
 
   const stats = {
-    pending: requestData.filter((item) => item.status === "검토요청").length,
-    approved: requestData.filter((item) => item.status === "승인").length,
-    rejected: requestData.filter((item) => item.status === "승인거부").length,
-  }
+    pending: allData.filter((item) => item.status === "검토요청").length,
+    approved: allData.filter((item) => item.status === "승인").length,
+    rejected: allData.filter((item) => item.status === "승인거부").length,
+  };
 
   const handleCardSelect = (key) => {
-    setActiveCard(key)
-    // 카드 선택 시 해당 API 호출
-    fetchData(key)
-  }
+    setActiveCard(key);
+  };
 
   const handleDetailClick = (item) => {
     const updatedItem = { ...item };
@@ -233,49 +209,62 @@ export default function Dashboard() {
   };
 
   const handleApproveProduct = async (productId) => {
+    const originalData = [...allData];
+    const updatedData = allData.map(item =>
+      item.id === productId ? { ...item, status: '승인', progress: 100, approvalDate: getApprovalDate('APPROVED') } : item
+    );
+    setAllData(updatedData);
+    setIsPendingModalOpen(false);
+    setIsApprovalConfirmationModalOpen(true);
+
     try {
       await axios.post(`https://likelion.info/post/update/register/status/true/${productId}`, {}, { withCredentials: true });
-      setIsPendingModalOpen(false);
-      setIsApprovalConfirmationModalOpen(true);
-      fetchData(activeCard);
     } catch (error) {
       console.error("상품 승인 실패:", error);
-      alert("상품 승인에 실패했습니다.");
+      alert("상품 승인에 실패했습니다. 데이터를 원래대로 되돌립니다.");
+      setAllData(originalData);
     }
   };
+
   const handleRejectProduct = async (productId, failedReason) => {
+    const originalData = [...allData];
+    const updatedData = allData.map(item =>
+      item.id === productId ? { ...item, status: '승인거부', progress: 30 } : item
+    );
+    setAllData(updatedData);
+    setIsPendingModalOpen(false);
+    alert("상품이 반려되었습니다.");
+
     try {
       await axios.post(`https://likelion.info/post/update/register/status/false/${productId}`, { failedReason }, { withCredentials: true });
-      setIsPendingModalOpen(false);
-      alert("상품이 반려되었습니다.");
-      fetchData(activeCard);
     } catch (error) {
       console.error("상품 반려 실패:", error);
-      alert("상품 반려에 실패했습니다.");
+      alert("상품 반려에 실패했습니다. 데이터를 원래대로 되돌립니다.");
+      setAllData(originalData);
     }
   };
 
   const closeModal = () => {
-    setIsDetailModalOpen(false)
-    setIsRejectedModalOpen(false)
-    setIsPendingModalOpen(false)
-    setIsApprovalConfirmationModalOpen(false)
-    setSelectedItem(null)
-  }
+    setIsDetailModalOpen(false);
+    setIsRejectedModalOpen(false);
+    setIsPendingModalOpen(false);
+    setIsApprovalConfirmationModalOpen(false);
+    setSelectedItem(null);
+  };
 
-  const filteredData = requestData.filter((item) => {
-    if (activeCard === "all") return true
-    if (activeCard === "pending") return item.status === "검토요청"
-    if (activeCard === "approved") return item.status === "승인"
-    if (activeCard === "rejected") return item.status === "승인거부"
-    return true
-  })
+  const filteredData = allData.filter((item) => {
+    if (activeCard === "all") return true;
+    if (activeCard === "pending") return item.status === "검토요청";
+    if (activeCard === "approved") return item.status === "승인";
+    if (activeCard === "rejected") return item.status === "승인거부";
+    return true;
+  });
 
   const statusToStyle = {
     "검토요청": tableStyles.statusPending,
     "승인": tableStyles.statusApproved,
     "승인거부": tableStyles.statusRejected,
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -355,8 +344,6 @@ export default function Dashboard() {
           <button className={`${styles.pageButton} ${styles.active}`}>1</button>
           <button className={styles.pageButton}>2</button>
           <button className={styles.pageButton}>3</button>
-          <span className={styles.dots}>...</span>
-          <button className={styles.pageButton}>10</button>
           <button className={styles.pageButton}>›</button>
         </div>
       </main>
@@ -391,5 +378,5 @@ export default function Dashboard() {
         />
       )}
     </div>
-  )
+  );
 }
