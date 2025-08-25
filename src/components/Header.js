@@ -3,7 +3,6 @@ import { NavLink, useLocation /*, Link, */, useNavigate  } from "react-router-do
 
 
 import styles from "./styles/Header.module.css";
-// import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 import { useAuth, ROLES } from "../auth/AuthContext";
 import { NAV_BY_ROLE } from "../config/headerTest";
 
@@ -15,9 +14,6 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-// 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
-  // const location = useLocation();
-  // const items = NAV_BY_ROLE[role] ?? [];
   const items = NAV_BY_ROLE[role] ?? NAV_BY_ROLE[ROLES.GUEST] ?? [];
 
   if (loading) return null;
@@ -54,29 +50,6 @@ function Header() {
       </nav>
     </div>
     </>
-
-//         <div className={styles.logo}>
-//           <img src={logo} alt="logo" onClick={() => navigate("/")} />
-//         </div>
-
-
-//          <nav className={styles.nav} aria-label="main">
-//             {items.map((it) => (
-
-//               <NavLink
-//                 key={it.key}
-//                 to={it.href}
-//                 // isActive 가 true면 currentPage 스타일을 추가
-//                 className={({ isActive }) =>
-//                   `${styles.buttonContainer} ${isActive ? styles.currentPage : ""}`
-//                 }
-//               >
-//                 <span className={styles.button}>{it.label}</span>
-//               </NavLink>
-//             ))}
-//           </nav>
-//         </header>
-//       </>
 
   );
 }
