@@ -2,19 +2,23 @@ import React, {useState} from "react";
 import { NavLink/*, useLocation , Link, */, useNavigate  } from "react-router-dom";
 
 import styles from "./styles/Header.module.css";
-import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
+// import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
+import { useAuth, ROLES } from "../auth/AuthProvider";
+import { NAV_BY_ROLE } from "../config/headerTest";
 
 import logo from "../assets/mainLogo.svg";
 
 function Header() {
-  const [role] = useState(ROLES.JUNGDOMAEIN);
+  // const [role] = useState(ROLES.JUNGDOMAEIN);
+  const { role, loading } = useAuth();
   const navigate = useNavigate();
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
   // const location = useLocation();
-  const items = NAV_BY_ROLE[role] ?? [];
+  // const items = NAV_BY_ROLE[role] ?? [];
+  const items = NAV_BY_ROLE[role] ?? NAV_BY_ROLE[ROLES.GUEST] ?? [];
 
-
+  if (loading) return null; 
   return (
     <>
       <div className={styles.headerContainer}>

@@ -18,29 +18,33 @@ import FishmanForm from "./pages/FishmanForm";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+import { AuthProvider } from "./auth/AuthProvider";
+
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
-          <Route path="/sales-settlement" element={<SalesSettlement />} />
-          <Route path="/producermain" element={<Producermain />} />
-          <Route path="/register" element={<Produceregistar />} />
-          <Route path="/auction" element={<Auction />} />
-          <Route path="/auction/detail/:id" element={<AuctionDetail />} />
-          <Route path="/confirm-receipt" element={<Confirm />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/purchase-history" element={<PurchaseHistoryPage />} />
+            <Route path="/sales-settlement" element={<SalesSettlement />} />
+            <Route path="/producermain" element={<Producermain />} />
+            <Route path="/register" element={<Produceregistar />} />
+            <Route path="/auction" element={<Auction />} />
+            <Route path="/auction/detail/:id" element={<AuctionDetail />} />
+            <Route path="/confirm-receipt" element={<Confirm />} />
 
-          <Route path="/review" element={<Review />} />
-          <Route path="/consignment-company" element={<ConsignmentCompanyForm />} /> 
-          <Route path="/buyer" element={<BuyerForm />} />
-          <Route path="/fishman" element={<FishmanForm />} />
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+            <Route path="/review" element={<Review />} />
+            <Route path="/consignment-company" element={<ConsignmentCompanyForm />} /> 
+            <Route path="/buyer" element={<BuyerForm />} />
+            <Route path="/fishman" element={<FishmanForm />} />
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
