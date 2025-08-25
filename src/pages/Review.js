@@ -234,7 +234,7 @@ export default function Dashboard() {
 
   const handleApproveProduct = async (productId) => {
     try {
-      await axios.post(`https://likelion.info/update/register/status/true/${productId}`, {}, { withCredentials: true });
+      await axios.post(`https://likelion.info/post/update/register/status/true/${productId}`, {}, { withCredentials: true });
       setIsPendingModalOpen(false);
       setIsApprovalConfirmationModalOpen(true);
       fetchData(activeCard);
@@ -245,7 +245,7 @@ export default function Dashboard() {
   };
   const handleRejectProduct = async (productId, failedReason) => {
     try {
-      await axios.post(`https://likelion.info/update/register/status/false/${productId}`, { failedReason }, { withCredentials: true });
+      await axios.post(`https://likelion.info/post/update/register/status/false/${productId}`, { failedReason }, { withCredentials: true });
       setIsPendingModalOpen(false);
       alert("상품이 반려되었습니다.");
       fetchData(activeCard);
