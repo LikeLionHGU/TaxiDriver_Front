@@ -20,6 +20,10 @@ function Header() {
 
   // 디버그(원인 추적용)
   console.log("role =", role, "items =", items.map(i => i.key));
+
+  const handleLogin = () => {
+    window.location.href = "https://www.likelion.info/login/oauth2/google";
+  };
   
   return (
     <>
@@ -48,6 +52,13 @@ function Header() {
           );
         })}
       </nav>
+
+      <button 
+        className={styles.loginBtn}
+        onClick={handleLogin}
+      >
+        재로그인
+      </button>
     </div>
     </>
 
