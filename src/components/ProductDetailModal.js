@@ -4,7 +4,7 @@ import axios from "axios";
 import Modal from "./Modal";
 import styles from "./styles/modal.module.css";
 
-export default function ProductDetailModal({ open, onClose, product, isApproved }) {
+export default function ProductDetailModal({ open, onClose, product, isApproved, apiUrl }) {
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ export default function ProductDetailModal({ open, onClose, product, isApproved 
           setLoading(true);
           setError(null);
           const response = await axios.get(
-            `https://likelion.info/post/get/detail/${product.id}`,
+            `${apiUrl}${product.id}`,
             { withCredentials: true }
           );
           setProductDetails(response.data);
@@ -35,7 +35,7 @@ export default function ProductDetailModal({ open, onClose, product, isApproved 
       setLoading(true);
       setError(null);
     }
-  }, [open, product]);
+  }, [open, product, apiUrl]);
 
   if (!open) return null;
 

@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import styles from "./styles/modal.module.css";
 import pendingIcon from "../assets/검토중.svg"; 
 
-export default function PendingReviewModal({ open, onClose, product, onApprove, hideApprovalButtons }) {
+export default function PendingReviewModal({ open, onClose, product, onApprove, onReject, hideApprovalButtons }) {
   const [showRejectionReasonInput, setShowRejectionReasonInput] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
@@ -97,7 +97,10 @@ export default function PendingReviewModal({ open, onClose, product, onApprove, 
   };
 
   const handleConfirmReject = () => {
-    onClose(); // Close the modal after confirming rejection
+    if (onReject && product && product.id) {
+      onReject(product.id, rejectionReason);
+    }
+    onClose();
     setShowRejectionReasonInput(false);
     setRejectionReason('');
   };
