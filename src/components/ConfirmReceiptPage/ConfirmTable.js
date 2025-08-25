@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import styles from "./ConfirmTable.module.css";
 import ConfirmTableBox from "./ConfirmTableBox";
+import { useAuth, ROLES } from "../../auth/AuthContext";
 
 /** ================== 유틸 ================== */
 // "2025-08-24T08:29:11.368214" → 로컬 Date
@@ -66,14 +67,23 @@ function ConfirmTable({ activeFilter = "today" }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const ENDPOINT = "https://likelion.info:443/post/get/receive/admin";
+  const { role, loading: authLoading } = useAuth();
+
+  const ENDPOINT_BY_ROLE = {
+    [ROLES.ADMIN]:       "https://likelion.info:443/post/get/receive/admin",      // 관리자: 전체
+    [ROLES.GUARDIAN]:    "https://likelion.info:443/post/get/receive/admin",     // 어민(판매자): 내가 판매한 건
+    [ROLES.JUNGDOMAEIN]: "https://likelion.info:443/post/get/receive/user",      // 중도매인(구매자): 내가 수령할 건
+    [ROLES.GUEST]:       "https://likelion.info:443/post/get/receive/admin",      // 게스트: 임시로 전체(필요시 접근 차단)
+  };
+
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const { data } = await axios.get(ENDPOINT, { withCredentials: true });
+      const url = ENDPOINT_BY_ROLE[role] || ENDPOINT_BY_ROLE[ROLES.GUEST];
+      const { data } = await axios.get(url, { withCredentials: true });
       // 배열 또는 {items: []} 모두 허용
       const list = Array.isArray(data) ? data : data?.items || [];
       const mapped = list.map(mapDtoToRow);
