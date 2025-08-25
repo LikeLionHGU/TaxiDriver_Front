@@ -8,6 +8,7 @@ import loadingStyles from "../../styles/Loading.module.css";
 import styles from "./AuctionItem.module.css";
 
 import BigPanel from "../AuctionDetail/BigPanel";
+import { useAuth, ROLES } from "../../auth/AuthContext";
 
 /** ===== 유틸 & 매퍼 ===== */
 const mapStatus = (n) => ({ "AUCTION_READY": "PROGRESS", "AUCTION_CURRENT": "PENDING", "AUCTION_FINISH": "DONE" }[n] || "PENDING");
@@ -63,9 +64,9 @@ function mapDtoToDetailItem(a) {
     unitWeightText,
     unitWeightKg,
     quantity: a.fishCount,
-    images: a.urls || a.images || [null, null, null, null], // ✅ urls 대응
+    images: a.urls || a.images || [null, null, null, null], 
     startPrice: a.reservePrice,
-    currentPrice: a.topPrice ?? a.currentPrice ?? a.reservePrice, // ✅ topPrice 대응
+    currentPrice: a.topPrice ?? a.currentPrice ?? a.reservePrice, 
     endAt,
     status,
   };
@@ -99,6 +100,8 @@ function useCountdown(endAt) {
 
 /** ===== 메인 컴포넌트 ===== */
 function AuctionItem({ item: initialItem, onStatusChange }) {
+  const { role, loading } = useAuth();
+  if (loading) return null;
   const { id } = useParams(); // /auction/detail/:id 라우트 기준
   const [item, setItem] = useState(
     initialItem || {
@@ -120,6 +123,15 @@ function AuctionItem({ item: initialItem, onStatusChange }) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { isReady, isCurrent, isFinish } = useMemo(() => {
+    const raw = String(item?.auctionStatusRaw || "").toUpperCase();
+    return {
+      isReady: raw === "AUCTION_READY",
+      isCurrent: raw === "AUCTION_CURRENT",
+      isFinish: raw === "AUCTION_FINISH",
+    };
+  }, [item?.auctionStatusRaw]);
 
   // API 호출 → id로 대상 선택 → 매핑
   const fetchDetail = async () => {
@@ -263,15 +275,17 @@ function AuctionItem({ item: initialItem, onStatusChange }) {
         </div>
       </div>
 
-      {/* 상태 안내 배너 */}
-      {/* {banner && (
-        <div className={styles.banner}>
-          <div className={styles.bannerTitle}>{banner.title}</div>
-          <div className={styles.bannerDesc}>{banner.desc}</div>
-        </div>
-      )} */}
 
-      <BigPanel item={item} totalWeight={totalWeight} remainText={remainText} />
+    
+       {isFinish && (
+        <div className={styles.banner}>
+          <div className={styles.bannerTitle}>경매 종료</div>
+          <div className={styles.bannerDesc}>경매가 종료되었습니다.</div>
+        </div>
+      )} 
+
+      { role === ROLES.JUNGDOMAEIN && isCurrent && <BigPanel item={item} totalWeight={totalWeight} remainText={remainText} /> }
+
     </div>
   );
 }

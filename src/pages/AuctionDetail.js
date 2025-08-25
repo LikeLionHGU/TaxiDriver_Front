@@ -50,7 +50,9 @@ function AuctionDetail() {
           setAuctionStatus({ raw, value });
         }}/>
           </div>
-          <AuctionPeople />
+          <AuctionPeople onStatusChange={({ raw, value }) => {
+          setAuctionStatus({ raw, value });
+        }}/>
         </div>
       </div>
     </>

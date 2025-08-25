@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useMemo} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -29,12 +29,22 @@ const mapParticipant = (u) => ({
   note: u.note ?? "",
 });
 
-function AuctionPeople() {
+function AuctionPeople({ item, statusRaw }) {
   const { id: paramId } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [peopleList, setPeopleList] = useState([]);
+
+
+  const { isReady, isCurrent, isFinish } = useMemo(() => {
+    const raw = String(item?.auctionStatusRaw || "").toUpperCase();
+    return {
+      isReady: raw === "AUCTION_READY",
+      isCurrent: raw === "AUCTION_CURRENT",
+      isFinish: raw === "AUCTION_FINISH",
+    };
+  }, [item?.auctionStatusRaw]);
 
   const fetchData = async () => {
     try {
@@ -117,6 +127,13 @@ function AuctionPeople() {
           </div>
         </div>
       )}
+
+      {isReady &&<div className={styles.beforeStart}>
+          <div className={styles.beforeStartContainer}> 
+            <img src={peopleIcon} alt="people" />
+            <span className={styles.beforeStartText}>경매 시작</span>
+          </div>
+        </div>}
     </div>
   );
 }
