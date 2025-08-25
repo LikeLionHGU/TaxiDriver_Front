@@ -190,7 +190,7 @@ const Landing = () => {
     
     innovationSection: {
       padding: '100px 20px',
-      background: 'linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%)'
+      background: "#f8f9ff",
     },
     
     innovationContent: {
@@ -198,27 +198,37 @@ const Landing = () => {
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '80px',
-      alignItems: 'center'
+      gap: '60px',
+      alignItems: 'flex-start'
     },
     
     innovationTitle: {
-      fontSize: '2.5rem',
+      fontSize: '2rem',
       fontWeight: 700,
       color: '#2d3748',
-      marginBottom: '40px'
+      marginBottom: '40px',
+      textAlign:"center"
     },
     
     problemItem: {
-      marginBottom: '20px'
+      background: "white",
+    padding: "20px 24px",
+    borderRadius: "12px",
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
     },
+
+    problemSection: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
     
     problemItemTitle: {
-      fontSize: '30px',
-      fontWeight: 700,
-      color: '#000',
-      textaligh:'center',
-      marginBottom: '20px'
+      fontSize: '16px',
+      fontWeight: 600,
+      color: '#2d3748',
+      marginBottom: '8px'
     },
     
     problemList: {
@@ -570,61 +580,74 @@ const Landing = () => {
 
       {/* Innovation Section */}
       <section style={styles.innovationSection}>
+        <h2 style={styles.innovationTitle}>어울림의 혁신 방향</h2>
         <div style={styles.innovationContent}>
-          <div>
+          <div style={styles.problemSection}>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#2d3748", marginBottom: "20px" }}>
+              기존 시스템의 문제점
+            </h3>
+
             <div style={styles.problemItem}>
-              <h4 style={styles.problemItemTitle}>기존 시스템의 문제점</h4>
-              <ul style={styles.problemList}>
-                <li style={{...styles.problemListItem, position: 'relative'}}>
-                  <span style={{position: 'absolute', left: '0', color: '#667eea', fontWeight: 'bold'}}>•</span>
-                  복잡한 사용자 인터페이스
-                </li>
-                <li style={{...styles.problemListItem, position: 'relative'}}>
-                  <span style={{position: 'absolute', left: '0', color: '#667eea', fontWeight: 'bold'}}>•</span>
-                  불투명한 처리 과정
-                </li>
-                <li style={{...styles.problemListItem, position: 'relative'}}>
-                  <span style={{position: 'absolute', left: '0', color: '#667eea', fontWeight: 'bold'}}>•</span>
-                  정보 부족
-                </li>
-                <li style={{...styles.problemListItem, position: 'relative'}}>
-                  <span style={{position: 'absolute', left: '0', color: '#667eea', fontWeight: 'bold'}}>•</span>
-                  번거로운 관리 과정
-                </li>
-              </ul>
+              <div style={styles.problemItemTitle}>복잡한 사용자 인터페이스</div>
+              <div style={styles.problemItemDesc}>사용자가 쉽게 이해하기 어려운 복잡한 구조</div>
+            </div>
+
+            <div style={styles.problemItem}>
+              <div style={styles.problemItemTitle}>불투명한 처리 과정</div>
+              <div style={styles.problemItemDesc}>경매 과정과 결과를 실시간으로 확인하기 어려운 구조</div>
+            </div>
+
+            <div style={styles.problemItem}>
+              <div style={styles.problemItemTitle}>정보 부족</div>
+              <div style={styles.problemItemDesc}>시장 동향과 가격 정보에 대한 접근성 부족</div>
+            </div>
+
+            <div style={styles.problemItem}>
+              <div style={styles.problemItemTitle}>번거로운 관리 과정</div>
+              <div style={styles.problemItemDesc}>수동적인 업무 처리로 인한 비효율성</div>
             </div>
           </div>
-          <div>
-            <div style={styles.solutionButtons}>
-              <button 
-                style={styles.solutionButton}
-                onMouseEnter={(e) => handleButtonHover(e, true)}
-                onMouseLeave={(e) => handleButtonHover(e, false)}
-              >
-                실시간 모니터링
-              </button>
-              <button 
-                style={styles.solutionButton}
-                onMouseEnter={(e) => handleButtonHover(e, true)}
-                onMouseLeave={(e) => handleButtonHover(e, false)}
-              >
-                자동화된 워크플로우
-              </button>
-              <button 
-                style={styles.solutionButton}
-                onMouseEnter={(e) => handleButtonHover(e, true)}
-                onMouseLeave={(e) => handleButtonHover(e, false)}
-              >
-                통합 대시보드
-              </button>
-              <button 
-                style={styles.solutionButton}
-                onMouseEnter={(e) => handleButtonHover(e, true)}
-                onMouseLeave={(e) => handleButtonHover(e, false)}
-              >
-                스마트 알림 시스템
-              </button>
-            </div>
+
+          <div style={styles.solutionSection}>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#2d3748", marginBottom: "20px" }}>
+              어울림의 혁신 방향
+            </h3>
+
+            <button
+              style={styles.solutionButton}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+            >
+              <div style={styles.solutionButtonTitle}>직관적 사용자 경험</div>
+              <div style={styles.solutionButtonDesc}>누구나 쉽게 사용할 수 있는 간편한 인터페이스 제공</div>
+            </button>
+
+            <button
+              style={styles.solutionButton}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+            >
+              <div style={styles.solutionButtonTitle}>실시간 투명 거래</div>
+              <div style={styles.solutionButtonDesc}>경매 과정을 실시간으로 모니터링하고 투명하게 공개</div>
+            </button>
+
+            <button
+              style={styles.solutionButton}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+            >
+              <div style={styles.solutionButtonTitle}>통합 정보 제공</div>
+              <div style={styles.solutionButtonDesc}>시장 동향, 가격 정보, 거래 내역을 한눈에 확인</div>
+            </button>
+
+            <button
+              style={styles.solutionButton}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
+            >
+              <div style={styles.solutionButtonTitle}>스마트 자동화</div>
+              <div style={styles.solutionButtonDesc}>AI 기반 자동화로 효율적인 업무 처리 지원</div>
+            </button>
           </div>
         </div>
       </section>
