@@ -61,7 +61,7 @@ const mapDtoToRow = (a) => {
   };
 };
 
-function ConfirmTable({ activeFilter = "today", onOpenDetail  }) {
+function ConfirmTable({ activeFilter = "today" }) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

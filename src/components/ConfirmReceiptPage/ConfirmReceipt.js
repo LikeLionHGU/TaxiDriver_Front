@@ -5,7 +5,6 @@ import PageHeader from "../SalesSettlementPage/PageHeader";
 import ConfirmButton from "../ConfirmReceiptPage/ConfirmButton";
 import ConfirmTable from "../ConfirmReceiptPage/ConfirmTable";
 
-import ConfirmDetailModal from "../Modal/ConfirmDetailModal";
 
 
 function ConfirmReceipt() {
@@ -43,11 +42,10 @@ function ConfirmReceipt() {
           <ConfirmTable activeFilter={activeFilter} onOpenDetail={handleOpenDetail}/>
         </div>
 
-      <ConfirmDetailModal
+      {/* <ConfirmDetailModal
         open={confirmDetailModalOpen}
         close={closeConfirmDetailModal}
-        item={selectedItem}
-      />
+      /> */}
       </div>
     </>
   );

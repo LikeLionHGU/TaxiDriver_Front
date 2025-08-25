@@ -2,7 +2,7 @@ import React from "react";
 import ConfirmRow from "./ConfirmRow";
 import styles from "./ConfirmTableBox.module.css"; 
 
-function ConfirmTableBox({ items, onOpenDetail }) {
+function ConfirmTableBox({ items }) {
 
   return (
     <div className={styles.tableWrap}>
@@ -16,9 +16,7 @@ function ConfirmTableBox({ items, onOpenDetail }) {
         <span>수령 상태</span>
       </div>
 
-      {items.map((it) => (
-        <ConfirmRow key={it.id} item={it} onOpenDetail={onOpenDetail} />
-      ))}
+      {items.map((it) => (<ConfirmRow key={it.id} item={it} />))}
     </div>
   );
 }
