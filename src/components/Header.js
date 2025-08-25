@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import headerlogo from '../assets/headerlogo.svg';
-import { NavLink, useLocation /*, Link, useNavigate */ } from "react-router-dom";
+import React, {useState} from "react";
+import { NavLink/*, useLocation , Link, useNavigate */ } from "react-router-dom";
+
 
 import styles from "./styles/Header.module.css";
 import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 
 function Header() {
-  const [role] = useState(ROLES.AMIN); // 임시로 AMIN 고정ㅁ
-  const items = NAV_BY_ROLE[role];
+  const [role] = useState(ROLES.JUNGDOMAEIN);
+
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
-  const location = useLocation();
+  // const location = useLocation();
 
 
 
