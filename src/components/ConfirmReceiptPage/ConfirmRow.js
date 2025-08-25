@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./ConfirmRow.module.css";
+import ConfirmDetailModal from "../Modal/ConfirmDetailModal";
 
 const formatKRW = (n) =>
   new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(n);
 
 // 수령 상태 Pill
-function ReceivePill({ state }) {
+function ReceivePill({ state , onClick }) {
   const map = {
     WAITING: { label: "수령대기", bg: "none", color: "#000", border: "#2775E7" },
     DONE:    { label: "수령완료", bg: "#E5E5E5", color: "#757575", border: "none" },
@@ -16,7 +17,8 @@ function ReceivePill({ state }) {
       type="button"
       className={styles.statusPill}
       style={{ background: s.bg, color: s.color, borderColor: s.border }}
-      disabled
+      
+      onClick={onClick} 
     >
       {s.label}
     </button>
@@ -24,7 +26,26 @@ function ReceivePill({ state }) {
 }
 
 function ConfirmRow({ item }) {
+  const [open, setOpen] = useState(false);
+
+  const openModal = useCallback(() => {
+    setOpen(true);
+    // 스크롤 잠금(선택)
+    document.body.style.overflow = "hidden";
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setOpen(false);
+    document.body.style.removeProperty("overflow");
+  }, []);
+
+  // 언마운트 시 안전하게 복구
+  useEffect(() => {
+    return () => document.body.style.removeProperty("overflow");
+  }, []);
+
   return (
+    <>
     <div className={styles.row} role="row">
       {/* 수산물 정보 */}
       <div className={styles.productCell}>
@@ -49,10 +70,22 @@ function ConfirmRow({ item }) {
       </div>
 
       {/* 수령 상태 */}
-      <div className={styles.statusCell}>
-        <ReceivePill state={item.receiveStatus} />
+      <div className={styles.statusCell} >
+        <ReceivePill state={item.receiveStatus} onClick={openModal} />
       </div>
     </div>
+
+    <ConfirmDetailModal
+        open={open}
+        close={closeModal}
+        item={item}
+        onConfirm={(updated) => {
+          console.log("확인 클릭!", updated || item);
+          closeModal();
+        }}
+      />
+
+      </>
   );
 }
 export default ConfirmRow;

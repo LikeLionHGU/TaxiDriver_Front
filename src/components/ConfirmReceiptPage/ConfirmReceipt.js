@@ -5,14 +5,13 @@ import PageHeader from "../SalesSettlementPage/PageHeader";
 import ConfirmButton from "../ConfirmReceiptPage/ConfirmButton";
 import ConfirmTable from "../ConfirmReceiptPage/ConfirmTable";
 
-import ConfirmDetailModal from "../Modal/ConfirmDetailModal";
 
 
 function ConfirmReceipt() {
   const [activeFilter, setActiveFilter] = useState("today");
+  const [selectedItem, setSelectedItem] = useState(null);
 
-
-// 1) test용 모달 생성
+// 1) 모달 생성
   const [confirmDetailModalOpen, setConfirmDetailModalOpen] = useState(false);
     const openConfirmDetailModal = () => {
       setConfirmDetailModalOpen(true);
@@ -23,6 +22,10 @@ function ConfirmReceipt() {
       document.body.style.removeProperty("overflow");
   };
 
+  const handleOpenDetail = (item) => {
+    setSelectedItem(item);
+    openConfirmDetailModal();
+  };
   return (
     <>
       <div className={styles.main}>
@@ -36,13 +39,13 @@ function ConfirmReceipt() {
             <span>모달 확인용</span>
           </button>
           <ConfirmButton value={activeFilter} onChange={setActiveFilter} />
-          <ConfirmTable activeFilter={activeFilter} />
+          <ConfirmTable activeFilter={activeFilter} onOpenDetail={handleOpenDetail}/>
         </div>
 
-      <ConfirmDetailModal
+      {/* <ConfirmDetailModal
         open={confirmDetailModalOpen}
         close={closeConfirmDetailModal}
-      />
+      /> */}
       </div>
     </>
   );

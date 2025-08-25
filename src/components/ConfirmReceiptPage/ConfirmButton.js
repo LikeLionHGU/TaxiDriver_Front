@@ -54,7 +54,7 @@ function ConfirmButton({ value = "today", onChange }) {
 
   const OPTIONS = useMemo(
     () => [
-      { key: "today",    label: "오늘 수령",  count: status.totalCount,  icon: null,       variant: "neutral" },
+      { key: "today",    label: "전체",  count: status.totalCount,  icon: null,       variant: "neutral" },
       { key: "waiting",  label: "수령 대기",  count: status.waitCount,   icon: BlueButton,  variant: "blue"    },
       { key: "complete", label: "수령 완료",  count: status.finishCount, icon: GreenButton, variant: "green"   },
     ],
