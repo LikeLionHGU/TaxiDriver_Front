@@ -1115,13 +1115,7 @@ export default function ReceiptForm() {
               )}
             </div>
 
-            {/* 인기 어종 */}
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>인기 어종</label>
-              <div style={styles.popularFishContent}>
-                <p style={styles.popularFishText}>인기 어종이 여기에 표시됩니다.</p>
-              </div>
-            </div>
+            
 
             {/* 상태 선택 */}
             <div style={styles.inputGroup}>
