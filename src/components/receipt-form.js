@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import "../components/styles/receipt-form.module.css"
 
@@ -112,6 +113,7 @@ export default function ReceiptForm() {
   const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false)
 
   const unitLabel = packUnit === "sp" ? "S/P" : packUnit === "box" ? "Box" : "그물망"
+  const navigate = useNavigate();
   const inc = () => {
     if (saleType === "weight" || (saleType === "package" && packUnit === "net")) {
       setTotalCount((v) => v + 1)
@@ -436,6 +438,7 @@ export default function ReceiptForm() {
 
   const closeCompletionModal = () => {
     setIsCompletionModalOpen(false)
+    navigate('/producermain');
   }
 
   useEffect(() => {
