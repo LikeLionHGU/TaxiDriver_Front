@@ -10,7 +10,7 @@ import styles from "./AuctionItem.module.css";
 import BigPanel from "../AuctionDetail/BigPanel";
 
 /** ===== 유틸 & 매퍼 ===== */
-const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
+const mapStatus = (n) => ({ "AUCTION_READY": "PROGRESS", "AUCTION_CURRENT": "PENDING", "AUCTION_FINISH": "DONE" }[n] || "PENDING");
 
 const addMinutes = (ts, mins) => {
   if (!ts) return null;
@@ -55,6 +55,7 @@ function mapDtoToDetailItem(a) {
     parseKg(a.fishWeight) ?? (isFinite(Number(a.fishWeight)) ? Number(a.fishWeight) : null);
 
   return {
+    auctionStatusRaw: a.auctionStatus,
     name: a.name,
     origin: a.origin,
     seller: a.seller?.name ?? "-",
@@ -97,7 +98,7 @@ function useCountdown(endAt) {
 }
 
 /** ===== 메인 컴포넌트 ===== */
-function AuctionItem({ item: initialItem }) {
+function AuctionItem({ item: initialItem, onStatusChange }) {
   const { id } = useParams(); // /auction/detail/:id 라우트 기준
   const [item, setItem] = useState(
     initialItem || {
@@ -147,7 +148,12 @@ function AuctionItem({ item: initialItem }) {
         throw new Error("해당 경매를 찾을 수 없습니다.");
       }
 
-      setItem(mapDtoToDetailItem(dto));
+      const mapped = mapDtoToDetailItem(dto);
+      setItem(mapped);
+      onStatusChange?.({
+        raw: mapped.auctionStatusRaw,
+        value: mapped.status,
+      });
     } catch (e) {
       setError("정보를 불러오는데 실패했습니다.");
     } finally {
@@ -160,6 +166,7 @@ function AuctionItem({ item: initialItem }) {
     fetchDetail();
     // id가 바뀌면 다시 로드
   }, [id]);
+
 
   const totalWeight = useMemo(() => {
     if (!item) return "-";
@@ -191,15 +198,7 @@ function AuctionItem({ item: initialItem }) {
     );
   }
 
-  // 상태별 안내 문구 (원하면 사용)
-  const banner =
-    item?.status === "PROGRESS"
-      ? { title: "경매 진행중", desc: "구매업체들이 입찰에 참여하고 있습니다." }
-      : item?.status === "PENDING"
-      ? { title: "경매 대기", desc: "시작 시간까지 잠시만 기다려주세요." }
-      : item?.status === "DONE"
-      ? { title: "경매 종료", desc: "해당 경매는 종료되었습니다." }
-      : null;
+
 
   return (
     <div className={styles.main}>

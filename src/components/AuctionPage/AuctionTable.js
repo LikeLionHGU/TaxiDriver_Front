@@ -6,7 +6,7 @@ import searchImg from "../../assets/search.svg";
 import { useAuth, ROLES } from "../../auth/AuthContext";
 
 // 숫자 → 프론트 상태 키로 통일
-  const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
+  const mapStatus = (n) => ({ "AUCTION_READY": "PROGRESS", "AUCTION_CURRENT": "PENDING", "AUCTION_FINISH": "DONE" }[n] || "PENDING");
 
 // eslint-disable-next-line
   const join = (...xs) => xs.filter(Boolean).join(" | ");
