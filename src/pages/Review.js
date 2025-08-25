@@ -232,11 +232,27 @@ export default function Dashboard() {
     }
   };
 
-  const handleApproveProduct = () => {
-    setIsPendingModalOpen(false);
-    setIsApprovalConfirmationModalOpen(true);
-    // 승인 처리 후 데이터 새로고침
-    fetchData(activeCard)
+  const handleApproveProduct = async (productId) => {
+    try {
+      await axios.post(`https://likelion.info/update/register/status/true/${productId}`, {}, { withCredentials: true });
+      setIsPendingModalOpen(false);
+      setIsApprovalConfirmationModalOpen(true);
+      fetchData(activeCard);
+    } catch (error) {
+      console.error("상품 승인 실패:", error);
+      alert("상품 승인에 실패했습니다.");
+    }
+  };
+  const handleRejectProduct = async (productId, failedReason) => {
+    try {
+      await axios.post(`https://likelion.info/update/register/status/false/${productId}`, { failedReason }, { withCredentials: true });
+      setIsPendingModalOpen(false);
+      alert("상품이 반려되었습니다.");
+      fetchData(activeCard);
+    } catch (error) {
+      console.error("상품 반려 실패:", error);
+      alert("상품 반려에 실패했습니다.");
+    }
   };
 
   const closeModal = () => {
@@ -349,6 +365,7 @@ export default function Dashboard() {
           open={isDetailModalOpen}
           onClose={closeModal}
           product={selectedItem}
+          apiUrl="https://likelion.info/get/detail/"
         />
       )}
       {isRejectedModalOpen && selectedItem && (
@@ -363,7 +380,8 @@ export default function Dashboard() {
           open={isPendingModalOpen}
           onClose={closeModal}
           product={selectedItem}
-          onApprove={handleApproveProduct}
+          onApprove={() => handleApproveProduct(selectedItem.id)}
+          onReject={handleRejectProduct}
         />
       )}
       {isApprovalConfirmationModalOpen && (
