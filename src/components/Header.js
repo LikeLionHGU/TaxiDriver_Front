@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { NavLink, useLocation /*, Link, */, useNavigate  } from "react-router-dom";
 
+
 import styles from "./styles/Header.module.css";
 // import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
 import { useAuth, ROLES } from "../auth/AuthContext";
@@ -53,6 +54,30 @@ function Header() {
       </nav>
     </div>
     </>
+
+//         <div className={styles.logo}>
+//           <img src={logo} alt="logo" onClick={() => navigate("/")} />
+//         </div>
+
+
+//          <nav className={styles.nav} aria-label="main">
+//             {items.map((it) => (
+
+//               <NavLink
+//                 key={it.key}
+//                 to={it.href}
+//                 // isActive 가 true면 currentPage 스타일을 추가
+//                 className={({ isActive }) =>
+//                   `${styles.buttonContainer} ${isActive ? styles.currentPage : ""}`
+//                 }
+//               >
+//                 <span className={styles.button}>{it.label}</span>
+//               </NavLink>
+//             ))}
+//           </nav>
+//         </header>
+//       </>
+
   );
 }
 
