@@ -2,6 +2,8 @@
 import React from "react";
 import styles from "./styles/landing-header.module.css";
 
+import logo from "../assets/mainLogo.svg";
+
 const LandingHeader = () => {
   const handleLogin = () => {
     window.location.href = "https://www.likelion.info/login/oauth2/google";
@@ -18,6 +20,12 @@ const LandingHeader = () => {
       <div className={styles.container}>
         {/* 왼쪽: 로고 */}
         <div className={styles.logo}>
+          <img 
+            src={logo} 
+            alt="logo" 
+            onClick={() => window.location.href = "/"} // 홈으로 이동
+            className={styles.logoImage}
+          />
         </div>
 
         {/* 가운데: 네비게이션 (선택사항) */}
