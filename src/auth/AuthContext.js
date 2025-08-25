@@ -1,4 +1,3 @@
-// src/auth/AuthProvider.js
 "use client";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
@@ -6,36 +5,56 @@ import { api } from "../api/client";
 /** 내부 표준 롤 */
 export const ROLES = {
   ADMIN: "ADMIN",
-  GUARDIAN: "GUARDIAN",       // 어민(ROLE_SELLER)을 여기로 매핑
-  JUNGDOMAEIN: "JUNGDOMAEIN", // 중도매인(ROLE_BUYER)
+  GUARDIAN: "GUARDIAN",       // ROLE_SELLER
+  JUNGDOMAEIN: "JUNGDOMAEIN", // ROLE_BUYER
   GUEST: "GUEST",
 };
 
-/** 서버에서 온 권한 배열을 내부 롤로 변환 (우선순위: ADMIN > BUYER > SELLER) */
-function pickRoleFromList(list) {
-  const toUpper = (v) => String(v || "").toUpperCase();
-  const has = (k) => list.some((v) => toUpper(v) === k);
-
-  if (has("ROLE_ADMIN"))  return ROLES.ADMIN;
-  if (has("ROLE_BUYER"))  return ROLES.JUNGDOMAEIN;
-  if (has("ROLE_SELLER")) return ROLES.GUARDIAN;
-  return ROLES.GUEST; // ROLE_USER 등은 게스트 취급(필요시 확장)
+/** 문자열/객체 배열 -> 문자열 배열 */
+function toStringRoles(any) {
+  if (!any) return [];
+  const arr = Array.isArray(any) ? any : [any];
+  return arr
+    .map((v) => {
+      if (typeof v === "string") return v;
+      if (v && typeof v === "object") {
+        // Spring Security 자주 나오는 형태들
+        return v.authority || v.role || v.name || v.code || v.roleName || v.value || "";
+      }
+      return "";
+    })
+    .filter(Boolean);
 }
 
-/** 응답에서 roles/authorities/role 등 다양한 키를 안전하게 추출 */
+/** 응답에서 roles/authorities 등 추출 */
 function extractRawRoles(data) {
+  // 서버가 배열만 바로 줄 수도 있어서 먼저 처리
+  if (Array.isArray(data)) return toStringRoles(data);
+
   const candidates =
     data?.roles ??
     data?.authorities ??
+    data?.roleList ??
+    data?.grants ??
     data?.user?.roles ??
     data?.user?.authorities ??
-    data?.role ??
-    data?.user?.role ??
+    data?.role ??                 // 단일 문자열
+    data?.user?.role ??           // 단일 문자열
     [];
 
-  if (Array.isArray(candidates)) return candidates;
-  if (typeof candidates === "string") return [candidates];
-  return [];
+  return toStringRoles(candidates);
+}
+
+/** ROLE_USER는 다른 역할과 같이 오면 제거 + 우선순위 매핑 */
+function pickRoleFromList(list) {
+  const up = list.map((v) => String(v || "").toUpperCase());
+  const hasNonUser = up.some((r) => r !== "ROLE_USER");
+  const roles = hasNonUser ? up.filter((r) => r !== "ROLE_USER") : up;
+
+  if (roles.includes("ROLE_ADMIN"))  return ROLES.ADMIN;
+  if (roles.includes("ROLE_BUYER"))  return ROLES.JUNGDOMAEIN;
+  if (roles.includes("ROLE_SELLER")) return ROLES.GUARDIAN;
+  return ROLES.GUEST;
 }
 
 const AuthCtx = createContext({
@@ -60,11 +79,13 @@ export function AuthProvider({ children }) {
       setLoading(true);
       setError(null);
 
-      // 쿠키 인증이면 api 인스턴스에 withCredentials=true 세팅돼 있어야 함
-      const { data } = await api.get("/user/check");
+      const { data } = await api.get("/user/check");  // ✅ api 인스턴스 사용
+      console.log("[Auth] /user/check data =", data);
 
       const rawRoles = extractRawRoles(data);
-      const nextRole = pickRoleFromList(rawRoles);
+      console.log("[Auth] rawRoles =", rawRoles);
+
+      const nextRole  = pickRoleFromList(rawRoles);
 
       const nextUser =
         data?.user ??
@@ -73,6 +94,7 @@ export function AuthProvider({ children }) {
       setUser(nextUser);
       setRole(nextRole);
     } catch (e) {
+      console.log("[Auth] fetchMe error", e?.response || e);
       setUser(null);
       setRole(ROLES.GUEST);
       setError(e?.message || "권한 확인 실패");
@@ -81,9 +103,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  useEffect(() => {
-    fetchMe();
-  }, []);
+  useEffect(() => { fetchMe(); }, []);
 
   const value = useMemo(
     () => ({
@@ -93,8 +113,8 @@ export function AuthProvider({ children }) {
       error,
       refresh: fetchMe,
       isAdmin: role === ROLES.ADMIN,
-      isGuardian: role === ROLES.GUARDIAN,         // ROLE_SELLER 매핑
-      isJungdomaein: role === ROLES.JUNGDOMAEIN,   // ROLE_BUYER  매핑
+      isGuardian: role === ROLES.GUARDIAN,
+      isJungdomaein: role === ROLES.JUNGDOMAEIN,
     }),
     [user, role, loading, error]
   );
