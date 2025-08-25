@@ -1,46 +1,83 @@
 import React, {useState} from "react";
-import { NavLink/*, useLocation , Link, */, useNavigate  } from "react-router-dom";
+import { NavLink, useLocation /*, Link, */, useNavigate  } from "react-router-dom";
 
 
 import styles from "./styles/Header.module.css";
-import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
+// import { NAV_BY_ROLE, ROLES } from "../config/headerTest";
+import { useAuth, ROLES } from "../auth/AuthContext";
+import { NAV_BY_ROLE } from "../config/headerTest";
 
 import logo from "../assets/mainLogo.svg";
 
 function Header() {
-  const [role] = useState(ROLES.JUNGDOMAEIN);
+  // const [role] = useState(ROLES.JUNGDOMAEIN);
+  const { role, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
   // const location = useLocation();
-  const items = NAV_BY_ROLE[role] ?? [];
+  // const items = NAV_BY_ROLE[role] ?? [];
+  const items = NAV_BY_ROLE[role] ?? NAV_BY_ROLE[ROLES.GUEST] ?? [];
 
+  if (loading) return null;
 
+  // 디버그(원인 추적용)
+  console.log("role =", role, "items =", items.map(i => i.key));
+  
   return (
     <>
       <div className={styles.headerContainer}>
-        <div className={styles.logo}>
-          <img src={logo} alt="logo" onClick={() => navigate("/")} />
-        </div>
+      <div className={styles.logo}>
+        <img src={logo} alt="logo" onClick={() => navigate("/")} />
+      </div>
+
+      <nav className={styles.nav} aria-label="main">
+        {items.map((it) => {
+          // /auction/..., /producermain/...도 활성화 처리
+          const isCurrent =
+            location.pathname === it.href ||
+            location.pathname.startsWith(`${it.href}/`);
+          return (
+            <NavLink
+              key={it.key}
+              to={it.href}
+              end={false} // 부분 일치 허용(하위경로도 활성화)
+              className={`${styles.buttonContainer} ${
+                isCurrent ? styles.currentPage : ""
+              }`}
+            >
+              <span className={styles.button}>{it.label}</span>
+            </NavLink>
+          );
+        })}
+      </nav>
+    </div>
+    </>
+
+//         <div className={styles.logo}>
+//           <img src={logo} alt="logo" onClick={() => navigate("/")} />
+//         </div>
 
 
-         <nav className={styles.nav} aria-label="main">
-            {items.map((it) => (
+//          <nav className={styles.nav} aria-label="main">
+//             {items.map((it) => (
 
-              <NavLink
-                key={it.key}
-                to={it.href}
-                // isActive 가 true면 currentPage 스타일을 추가
-                className={({ isActive }) =>
-                  `${styles.buttonContainer} ${isActive ? styles.currentPage : ""}`
-                }
-              >
-                <span className={styles.button}>{it.label}</span>
-              </NavLink>
-            ))}
-          </nav>
-        </header>
-      </>
+//               <NavLink
+//                 key={it.key}
+//                 to={it.href}
+//                 // isActive 가 true면 currentPage 스타일을 추가
+//                 className={({ isActive }) =>
+//                   `${styles.buttonContainer} ${isActive ? styles.currentPage : ""}`
+//                 }
+//               >
+//                 <span className={styles.button}>{it.label}</span>
+//               </NavLink>
+//             ))}
+//           </nav>
+//         </header>
+//       </>
+
   );
 }
 

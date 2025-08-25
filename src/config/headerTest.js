@@ -1,11 +1,13 @@
-export const ROLES = {
-  AMIN: "amin",
-  GUARDIAN: "guardian",
-  JUNGDOMAEIN: "jungdomaein", // 중도매인
-};
+import { ROLES } from "../auth/AuthContext";
+
+// export const ROLES = {
+//   AMIN: "amin",
+//   GUARDIAN: "guardian",
+//   JUNGDOMAEIN: "jungdomaein", // 중도매인
+// };
 
 export const NAV_BY_ROLE = {
-  [ROLES.AMIN]: [
+  [ROLES.ADMIN]: [
     { key: "status",           label: "등록 현황",   href: "/producermain" },
     { key: "register-fish",    label: "수산물 등록", href: "/register" },
     { key: "auction-status",   label: "경매 상태",   href: "/auction" },
@@ -21,5 +23,8 @@ export const NAV_BY_ROLE = {
     { key: "receiving-status", label: "수령 현황",     href: "/confirm-receipt" },
     { key: "purchase-history", label: "구매 내역",     href: "/purchase-history" },
 
+  ],
+  [ROLES.GUEST]: [
+    // 필요하면 게스트 메뉴
   ],
 };
