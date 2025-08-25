@@ -133,7 +133,7 @@ export default function ProducerMainTable({
       </div>
 
       {modal.kind === "approved" && (
-        <ProductDetailModal open={modal.open} onClose={closeModal} product={modal.product} isApproved={true} />
+        <ProductDetailModal open={modal.open} onClose={closeModal} product={modal.product} isApproved={true} apiUrl="https://likelion.info/post/get/detail/" />
       )}
       {modal.kind === "pending" && (
         <PendingReviewModal open={modal.open} onClose={closeModal} product={modal.product} hideApprovalButtons={true} />
