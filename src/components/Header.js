@@ -25,7 +25,7 @@ function Header() {
     window.location.href = "https://www.likelion.info/login/oauth2/google";
   };
   
-  return (
+  return ( 
     <>
       <div className={styles.headerContainer}>
       <div className={styles.logo}>
