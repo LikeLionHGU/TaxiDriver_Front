@@ -5,6 +5,7 @@ import styles from "../styles/consignment-company-form.module.css"
 import { regions } from "../data/regions"
 import { ReactComponent as LocationIcon } from '../assets/위치.svg';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // axios 기본 설정
 axios.defaults.withCredentials = true; // 쿠키 자동 포함
@@ -15,6 +16,7 @@ export default function LocationSelector() {
   const [selectedLocation, setSelectedLocation] = useState("")
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const navigate = useNavigate();
 
   const provinces = Object.keys(regions);
   const locations = selectedProvince ? regions[selectedProvince] : [];
@@ -53,11 +55,7 @@ export default function LocationSelector() {
 
       if (response.data === true) {
         alert("회원가입에 성공했습니다!");
-        // 폼 초기화
-        setName("");
-        setPhoneNumber("");
-        setSelectedProvince("");
-        setSelectedLocation("");
+        navigate('/', { state: { registrationComplete: true } });
       } else {
         alert("회원가입에 실패했습니다.");
       }

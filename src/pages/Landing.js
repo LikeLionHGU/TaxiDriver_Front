@@ -1,63 +1,90 @@
 /* eslint-disable */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LandingHeader from '../components/LandingHeader';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-// axios.defaults.withCredentials = true;
+const Modal = ({ isOpen, onClose, message }) => {
+  if (!isOpen) return null;
 
-// function getCookie(name) {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop().split(";").shift();
-// }
+  const styles = {
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+    },
+    modal: {
+      background: 'white',
+      padding: '40px',
+      borderRadius: '12px',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+      textAlign: 'center',
+      maxWidth: '400px',
+      width: '90%',
+    },
+    message: {
+      fontSize: '18px',
+      marginBottom: '30px',
+      color: '#333',
+    },
+    button: {
+      padding: '12px 24px',
+      border: 'none',
+      borderRadius: '8px',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: 'white',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      transition: 'transform 0.2s',
+    }
+  };
 
-// async function sendSecureRequest() {
-//   if (!window.CSRF) {
-//     await initCsrf();
-//   }
-
-//   console.log("CSRF:", window.CSRF);
-
-//   const res = await axios.post(
-//     "https://likelion.info/temp",
-//     {}, // ← body (없으면 빈 객체)
-//     {
-//       withCredentials: true,
-//       headers: {
-//         // 서버에서 요구하는 정확한 헤더명을 사용하세요.
-//         // (백엔드가 X-XSRF-TOKEN인지 X-CSRF-TOKEN인지 확인)
-//         "X-XSRF-TOKEN": window.CSRF,
-//         // "X-CSRF-TOKEN": window.CSRF,
-//       },
-//     }
-//   );
-
-//   console.log(res.data);
-// }
-
-// const API = "https://likelion.info";
-
-
-// export async function initCsrf() {
-//   const tryOnce = async () => {
-//     const res = await axios.get(`${API}/test`, { withCredentials: true });
-//     const h = res.headers || {};
-//     return h["x-csrf-token"] || h["x-xsrf-token"] || h["X-CSRF-TOKEN"] || null;
-//   };
-
-//   // 1차 시도(세션 생성 + 토큰 시도)
-//   let token = await tryOnce();
-
-//   // 토큰이 아직 없으면 2차 시도(이미 세션 쿠키가 생겼으니 이번엔 헤더가 올 가능성 큼)
-
-//   window.CSRF = token;
-// }
-
-
+  return (
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <p style={styles.message}>{message}</p>
+        <button style={styles.button} onClick={onClose}>
+          확인
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Landing = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(
+    () => sessionStorage.getItem('registrationComplete') === 'true'
+  );
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.registrationComplete) {
+      setRegistrationComplete(true);
+      sessionStorage.setItem('registrationComplete', 'true');
+      setShowModal(true);
+      // Prevent the modal from showing up again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
+
+  const handleLinkClick = (e) => {
+    if (registrationComplete) {
+      e.preventDefault();
+      setShowModal(true);
+    }
+  };
+  
   const styles = {
     landingPage: {
       width: '100%',
@@ -397,17 +424,13 @@ const Landing = () => {
 
   return (
     <div style={styles.landingPage}>
+      <Modal 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)}
+        message="로그인 해주세요. 이미 회원가입이 완료되었습니다"
+      />
       {/* 헤더 */}
       <LandingHeader />
-      {/* <button onClick={() => initCsrf()}>
-        test
-      </button>
-      <button onClick={() => sendSecureRequest()}>
-        test2
-      </button>
-      <button >
-        test3
-      </button> */}
       
       {/* Hero Section */}
       <section style={styles.heroSection}>
@@ -442,6 +465,7 @@ const Landing = () => {
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
+            onClick={handleLinkClick}
           >
             <div style={styles.featureIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" width="46" height="57" viewBox="0 0 46 57" fill="none">
@@ -485,6 +509,7 @@ const Landing = () => {
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
+            onClick={handleLinkClick}
           >
             <div style={styles.featureIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" width="44" height="52" viewBox="0 0 44 52" fill="none">
@@ -513,6 +538,7 @@ const Landing = () => {
             style={styles.featureCard}
             onMouseEnter={(e) => handleCardHover(e, true)}
             onMouseLeave={(e) => handleCardHover(e, false)}
+            onClick={handleLinkClick}
           >
             <div style={styles.featureIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" width="61" height="54" viewBox="0 0 61 54" fill="none">
@@ -689,6 +715,7 @@ const Landing = () => {
             style={styles.ctaButton}
             onMouseEnter={(e) => handleCtaButtonHover(e, true)}
             onMouseLeave={(e) => handleCtaButtonHover(e, false)}
+            onClick={handleLinkClick}
           >
             시작하기
           </button>
