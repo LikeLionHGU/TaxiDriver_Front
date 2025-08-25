@@ -117,6 +117,7 @@ function AuctionTable({ activeStatus = "ALL",
   useEffect(() => {
     if (authLoading) return; 
     fetchData();
+    // eslint-disable-next-line
   }, [authLoading, role]);
 
   // 2) 필터/검색/페이지네이션
