@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styles from "./ConfirmRow.module.css";
 import ConfirmDetailModal from "../Modal/ConfirmDetailModal";
+import { useAuth, ROLES } from "../../auth/AuthContext";
 
 const formatKRW = (n) =>
   new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(n);
@@ -27,12 +28,14 @@ function ReceivePill({ state , onClick }) {
 
 function ConfirmRow({ item }) {
   const [open, setOpen] = useState(false);
+  const { role } = useAuth();
+  const canOpen = role === ROLES.GUARDIAN;
 
   const openModal = useCallback(() => {
+    if (!canOpen) return;
     setOpen(true);
-    // 스크롤 잠금(선택)
     document.body.style.overflow = "hidden";
-  }, []);
+  }, [canOpen]);
 
   const closeModal = useCallback(() => {
     setOpen(false);
