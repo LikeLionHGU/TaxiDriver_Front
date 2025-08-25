@@ -3,6 +3,7 @@ import styles from "./AuctionTable.module.css";
 import axios from "axios";
 import AuctionTableBox from "./AuctionTableBox";
 import searchImg from "../../assets/search.svg";
+import { useAuth, ROLES } from "../../auth/AuthContext";
 
 // 숫자 → 프론트 상태 키로 통일
   const mapStatus = (n) => ({ 0: "PROGRESS", 1: "PENDING", 2: "DONE" }[n] || "PENDING");
@@ -51,6 +52,14 @@ function AuctionTable({ activeStatus = "ALL",
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { role, loading: authLoading } = useAuth();     
+
+  const ENDPOINT_BY_ROLE = {
+    [ROLES.ADMIN]:       "https://likelion.info:443/post/get/auction/all",   // 어민 : 내가 등록한 것
+    [ROLES.GUARDIAN]:    "https://likelion.info:443/post/get/auction/all/admin",  // 관리자 : 전체
+    [ROLES.JUNGDOMAEIN]: "https://likelion.info:443/post/get/auction/all/admin",   // 중도매인: 참여 가능한 전체
+    [ROLES.GUEST]:       "https://likelion.info:443/post/get/auction/all/admin",   // 비로그인: 전체
+  };
 
   // 1) API 호출
   const fetchData = async () => {
@@ -58,8 +67,10 @@ function AuctionTable({ activeStatus = "ALL",
       setIsLoading(true);
       setError(null);
 
-      const { data } = await axios.get(`https://likelion.info:443/post/get/auction/all`, {
-        withCredentials: true, 
+      const url = ENDPOINT_BY_ROLE[role] || ENDPOINT_BY_ROLE[ROLES.GUEST];
+
+      const { data } = await axios.get(url, {
+        withCredentials: true,
       });
       console.log(data);
       const list = Array.isArray(data) ? data : data?.items || [];
@@ -104,8 +115,9 @@ function AuctionTable({ activeStatus = "ALL",
   };
 
   useEffect(() => {
+    if (authLoading) return; 
     fetchData();
-  }, []);
+  }, [authLoading, role]);
 
   // 2) 필터/검색/페이지네이션
   const norm = (s) => (s ?? "").toString().trim().toLowerCase();
