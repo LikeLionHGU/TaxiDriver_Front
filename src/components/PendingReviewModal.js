@@ -44,36 +44,24 @@ export default function PendingReviewModal({ open, onClose, product, onApprove, 
 
     // 가운데 넓은 2칸: AI 분석결과 (로딩 상태)
     cardBlock(
-      "AI 분석결과",
-      product.aiAnalysisResult ? (
-        h("div", { className: styles.aiAnalysisContent },
-          h("div", { className: styles.scoreWrap },
-            h("div", { className: styles.rejectBadge }, "질병 감지"),
-            h("div", { className: styles.rejectValue }, String(product.aiAnalysisResult.diseasePercentage)),
-            h("div", { className: styles.progressWrap },
-              h("div", { className: `${styles.progress} ${styles.progressDanger}` },
-                h("span", { style: { width: `${Math.min(100, product.aiAnalysisResult.diseasePercentage)}%` } })
-              ),
-              h("div", { className: styles.progressLabels },
-                ["0","25","50","75","100"].map((t,i)=>h("span",{key:i},t))
-              )
-            )
-          ),
-          h("p", { className: styles.noteText },
-            product.aiAnalysisResult.diseaseDescription
-          )
-        )
-      ) : (
-        h(
-          "div",
-          { className: styles.pendingWrap },
-          h("div", { className: styles.spinner }),
-          h('img', { src: pendingIcon, alt: '검토중', className: styles.pendingIcon }),
-          h("p", { className: styles.pendingText }, "AI 검토 중, 잠시만 기다려주세요.")
-        )
-      ),
-      { full: true }
-    ),
+  "AI 분석결과",
+  product.aiAnalysisResult ? (
+    h("div", { className: styles.aiAnalysisContent },
+      h("div", { className: styles.scoreWrap },
+        h("div", { className: styles.rejectBadge }, product.aiAnalysisResult.diseaseDescription)
+      )
+    )
+  ) : (
+    h(
+      "div",
+      { className: styles.pendingWrap },
+      h("div", { className: styles.spinner }),
+      h('img', { src: pendingIcon, alt: '검토중', className: styles.pendingIcon }),
+      h("p", { className: styles.pendingText }, "AI 검토 중, 잠시만 기다려주세요.")
+    )
+  ),
+  { full: true }
+),
   );
 
   // 하단: 상품 사진(없으면 비워둠)
