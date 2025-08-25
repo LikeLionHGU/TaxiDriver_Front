@@ -51,9 +51,9 @@ function pickRoleFromList(list) {
   const hasNonUser = up.some((r) => r !== "ROLE_USER");
   const roles = hasNonUser ? up.filter((r) => r !== "ROLE_USER") : up;
 
-  if (roles.includes("ROLE_ADMIN"))  return ROLES.ADMIN;
+  if (roles.includes("ROLE_ADMIN"))  return ROLES.GUARDIAN;
   if (roles.includes("ROLE_BUYER"))  return ROLES.JUNGDOMAEIN;
-  if (roles.includes("ROLE_SELLER")) return ROLES.GUARDIAN;
+  if (roles.includes("ROLE_SELLER")) return ROLES.ADMIN;
   return ROLES.GUEST;
 }
 
