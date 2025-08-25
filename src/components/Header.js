@@ -5,6 +5,7 @@ import { NavLink, useLocation /*, Link, */, useNavigate  } from "react-router-do
 import styles from "./styles/Header.module.css";
 import { useAuth, ROLES } from "../auth/AuthContext";
 import { NAV_BY_ROLE } from "../config/headerTest";
+import LandingHeader from "./LandingHeader";
 
 import logo from "../assets/mainLogo.svg";
 
@@ -17,6 +18,10 @@ function Header() {
   const items = NAV_BY_ROLE[role] ?? NAV_BY_ROLE[ROLES.GUEST] ?? [];
 
   if (loading) return null;
+
+  if (role === ROLES.GUEST) {
+    return <LandingHeader />;
+  }
 
   // 디버그(원인 추적용)
   console.log("role =", role, "items =", items.map(i => i.key));

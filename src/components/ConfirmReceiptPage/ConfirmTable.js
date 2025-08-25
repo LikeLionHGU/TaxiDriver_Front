@@ -69,7 +69,7 @@ function ConfirmTable({ activeFilter = "today" }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const ENDPOINT = "https://likelion.info:443/post/get/receive/admin"; // 예시: 수령확인 목록 API
+  const ENDPOINT = "https://likelion.info:443/post/get/receive/admin"; 
 
   const fetchData = async () => {
     try {
