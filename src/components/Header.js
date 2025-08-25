@@ -8,7 +8,7 @@ import logo from "../assets/mainLogo.svg";
 
 function Header() {
   const [role] = useState(ROLES.JUNGDOMAEIN);
-  const items = NAV_BY_ROLE[role];
+
 
 // 1) 현재 경로 확인해서 현재 페이지 알려주는 border추가
   // const location = useLocation();

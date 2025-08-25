@@ -4,19 +4,20 @@ import styles1 from "./SaleRow.module.css";
 
 import SaleRow from "./SaleRow";
 
-function MainTableBox({items = []}) {
+function MainTableBox({ items = [], selectedRows, selectAll, handleSelectRow, handleSelectAll }) {
+  const handleHeaderCheckboxChange = (event) => {
+    handleSelectAll(event.target.checked, items);
+  };
 
-  
   return (
     <>
       <div className={styles.main}>
         <div className={styles.tableTitle}>
-          {/* <img src={Rectangle} alt="checkbox" /> */}
           <div className={styles1.checkCell}>
-            <input type="checkbox" 
-              disabled
-              tabIndex={-1}
-              aria-hidden="true"
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleHeaderCheckboxChange}
             />
           </div>
           <span className={styles.product}>상품명</span>
@@ -25,8 +26,14 @@ function MainTableBox({items = []}) {
           <span className={styles.date}>낙찰일</span>
         </div>
 
-        {/* row 를 맵으로 */}
-        {items.map((it) => (<SaleRow key={it.id} item={it} />))}
+        {items.map((item) => (
+          <SaleRow
+            key={item.id}
+            item={item}
+            isSelected={selectedRows[item.id] || false}
+            handleSelectRow={handleSelectRow}
+          />
+        ))}
       </div>
     </>
   );

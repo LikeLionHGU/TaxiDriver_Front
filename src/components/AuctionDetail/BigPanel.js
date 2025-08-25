@@ -1,5 +1,7 @@
 /* eslint-disable */
 import React, { useMemo, useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 import styles from "./BigPanel.module.css";
 
 // ₩ 포맷
@@ -48,60 +50,64 @@ export default function BidPanel({
   endAt,
   totalWeightKg,
   quickSteps = [500, 1000, 2000, 5000],
-  onBid,
   disabled = false,
 }) {
-  const currentPrice = Number.isFinite(currentPriceProp)
-    ? currentPriceProp
-    : startPrice;
+  const { id: postId } = useParams();              // ← URL의 :id 사용
+  const [submitting, setSubmitting] = useState(false);
 
-  const [bidValue, setBidValue] = useState(""); // 입력값(문자열)
+  const currentPrice = Number.isFinite(currentPriceProp) ? currentPriceProp : startPrice;
+  const [bidValue, setBidValue] = useState("");
   const remainText = useCountdown(endAt);
 
-  // 입력 숫자만 허용(쉼표 제거)
   const parseNumber = (str) => {
-    if (str == null) return NaN;
-    const onlyNum = String(str).replace(/[^\d]/g, "");
+    const onlyNum = String(str ?? "").replace(/[^\d]/g, "");
     return onlyNum ? Number(onlyNum) : NaN;
   };
 
-  // 증분 버튼 클릭: 입력값 있으면 거기서 +, 없으면 currentPrice에서 +
   const bump = (step) => {
-    const base = Number.isFinite(parseNumber(bidValue))
-      ? parseNumber(bidValue)
-      : currentPrice;
-    const next = base + step;
-    setBidValue(next.toString());
+    const base = Number.isFinite(parseNumber(bidValue)) ? parseNumber(bidValue) : currentPrice;
+    setBidValue(String(base + step));
   };
 
-  // 총 지불금액
   const totalPay = useMemo(() => {
     const num = parseNumber(bidValue);
-    if (!Number.isFinite(num)) {
-      // 입력이 없으면 현재가 기준으로 보여주기
-      if (Number.isFinite(totalWeightKg)) return currentPrice * totalWeightKg;
-      return currentPrice;
-    }
-    if (Number.isFinite(totalWeightKg)) return num * totalWeightKg;
-    return num;
+    if (!Number.isFinite(num)) return Number.isFinite(totalWeightKg) ? currentPrice * totalWeightKg : currentPrice;
+    return Number.isFinite(totalWeightKg) ? num * totalWeightKg : num;
   }, [bidValue, totalWeightKg, currentPrice]);
 
   const canBid = useMemo(() => {
     const num = parseNumber(bidValue);
-    // 입력이 없으면 불가, 입력값이 현재가보다 높아야 가능(동일가 금지면 >, 허용이면 >=)
-    return !disabled && Number.isFinite(num) && num > currentPrice;
-  }, [bidValue, currentPrice, disabled]);
+    return !disabled && !submitting && Number.isFinite(num) && num > currentPrice;
+  }, [bidValue, currentPrice, disabled, submitting]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e?.preventDefault?.();
-    const num = parseNumber(bidValue);
-    if (!Number.isFinite(num)) return;
-    if (onBid) onBid(num);
+    const price = parseNumber(bidValue);
+    if (!Number.isFinite(price)) return;
+
+    try {
+      setSubmitting(true);
+      const res = await axios.post(
+        `https://likelion.info/auction/add`,
+        {  postId: Number(postId), price: Number(price)  },
+        { withCredentials: true }
+      );
+      const ok = res?.data?.isSuccess === 1 || res?.data?.isSuccess === true;
+      if (!ok) throw new Error("등록 실패");
+
+      // 성공 UX (알림/초기화/재조회)
+      // setBidValue("");
+      // TODO: 최신 현재가 재조회 필요하면 상위에서 콜백 받거나 이벤트 발생
+      alert("호가가 등록되었습니다.");
+    } catch (err) {
+      alert("호가 등록 실패: " + (err?.message ?? "알 수 없는 오류"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className={styles.panel}>
-      {/* 증분 버튼 */}
       <div className={styles.sectionTitle}>호가 참여(kg당 가격 입력)</div>
       <div className={styles.quickRow}>
         {quickSteps.map((step) => (
@@ -110,7 +116,7 @@ export default function BidPanel({
             type="button"
             className={styles.quickBtn}
             onClick={() => bump(step)}
-            disabled={disabled}
+            disabled={disabled || submitting}
           >
             <span className={styles.plus}>+</span>
             {formatKRW(step)}
@@ -118,18 +124,15 @@ export default function BidPanel({
         ))}
       </div>
 
-      {/* 입력 + 제출 */}
       <form className={styles.inputRow} onSubmit={handleSubmit}>
         <input
           type="text"
           inputMode="numeric"
           placeholder={`현재 kg당 ${formatKRW(currentPrice)}`}
           value={bidValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          onChange={(e) =>
-            setBidValue(e.target.value.replace(/[^\d]/g, "")) // 숫자만
-          }
+          onChange={(e) => setBidValue(e.target.value.replace(/[^\d]/g, ""))}
           className={styles.priceInput}
-          disabled={disabled}
+          disabled={disabled || submitting}
           aria-label="kg당 호가 입력"
         />
         <button
@@ -138,18 +141,12 @@ export default function BidPanel({
           disabled={!canBid}
           aria-disabled={!canBid}
         >
-          호가하기
+          {submitting ? "등록 중..." : "호가하기"}
         </button>
       </form>
 
-      {/* 총 지불금액 */}
       <div className={styles.totalRow}>
-        <input
-          className={styles.totalInput}
-          value={formatKRW(totalPay)}
-          readOnly
-          aria-label="총 지불금액"
-        />
+        <input className={styles.totalInput} value={formatKRW(totalPay)} readOnly aria-label="총 지불금액" />
       </div>
     </div>
   );
