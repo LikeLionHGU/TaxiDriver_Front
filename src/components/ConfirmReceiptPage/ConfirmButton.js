@@ -5,6 +5,8 @@ import loadingStyles from "../../styles/Loading.module.css";
 
 import BlueButton from "../../assets/AuctionTable/blue.svg";
 import GreenButton from "../../assets/AuctionTable/green.svg";
+import { useAuth, ROLES } from "../../auth/AuthContext";
+
 
 function ConfirmButton({ value = "today", onChange }) {
   const [selected, setSelected] = useState(value);  
@@ -16,6 +18,14 @@ function ConfirmButton({ value = "today", onChange }) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { role, loading: authLoading } = useAuth();
+  
+    const ENDPOINT_BY_ROLE = {
+      [ROLES.ADMIN]:       "https://likelion.info:443/post/get/receive/count/admin",     
+      [ROLES.GUARDIAN]:    "https://likelion.info:443/post/get/receive/count/admin",   
+      [ROLES.JUNGDOMAEIN]: "https://likelion.info:443/post/get/receive/count/user",      
+      [ROLES.GUEST]:       "https://likelion.info:443/post/get/receive/count/admin",      
+    };
 
   useEffect(() => setSelected(value), [value]);
 
@@ -24,9 +34,8 @@ function ConfirmButton({ value = "today", onChange }) {
       setIsLoading(true);
       setError(null);
 
-      const {data} = await axios.get(
-        `https://likelion.info:443/post/get/receive/count/admin`
-        , { withCredentials: true });
+      const url = ENDPOINT_BY_ROLE[role] || ENDPOINT_BY_ROLE[ROLES.GUEST];
+      const {data} = await axios.get(url, { withCredentials: true });
       console.log(data); 
       if (data) {
         setStatus({

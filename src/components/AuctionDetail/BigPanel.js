@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import styles from "./BigPanel.module.css";
@@ -58,6 +59,7 @@ export default function BidPanel({
   const currentPrice = Number.isFinite(currentPriceProp) ? currentPriceProp : startPrice;
   const [bidValue, setBidValue] = useState("");
   const remainText = useCountdown(endAt);
+  const navigate = useNavigate();
 
   const parseNumber = (str) => {
     const onlyNum = String(str ?? "").replace(/[^\d]/g, "");
@@ -104,7 +106,7 @@ export default function BidPanel({
     } finally {
       setSubmitting(false);
     }
-    location.reload(true);
+    navigate(`/auction/detail/${postId}`);  // 호가 등록 후 경매 페이지로 이동
   };
 
   return (
